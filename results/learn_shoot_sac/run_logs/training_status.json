@@ -1,0 +1,29 @@
+{
+    "Shootair": {
+        "checkpoints": [
+            {
+                "steps": 149367,
+                "file_path": "results/learn_shoot_sac/Shootair/Shootair-149367.onnx",
+                "reward": null,
+                "creation_time": 1706969378.4348242,
+                "auxillary_file_paths": [
+                    "results/learn_shoot_sac/Shootair/Shootair-149367.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 149367,
+            "file_path": "results/learn_shoot_sac/Shootair.onnx",
+            "reward": null,
+            "creation_time": 1706969378.4348242,
+            "auxillary_file_paths": [
+                "results/learn_shoot_sac/Shootair/Shootair-149367.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "2.2.0"
+    }
+}
