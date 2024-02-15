@@ -148,7 +148,8 @@ public class ShootairAgent : Agent
         // Convert the second action to turning left or right
         float turnAmount = 0f;
         if (actionBuffers.DiscreteActions[1] == 1f)
-        {
+        {;
+                hasShot = true;
             turnAmount = -1f;
         }
         else if (actionBuffers.DiscreteActions[1] == 2f)

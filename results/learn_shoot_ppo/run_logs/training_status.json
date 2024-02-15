@@ -18,21 +18,48 @@
                 "auxillary_file_paths": [
                     "results/learn_shoot_ppo/Shootair/Shootair-168626.pt"
                 ]
+            },
+            {
+                "steps": 190618,
+                "file_path": "results/learn_shoot_ppo/Shootair/Shootair-190618.onnx",
+                "reward": -0.2964091096073389,
+                "creation_time": 1707844969.6406875,
+                "auxillary_file_paths": [
+                    "results/learn_shoot_ppo/Shootair/Shootair-190618.pt"
+                ]
+            },
+            {
+                "steps": 200968,
+                "file_path": "results/learn_shoot_ppo/Shootair/Shootair-200968.onnx",
+                "reward": -0.2935351424596526,
+                "creation_time": 1708025284.5678747,
+                "auxillary_file_paths": [
+                    "results/learn_shoot_ppo/Shootair/Shootair-200968.pt"
+                ]
+            },
+            {
+                "steps": 210879,
+                "file_path": "results/learn_shoot_ppo/Shootair/Shootair-210879.onnx",
+                "reward": -0.2927727460861206,
+                "creation_time": 1708025593.0685437,
+                "auxillary_file_paths": [
+                    "results/learn_shoot_ppo/Shootair/Shootair-210879.pt"
+                ]
             }
         ],
         "final_checkpoint": {
-            "steps": 168626,
+            "steps": 210879,
             "file_path": "results/learn_shoot_ppo/Shootair.onnx",
-            "reward": -0.29860228672623634,
-            "creation_time": 1706976339.879174,
+            "reward": -0.2927727460861206,
+            "creation_time": 1708025593.0685437,
             "auxillary_file_paths": [
-                "results/learn_shoot_ppo/Shootair/Shootair-168626.pt"
+                "results/learn_shoot_ppo/Shootair/Shootair-210879.pt"
             ]
         }
     },
     "metadata": {
         "stats_format_version": "0.3.0",
         "mlagents_version": "1.0.0",
-        "torch_version": "2.2.0"
+        "torch_version": "2.1.1+cu121"
     }
 }
