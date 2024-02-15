@@ -3,8 +3,8 @@
 :: Activate conda environment
 call conda.bat activate base
 
-:: Create and activate mlagents_test environment
-call conda.bat create --name mlagents_test python=3.10.12 -y
+:: Create and activate mlagents environment
+call conda.bat create --name mlagents python=3.10.12 -y
 call conda.bat activate mlagents
 
 :: Install requirements
