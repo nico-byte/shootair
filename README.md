@@ -24,8 +24,7 @@ Follow the steps below to set up the project on your local machine:
      ```
 
 3. **Run Installation Script:** <br>
-   The installation script will automatically clone the Unity [ML Agents](https://github.com/Unity-Technologies/ml-agents) repo into the Packages folder inside the project and setup the python environment named mlagents via conda.
-   Additionally it will check if PyTorch is working as expected.
+   - The installation script will automatically clone the Unity [ML Agents](https://github.com/Unity-Technologies/ml-agents) repo into the Packages folder inside the project and setup the python environment named mlagents via conda. Additionally it will check if PyTorch is working as expected.
    - For Windows users:
      - Open Anaconda Prompt.
      - Navigate to the project directory using the `cd` command.
