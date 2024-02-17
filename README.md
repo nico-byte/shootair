@@ -2,14 +2,13 @@
 
 ## Overview
 
-This repository contains the source code for shootair. The project is developed using Python, C# and Unity, and it requires Python and Conda for setup.
+This repository contains the source code for the ML Agent Shootair. The project is developed using Python, C# and Unity, and it requires Python and Conda for setup.
 
 ## Prerequisites
 
 Before you begin, make sure you have the following installed on your machine:
 
-- Python
-- Conda
+- [Python + Conda](https://www.anaconda.com/download)
 
 ## Installation Process
 
@@ -25,7 +24,8 @@ Follow the steps below to set up the project on your local machine:
      ```
 
 3. **Run Installation Script:**
-   - The installation script will automatically clone the Unity [ML Agents](https://github.com/Unity-Technologies/ml-agents) repo into the Packages folder inside the project and setup the python environment named mlagents via conda.
+   The installation script will automatically clone the Unity [ML Agents](https://github.com/Unity-Technologies/ml-agents) repo into the Packages folder inside the project and setup the python environment named mlagents via conda.
+   Additionally it will check if PyTorch is working as expected.
    - For Windows users:
      - Open Anaconda Prompt.
      - Navigate to the project directory using the `cd` command.
