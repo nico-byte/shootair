@@ -25,8 +25,8 @@ Follow the steps below to set up the project on your local machine:
      ```
 
 3. **Run Installation Script:**
+   - The installation script will automatically clone the Unity ML Agents repo into the Packages folder inside the project and setup the python environment named mlagents via conda.
    - For Windows users:
-     - The installation script will automatically clone the Unity ML Agents repo into the Packages folder inside the project and setup the python environment named mlagents via conda.
      - Open Anaconda Prompt.
      - Navigate to the project directory using the `cd` command.
      - Execute the install script:
@@ -45,12 +45,12 @@ Follow the steps below to set up the project on your local machine:
        ./install.sh
        ```
 
-4. **Open Project in Unity Hub:**
+5. **Open Project in Unity Hub:**
    - Open Unity Hub.
    - Click on the "Add" button to add the project folder.
    - Select the project folder you cloned in step 2.
 
-5. **Install Unity Editor:**
+6. **Install Unity Editor:**
    - When prompted, Unity Hub will detect the required Unity Editor version.
    - Click on "Install" to download and install the specified Unity Editor version.
 
