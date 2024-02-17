@@ -23,7 +23,7 @@ Follow the steps below to set up the project on your local machine:
      git clone https://github.com/nico-byte/shotair.git
      ```
 
-3. **Run Installation Script:** <br>
+3. **Run Installation Script:**
    - The installation script will automatically clone the Unity [ML Agents](https://github.com/Unity-Technologies/ml-agents) repo into the Packages folder inside the project and setup the python environment named mlagents via conda. Additionally it will check if PyTorch is working as expected.
    - For Windows users:
      - Open Anaconda Prompt.
