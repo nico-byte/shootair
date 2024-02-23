@@ -3,26 +3,33 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Policies;
 
 public class ShootairAgent : Agent
 {
     Rigidbody2D rBody;
+    BehaviorParameters behaviorParameters;
     AgentSettings agentSettings;
-    // Gun properties
     public GameObject bulletPrefab;
-    public GameObject enemyPrefab;
     public Transform firingPoint;
-    public int numberOfTargets = 8;
-    private int enemiesInit;
-    public Transform Enemy;
-    public Transform Bullet;
-    public int warmup = 50000;
+
+    EnvironmentController envController;
+
+    EnvironmentParameters resetParams;
+    
+    void Start()
+    {
+        envController = FindObjectOfType<EnvironmentController>();
+    }
     
     public override void Initialize()
     {
         base.Initialize();
         rBody = GetComponent<Rigidbody2D>();
         agentSettings = FindObjectOfType<AgentSettings>();
+        behaviorParameters = gameObject.GetComponent<BehaviorParameters>();
+
+        resetParams = Academy.Instance.EnvironmentParameters;
     }
 
     void Update()
@@ -30,37 +37,12 @@ public class ShootairAgent : Agent
          Cursor.visible = false;
          Cursor.lockState = CursorLockMode.Locked;
     }
-    
-    public override void OnEpisodeBegin()
-    {
-        if (CompletedEpisodes < warmup)
-        {
-            MaxStep = 1000;
-        } else MaxStep = 10000;
-        
-        enemiesInit = numberOfTargets * 2;
-        
-        this.rBody.angularVelocity = 0;
-        this.rBody.velocity = Vector3.zero;
-        this.transform.localPosition = new Vector3(0, 0, 0);
-        
-        // kill previous instances of enemies
-        Object[] allObjects = FindObjectsOfType(typeof(GameObject));
-        foreach(GameObject obj in allObjects) {
-            if(obj.transform.name == "Enemy(Clone)"){
-                Destroy(obj);
-            }
-        }
 
-        // Move the target to a new spot
-        for (int i = 0; i <= numberOfTargets; i++)
+    void OnCollisionEnter2D(Collision2D c)
+    {
+        if (c.gameObject.CompareTag("target"))
         {
-            Instantiate(enemyPrefab, new Vector3(Random.value * 12 + 4, Random.value * 8 - 4, 0f), Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
-            Instantiate(enemyPrefab, new Vector3(Random.value * - 12 - 4, Random.value * 8 - 4, 0f), Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
-        }
-        if (CompletedEpisodes == warmup)
-        {
-            Debug.Log("Warmup Phase now over. Some Rewards are cut out of the training process.");
+            envController.ResolveEvent(Event.collisionWithTarget);
         }
     }
 
@@ -118,16 +100,8 @@ public class ShootairAgent : Agent
         transform.Rotate(transform.forward * -actionBuffers.ContinuousActions[0] * agentSettings.turnSpeed * Time.fixedDeltaTime);
     }
 
-    /// Moves the agent according to the selected action.
-    /// </summary>
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        if (GameObject.Find("Enemy(Clone)") == null)
-        {
-            AddReward(1f-GetCumulativeReward());
-            Debug.Log("Episode " + CompletedEpisodes + " completed with reward: " + GetCumulativeReward());
-            EndEpisode();
-        }
         MoveAgent(actionBuffers);
     }
 
