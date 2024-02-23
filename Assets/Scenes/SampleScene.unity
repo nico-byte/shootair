@@ -611,6 +611,7 @@ GameObject:
   - component: {fileID: 748349530}
   - component: {fileID: 748349537}
   - component: {fileID: 748349538}
+  - component: {fileID: 748349539}
   m_Layer: 0
   m_Name: ShootairAgent
   m_TagString: agent
@@ -761,12 +762,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 10000
   bulletPrefab: {fileID: 4524749434195352863, guid: af543b097154e8692971764a6b33f5f7, type: 3}
-  enemyPrefab: {fileID: 3245322192379080683, guid: c5e2bb26abc667ad8acbfb8b826740a3, type: 3}
   firingPoint: {fileID: 1847183312}
-  numberOfTargets: 6
-  Enemy: {fileID: 468951232450505503, guid: c5e2bb26abc667ad8acbfb8b826740a3, type: 3}
-  Bullet: {fileID: 4503110043191836608, guid: af543b097154e8692971764a6b33f5f7, type: 3}
-  warmup: 15000
 --- !u!50 &748349535
 Rigidbody2D:
   serializedVersion: 4
@@ -875,6 +871,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453ca7c47309efcf7af5d3eb9a38eb40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootairAgent: {fileID: 748349534}
+  enemy: {fileID: 2568976797945246692, guid: c5e2bb26abc667ad8acbfb8b826740a3, type: 3}
+  bullet: {fileID: 3953439025076092393, guid: af543b097154e8692971764a6b33f5f7, type: 3}
+  enemyPrefab: {fileID: 3245322192379080683, guid: c5e2bb26abc667ad8acbfb8b826740a3, type: 3}
+  AgentsList: []
+  EnemyList: []
+  MaxEnvironmentSteps: 10000
+--- !u!114 &748349539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748349528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e6cb4ff8b04b185816496b34cd85c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numEnemies: 5
 --- !u!1 &880985977
 GameObject:
   m_ObjectHideFlags: 0
