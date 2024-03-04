@@ -16,6 +16,8 @@ public class ShootairAgent : Agent
     EnvironmentController envController;
 
     EnvironmentParameters resetParams;
+
+    // private float currentRotationVelocity = 0.0f;
     
     void Start()
     {
@@ -97,7 +99,13 @@ public class ShootairAgent : Agent
 
         // Apply movement and shoot
         rBody.MovePosition(transform.position + transform.up * forwardAmount * agentSettings.moveSpeed * Time.fixedDeltaTime + transform.right * turnAmount * agentSettings.moveSpeed * Time.fixedDeltaTime);
-        transform.Rotate(transform.forward * -actionBuffers.ContinuousActions[0] * agentSettings.turnSpeed * Time.fixedDeltaTime);
+        
+        float rawRotationInput = -actionBuffers.ContinuousActions[0];
+        float clampedRotationInput = Mathf.Clamp(rawRotationInput * agentSettings.turnSpeed * Time.fixedDeltaTime * 4, -45, 45);
+        // float smoothRotationInput = Mathf.SmoothDamp(0, clampedRotationInput, ref currentRotationVelocity, 1e-3f);
+        
+        transform.Rotate(transform.forward * clampedRotationInput);
+        // Debug.Log(transform.forward * clampedRotationInput);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -141,7 +149,7 @@ public class ShootairAgent : Agent
         actionsOut.DiscreteActions.Array[0] = forwardAction;
         actionsOut.DiscreteActions.Array[1] = turnAction;
         
-        actionsOut.ContinuousActions.Array[0] = Input.GetAxisRaw("Mouse X");
-        actionsOut.ContinuousActions.Array[1] = Input.GetKey(KeyCode.Space) ? 1f : 0f;
+        actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Mouse X");
+        actionsOut.ContinuousActions.Array[1] = Input.GetKey(KeyCode.Mouse0) ? 1f : 0f;
     }
 }
