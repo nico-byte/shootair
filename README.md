@@ -20,7 +20,7 @@ Follow the steps below to set up the project on your local machine:
 2. **Clone the Project:**
    - Clone this repository to your local machine using Git:
      ```bash
-     git clone https://github.com/nico-byte/shotair.git
+     git clone https://github.com/nico-byte/shootair.git
      ```
 
 3. **Run Installation Script:**
