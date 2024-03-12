@@ -9,6 +9,7 @@ This repository contains the source code for the ML Agent Shootair. The project 
 Before you begin, make sure you have the following installed on your machine:
 
 - [Python + Conda](https://www.anaconda.com/download)
+- [Microsoft Visual Studio C++ Build Tools](https://visualstudio.microsoft.com/de/visual-cpp-build-tools/)(for Windows users)
 
 ## Installation Process
 
