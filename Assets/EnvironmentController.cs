@@ -57,17 +57,18 @@ public class EnvironmentController : MonoBehaviour
             case Event.hitOnTarget:
                 
                 // apply reward to shootair agent
-                shootairAgent.AddReward(1e-6f);
+                shootairAgent.AddReward(1e-4f);
 
                 break;
 
             case Event.collisionWithTarget:
                 // agent loses
-                shootairAgent.AddReward(-1.0f);
+                shootairAgent.SetReward(-.5f);
 
                 currentWave = 0;
 
                 // end episode
+                // Debug.Log(shootairAgent.GetCumulativeReward());
                 shootairAgent.EndEpisode();
                 ResetScene();
                 break;

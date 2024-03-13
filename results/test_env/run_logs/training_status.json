@@ -1,0 +1,65 @@
+{
+    "Shootair": {
+        "checkpoints": [
+            {
+                "steps": 34652,
+                "file_path": "results/test_env/Shootair/Shootair-34652.onnx",
+                "reward": 0.0,
+                "creation_time": 1710357430.4775436,
+                "auxillary_file_paths": [
+                    "results/test_env/Shootair/Shootair-34652.pt"
+                ]
+            },
+            {
+                "steps": 49406,
+                "file_path": "results/test_env/Shootair/Shootair-49406.onnx",
+                "reward": 0.0,
+                "creation_time": 1710357756.6682577,
+                "auxillary_file_paths": [
+                    "results/test_env/Shootair/Shootair-49406.pt"
+                ]
+            },
+            {
+                "steps": 54231,
+                "file_path": "results/test_env/Shootair/Shootair-54231.onnx",
+                "reward": -0.499998492661433,
+                "creation_time": 1710357886.0651624,
+                "auxillary_file_paths": [
+                    "results/test_env/Shootair/Shootair-54231.pt"
+                ]
+            },
+            {
+                "steps": 75288,
+                "file_path": "results/test_env/Shootair/Shootair-75288.onnx",
+                "reward": -0.5,
+                "creation_time": 1710358318.390926,
+                "auxillary_file_paths": [
+                    "results/test_env/Shootair/Shootair-75288.pt"
+                ]
+            },
+            {
+                "steps": 230430,
+                "file_path": "results/test_env/Shootair/Shootair-230430.onnx",
+                "reward": -0.49999230830200336,
+                "creation_time": 1710359367.00341,
+                "auxillary_file_paths": [
+                    "results/test_env/Shootair/Shootair-230430.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 230430,
+            "file_path": "results/test_env/Shootair.onnx",
+            "reward": -0.49999230830200336,
+            "creation_time": 1710359367.00341,
+            "auxillary_file_paths": [
+                "results/test_env/Shootair/Shootair-230430.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "2.1.1+cu121"
+    }
+}

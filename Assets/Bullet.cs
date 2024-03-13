@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		envController = FindObjectOfType<EnvironmentController>();;
+		envController = FindObjectOfType<EnvironmentController>();
 		rb = GetComponent<Rigidbody2D>();
         Destroy(this.gameObject, lifeTime);
 	}
@@ -38,6 +38,7 @@ public class Bullet : MonoBehaviour {
 		if (enemy != null)
 		{
 			enemy.TakeDamage(damage);
+			Debug.Log("Hit!");
 			envController.ResolveEvent(Event.hitOnTarget);
 		}
     }
