@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using JetBrains.Annotations;
 using Unity.MLAgents;
 using UnityEngine;
 
@@ -20,9 +21,14 @@ public class EnvironmentController : MonoBehaviour
     public Enemy enemy;
     public Bullet bullet;
 
+    public GameObject trainingAreaPrefab;
     public GameObject standardEnemyPrefab;
     public GameObject difficultEnemyPrefab;
     public GameObject fastEnemyPrefab;
+    private GameObject agent;
+    private GameObject area;
+
+    public Transform environment;
 
     // public List<ShootairAgent> AgentsList = new List<ShootairAgent>();
     public List<GameObject> EnemyList = new List<GameObject>();
@@ -35,6 +41,11 @@ public class EnvironmentController : MonoBehaviour
     void Start()
     {
         environmentSettings = FindObjectOfType<EnvironmentSettings>();
+        
+        area = Instantiate(trainingAreaPrefab, environment.position, environment.rotation);
+        agent = GameObject.FindGameObjectWithTag("agent");
+
+        agent.transform.parent = area.transform;
 
         ResetScene();
     }
@@ -46,13 +57,13 @@ public class EnvironmentController : MonoBehaviour
             case Event.hitOnTarget:
                 
                 // apply reward to shootair agent
-                shootairAgent.AddReward(1e6f);
+                shootairAgent.AddReward(1e-6f);
 
                 break;
 
             case Event.collisionWithTarget:
                 // agent loses
-                shootairAgent.AddReward(-1f);
+                shootairAgent.AddReward(-1.0f);
 
                 currentWave = 0;
 
@@ -63,7 +74,7 @@ public class EnvironmentController : MonoBehaviour
 
             case Event.killedTarget:
                 // add reward for killing target
-                shootairAgent.AddReward(1e3f);
+                shootairAgent.AddReward(1e-3f);
 
                 break;
 
@@ -71,14 +82,14 @@ public class EnvironmentController : MonoBehaviour
                 if (currentWave >= environmentSettings.waves.Count-1)
                 {
                     currentWave = 0;
-                    shootairAgent.AddReward(.5f);
+                    shootairAgent.AddReward(0.5f);
                     shootairAgent.EndEpisode();
                     ResetScene();
                     break;
                 }
                 
                 // agent wins
-                shootairAgent.AddReward(2e2f);
+                shootairAgent.AddReward(1e-2f);
 
                 // end episode
                 shootairAgent.EpisodeInterrupted();
@@ -130,10 +141,10 @@ public class EnvironmentController : MonoBehaviour
         var randomPosY = Random.Range(0.5f, 3.75f); // depends on jump height
         var randomRot = Random.Range(-45f, 45f);
 
-        shootairAgent.transform.localPosition = new UnityEngine.Vector3(randomPosX, randomPosY, 0);
-        shootairAgent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, randomRot);
+        agent.transform.localPosition = new UnityEngine.Vector3(randomPosX, randomPosY, 0);
+        agent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, randomRot);
 
-        shootairAgent.GetComponent<Rigidbody2D>().velocity = default;
+        agent.GetComponent<Rigidbody2D>().velocity = default;
 
         ResetEnemies();
     }

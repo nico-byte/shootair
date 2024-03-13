@@ -9,6 +9,7 @@ This repository contains the source code for the ML Agent Shootair. The project 
 Before you begin, make sure you have the following installed on your machine:
 
 - [Python + Conda](https://www.anaconda.com/download)
+- [Microsoft Visual Studio C++ Build Tools](https://visualstudio.microsoft.com/de/visual-cpp-build-tools/)(for Windows users)
 
 ## Installation Process
 
@@ -20,7 +21,7 @@ Follow the steps below to set up the project on your local machine:
 2. **Clone the Project:**
    - Clone this repository to your local machine using Git:
      ```bash
-     git clone https://github.com/nico-byte/shotair.git
+     git clone https://github.com/nico-byte/shootair.git
      ```
 
 3. **Run Installation Script:**
