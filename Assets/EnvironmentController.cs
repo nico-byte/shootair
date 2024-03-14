@@ -139,10 +139,10 @@ public class EnvironmentController : MonoBehaviour
         // randomise starting positions and rotations
         var randomPosX = Random.Range(-2f, 2f);
         var randomPosY = Random.Range(0.5f, 3.75f); // depends on jump height
-        var randomRot = Random.Range(-45f, 45f);
+        // var randomRot = Random.Range(-45f, 45f);
 
         agent.transform.localPosition = new UnityEngine.Vector3(randomPosX, randomPosY, 0);
-        agent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, randomRot);
+        agent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, 0);
 
         agent.GetComponent<Rigidbody2D>().velocity = default;
 

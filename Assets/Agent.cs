@@ -4,6 +4,8 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Policies;
+using Unity.VisualScripting.Dependencies.Sqlite;
+using UnityEngine.AI;
 
 public class ShootairAgent : Agent
 {
@@ -17,7 +19,7 @@ public class ShootairAgent : Agent
 
     EnvironmentParameters resetParams;
 
-    // private float currentRotationVelocity = 0.0f;
+    private float targetRotation = 0f;
     
     void Start()
     {
@@ -67,45 +69,105 @@ public class ShootairAgent : Agent
 
     public void MoveAgent(ActionBuffers actionBuffers)
     {
-        float forwardAmount = 0f;       
-        // Convert first action to moving forward or backwards
+        float forwardAmount = 0f;
+        float turnAmount = 0f;
+        
         if (actionBuffers.DiscreteActions[0] == 1f)
-        {
-            forwardAmount = 1f;
+        {            
+            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
+            {
+                forwardAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
+            {
+                turnAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] != 1)
+            {
+                forwardAmount = 1f;
+                targetRotation = 0f;
+            }
         }
         else if (actionBuffers.DiscreteActions[0] == 2f)
-        {
-            forwardAmount = -1f;
+        {            
+            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
+            {
+                forwardAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
+            {
+                turnAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] != 1)
+            {
+                forwardAmount = 1f;
+                targetRotation = 180f;
+            }
         }
 
-        // Convert the second action to turning left or right
-        float turnAmount = 0f;
+        if (transform.eulerAngles.z != targetRotation && actionBuffers.ContinuousActions[0] != 1)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, targetRotation);
+        }
+
         if (actionBuffers.DiscreteActions[1] == 1f)
         {
-            turnAmount = -1f;
+            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
+            {
+                turnAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
+            {
+                forwardAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] != 1)
+            {
+                forwardAmount = 1f;
+                targetRotation = 90f;
+            }
         }
         else if (actionBuffers.DiscreteActions[1] == 2f)
-        {
-            turnAmount = 1f;
+        {   
+            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
+            {
+                turnAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
+            {
+                forwardAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] != 1)
+            {
+                forwardAmount = 1f;
+                targetRotation = 270f;
+            }
         }
-        if ((actionBuffers.ContinuousActions[1] == 1 && agentSettings.fireTimer <= 0f) || (agentSettings.autoShoot && agentSettings.fireTimer <= 0f))
+
+        if (transform.eulerAngles.z != targetRotation && actionBuffers.ContinuousActions[0] != 1)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, targetRotation);
+        }
+
+        // turnAmount = 0f;
+
+        // Apply movement
+        Debug.Log(transform.eulerAngles.z);
+        Vector3 movementForward = transform.up * forwardAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
+        Vector3 movementTurn = transform.right * turnAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
+        Vector3 movement = movementForward + movementTurn;
+        // Vector3 rotation = transform.eulerAngles + new Vector3(0, 0, turnAmount);
+        rBody.MovePosition(transform.position + movement);
+        // transform.rotation = Quaternion.Euler(rotation);
+        
+        if ((actionBuffers.ContinuousActions[0] == 1 && agentSettings.fireTimer <= 0f) || (agentSettings.autoShoot && agentSettings.fireTimer <= 0f))
         {
             Shoot();
             agentSettings.fireTimer = agentSettings.fireRate;
-        } else
+        } 
+        else
         {
             agentSettings.fireTimer -= Time.deltaTime;
         }
-
-        // Apply movement and shoot
-        rBody.MovePosition(transform.position + transform.up * forwardAmount * agentSettings.moveSpeed * Time.fixedDeltaTime + transform.right * turnAmount * agentSettings.moveSpeed * Time.fixedDeltaTime);
-        
-        float rawRotationInput = -actionBuffers.ContinuousActions[0];
-        float clampedRotationInput = Mathf.Clamp(rawRotationInput * agentSettings.turnSpeed * Time.fixedDeltaTime * 4, -45, 45);
-        // float smoothRotationInput = Mathf.SmoothDamp(0, clampedRotationInput, ref currentRotationVelocity, 1e-3f);
-        
-        transform.Rotate(transform.forward * clampedRotationInput);
-        // Debug.Log(transform.forward * clampedRotationInput);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -115,7 +177,8 @@ public class ShootairAgent : Agent
 
     private void Shoot()
     {
-        Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+        GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+        bullet.GetComponent<Rigidbody2D>().velocity += rBody.velocity;
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -149,7 +212,7 @@ public class ShootairAgent : Agent
         actionsOut.DiscreteActions.Array[0] = forwardAction;
         actionsOut.DiscreteActions.Array[1] = turnAction;
         
-        actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Mouse X");
-        actionsOut.ContinuousActions.Array[1] = Input.GetKey(KeyCode.Mouse0) ? 1f : 0f;
+        // actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Mouse X");
+        actionsOut.ContinuousActions.Array[0] = Input.GetKey(KeyCode.Space) ? 1f : 0f;
     }
 }
