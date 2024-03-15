@@ -151,7 +151,7 @@ public class ShootairAgent : Agent
         // turnAmount = 0f;
 
         // Apply movement
-        Debug.Log(transform.eulerAngles.z);
+        // Debug.Log(transform.eulerAngles.z);
         Vector3 movementForward = transform.up * forwardAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
         Vector3 movementTurn = transform.right * turnAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
         Vector3 movement = movementForward + movementTurn;

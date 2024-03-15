@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    public float speed = 1f;
+    // public float speed = 1f;
     private Animator anim;
 
     void Start()
@@ -23,7 +23,7 @@ public class NewBehaviourScript : MonoBehaviour
         if (Input.GetKey(KeyCode.W)) 
         {
             anim.SetBool("walkingUp", true);
-            if (Input.GetKey(KeyCode.Mouse0)) 
+            if (Input.GetKey(KeyCode.Space)) 
             {
                 anim.SetBool("aiming", true);
             }
@@ -57,7 +57,7 @@ public class NewBehaviourScript : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) 
         {
             anim.SetBool("walkingLeft", true);
-            if (Input.GetKey(KeyCode.Mouse0)) 
+            if (Input.GetKey(KeyCode.Space)) 
             {
                 anim.SetBool("aiming", true);
             }
@@ -74,7 +74,7 @@ public class NewBehaviourScript : MonoBehaviour
         if (Input.GetKey(KeyCode.D)) 
         {
             anim.SetBool("walkingRight", true);
-            if (Input.GetKey(KeyCode.Mouse0)) 
+            if (Input.GetKey(KeyCode.Space)) 
             {
                 anim.SetBool("aiming", true);
             }
@@ -89,7 +89,7 @@ public class NewBehaviourScript : MonoBehaviour
         }
         
         // movement in all directions
-        Vector2 movement = new Vector2(direction_right - direction_left, direction_up - direction_down);
-        transform.Translate(movement * speed * Time.deltaTime);
+        // Vector2 movement = new Vector2(direction_right - direction_left, direction_up - direction_down);
+        // transform.Translate(movement * speed * Time.deltaTime);
     }
 }
