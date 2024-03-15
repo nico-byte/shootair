@@ -3,26 +3,37 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Policies;
+using Unity.VisualScripting.Dependencies.Sqlite;
+using UnityEngine.AI;
 
 public class ShootairAgent : Agent
 {
     Rigidbody2D rBody;
+    BehaviorParameters behaviorParameters;
     AgentSettings agentSettings;
-    // Gun properties
     public GameObject bulletPrefab;
-    public GameObject enemyPrefab;
     public Transform firingPoint;
-    public int numberOfTargets = 8;
-    private int enemiesInit;
-    public Transform Enemy;
-    public Transform Bullet;
-    public int warmup = 50000;
+
+    EnvironmentController envController;
+
+    EnvironmentParameters resetParams;
+
+    private float targetRotation = 0f;
+    
+    void Start()
+    {
+        envController = FindObjectOfType<EnvironmentController>();
+    }
     
     public override void Initialize()
     {
         base.Initialize();
         rBody = GetComponent<Rigidbody2D>();
         agentSettings = FindObjectOfType<AgentSettings>();
+        behaviorParameters = gameObject.GetComponent<BehaviorParameters>();
+
+        resetParams = Academy.Instance.EnvironmentParameters;
     }
 
     void Update()
@@ -30,37 +41,12 @@ public class ShootairAgent : Agent
          Cursor.visible = false;
          Cursor.lockState = CursorLockMode.Locked;
     }
-    
-    public override void OnEpisodeBegin()
-    {
-        if (CompletedEpisodes < warmup)
-        {
-            MaxStep = 1000;
-        } else MaxStep = 10000;
-        
-        enemiesInit = numberOfTargets * 2;
-        
-        this.rBody.angularVelocity = 0;
-        this.rBody.velocity = Vector3.zero;
-        this.transform.localPosition = new Vector3(0, 0, 0);
-        
-        // kill previous instances of enemies
-        Object[] allObjects = FindObjectsOfType(typeof(GameObject));
-        foreach(GameObject obj in allObjects) {
-            if(obj.transform.name == "Enemy(Clone)"){
-                Destroy(obj);
-            }
-        }
 
-        // Move the target to a new spot
-        for (int i = 0; i <= numberOfTargets; i++)
+    void OnCollisionEnter2D(Collision2D c)
+    {
+        if (c.gameObject.CompareTag("target"))
         {
-            Instantiate(enemyPrefab, new Vector3(Random.value * 12 + 4, Random.value * 8 - 4, 0f), Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
-            Instantiate(enemyPrefab, new Vector3(Random.value * - 12 - 4, Random.value * 8 - 4, 0f), Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
-        }
-        if (CompletedEpisodes == warmup)
-        {
-            Debug.Log("Warmup Phase now over. Some Rewards are cut out of the training process.");
+            envController.ResolveEvent(Event.collisionWithTarget);
         }
     }
 
@@ -83,57 +69,116 @@ public class ShootairAgent : Agent
 
     public void MoveAgent(ActionBuffers actionBuffers)
     {
-        float forwardAmount = 0f;       
-        // Convert first action to moving forward or backwards
+        float forwardAmount = 0f;
+        float turnAmount = 0f;
+        
         if (actionBuffers.DiscreteActions[0] == 1f)
-        {
-            forwardAmount = 1f;
+        {            
+            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
+            {
+                forwardAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
+            {
+                turnAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] != 1)
+            {
+                forwardAmount = 1f;
+                targetRotation = 0f;
+            }
         }
         else if (actionBuffers.DiscreteActions[0] == 2f)
-        {
-            forwardAmount = -1f;
+        {            
+            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
+            {
+                forwardAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
+            {
+                turnAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] != 1)
+            {
+                forwardAmount = 1f;
+                targetRotation = 180f;
+            }
         }
 
-        // Convert the second action to turning left or right
-        float turnAmount = 0f;
+        if (transform.eulerAngles.z != targetRotation && actionBuffers.ContinuousActions[0] != 1)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, targetRotation);
+        }
+
         if (actionBuffers.DiscreteActions[1] == 1f)
         {
-            turnAmount = -1f;
+            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
+            {
+                turnAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
+            {
+                forwardAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] != 1)
+            {
+                forwardAmount = 1f;
+                targetRotation = 90f;
+            }
         }
         else if (actionBuffers.DiscreteActions[1] == 2f)
-        {
-            turnAmount = 1f;
+        {   
+            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
+            {
+                turnAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
+            {
+                forwardAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
+            }
+            else if (actionBuffers.ContinuousActions[0] != 1)
+            {
+                forwardAmount = 1f;
+                targetRotation = 270f;
+            }
         }
-        if ((actionBuffers.ContinuousActions[1] == 1 && agentSettings.fireTimer <= 0f) || (agentSettings.autoShoot && agentSettings.fireTimer <= 0f))
+
+        if (transform.eulerAngles.z != targetRotation && actionBuffers.ContinuousActions[0] != 1)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, targetRotation);
+        }
+
+        // turnAmount = 0f;
+
+        // Apply movement
+        Debug.Log(transform.eulerAngles.z);
+        Vector3 movementForward = transform.up * forwardAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
+        Vector3 movementTurn = transform.right * turnAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
+        Vector3 movement = movementForward + movementTurn;
+        // Vector3 rotation = transform.eulerAngles + new Vector3(0, 0, turnAmount);
+        rBody.MovePosition(transform.position + movement);
+        // transform.rotation = Quaternion.Euler(rotation);
+        
+        if ((actionBuffers.ContinuousActions[0] == 1 && agentSettings.fireTimer <= 0f) || (agentSettings.autoShoot && agentSettings.fireTimer <= 0f))
         {
             Shoot();
             agentSettings.fireTimer = agentSettings.fireRate;
-        } else
+        } 
+        else
         {
             agentSettings.fireTimer -= Time.deltaTime;
         }
-
-        // Apply movement and shoot
-        rBody.MovePosition(transform.position + transform.up * forwardAmount * agentSettings.moveSpeed * Time.fixedDeltaTime + transform.right * turnAmount * agentSettings.moveSpeed * Time.fixedDeltaTime);
-        transform.Rotate(transform.forward * -actionBuffers.ContinuousActions[0] * agentSettings.turnSpeed * Time.fixedDeltaTime);
     }
 
-    /// Moves the agent according to the selected action.
-    /// </summary>
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        if (GameObject.Find("Enemy(Clone)") == null)
-        {
-            AddReward(1f-GetCumulativeReward());
-            Debug.Log("Episode " + CompletedEpisodes + " completed with reward: " + GetCumulativeReward());
-            EndEpisode();
-        }
         MoveAgent(actionBuffers);
     }
 
     private void Shoot()
     {
-        Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+        GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+        bullet.GetComponent<Rigidbody2D>().velocity += rBody.velocity;
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -167,7 +212,7 @@ public class ShootairAgent : Agent
         actionsOut.DiscreteActions.Array[0] = forwardAction;
         actionsOut.DiscreteActions.Array[1] = turnAction;
         
-        actionsOut.ContinuousActions.Array[0] = Input.GetAxisRaw("Mouse X");
-        actionsOut.ContinuousActions.Array[1] = Input.GetKey(KeyCode.Space) ? 1f : 0f;
+        // actionsOut.ContinuousActions.Array[0] = Input.GetAxis("Mouse X");
+        actionsOut.ContinuousActions.Array[0] = Input.GetKey(KeyCode.Space) ? 1f : 0f;
     }
 }

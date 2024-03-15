@@ -7,19 +7,18 @@ using UnityEditor;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour {
+	EnvironmentController envController;
 
 	public float speed = 20f;
 	public int damage = 40;
 	public Rigidbody2D rb;
 
-	// public GameObject impactEffect;
-	public static bool hitTarget = false;
-	public static bool hitWall = false;
-	public static bool kill = false;
     public float lifeTime = 3f;
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
+		envController = FindObjectOfType<EnvironmentController>();;
 		rb = GetComponent<Rigidbody2D>();
         Destroy(this.gameObject, lifeTime);
 	}
@@ -31,17 +30,6 @@ public class Bullet : MonoBehaviour {
 
 	private void OnTriggerEnter2D (Collider2D other)
     {
-        ShootairAgent agent = other.GetComponent<ShootairAgent>();
-		if (other.CompareTag("target"))
-		{
-			hitTarget = true;
-			// Debug.Log("Hit Target!");
-		}
-		if (other.CompareTag("wall"))
-		{
-			hitWall = true;
-			// Debug.Log("Hit Wall!");
-		}
 		if (other.gameObject.CompareTag("target") || other.gameObject.CompareTag("wall"))
 		{
 			Destroy(gameObject);
@@ -50,6 +38,7 @@ public class Bullet : MonoBehaviour {
 		if (enemy != null)
 		{
 			enemy.TakeDamage(damage);
+			envController.ResolveEvent(Event.hitOnTarget);
 		}
     }
 }
