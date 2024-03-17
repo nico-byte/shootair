@@ -19,10 +19,11 @@ public class ShootairAgent : Agent
     EnvironmentController envController;
 
     EnvironmentParameters resetParams;    
+    
     void Start()
     {
         envController = FindObjectOfType<EnvironmentController>();
-        anim = GetComponent<Animator>();
+        anim = gameObject.GetComponent<Animator>();
     }
     
     public override void Initialize()
@@ -39,73 +40,63 @@ public class ShootairAgent : Agent
     {
          Cursor.visible = false;
          Cursor.lockState = CursorLockMode.Locked;
+ 
+        // Check for space key
+        switch (Input.GetKey(KeyCode.Space))
+        {
+            case true:
+                anim.SetBool("aiming", true);
+                break;
+            default:
+                anim.SetBool("aiming", false);
+                break;
+        }
 
-         if (Input.GetKey(KeyCode.W)) 
+        // Check for directional keys
+        bool walkingUp = Input.GetKey(KeyCode.W);
+        bool walkingDown = Input.GetKey(KeyCode.S);
+        bool walkingLeft = Input.GetKey(KeyCode.A);
+        bool walkingRight = Input.GetKey(KeyCode.D);
+
+        // Set animation bools based on directional keys
+        switch (walkingUp)
         {
-            anim.SetBool("walkingUp", true);
-            if (Input.GetKey(KeyCode.Space)) 
-            {
-                anim.SetBool("aiming", true);
-            }
-            else 
-            {
-                anim.SetBool("aiming", false);
-            }
-        }   
-        else 
-        {
-            anim.SetBool("walkingUp", false);
+            case var value when value == true:
+                anim.SetBool("walkingUp", true);
+                break;
+            default:
+                anim.SetBool("walkingUp", false);
+                break;
         }
-        // animation for walking down
-        if (Input.GetKey(KeyCode.S)) 
+
+        switch (walkingDown)
         {
-            anim.SetBool("walkingDown", true);
-            if (Input.GetKey(KeyCode.Mouse0)) 
-            {
-                anim.SetBool("aiming", true);
-            }
-            else 
-            {
-                anim.SetBool("aiming", false);
-            }
-        }   
-        else 
-        {
-            anim.SetBool("walkingDown", false);
+            case var value when value == true:
+                anim.SetBool("walkingDown", true);
+                break;
+            default:
+                anim.SetBool("walkingDown", false);
+                break;
         }
-        // animation for walking left
-        if (Input.GetKey(KeyCode.A)) 
+
+        switch (walkingLeft)
         {
-            anim.SetBool("walkingLeft", true);
-            if (Input.GetKey(KeyCode.Space)) 
-            {
-                anim.SetBool("aiming", true);
-            }
-            else 
-            {
-                anim.SetBool("aiming", false);
-            }
-        }   
-        else 
-        {
-            anim.SetBool("walkingLeft", false);
+            case var value when value == true:
+                anim.SetBool("walkingLeft", true);
+                break;
+            default:
+                anim.SetBool("walkingLeft", false);
+                break;
         }
-        // animation for walking right
-        if (Input.GetKey(KeyCode.D)) 
+
+        switch (walkingRight)
         {
-            anim.SetBool("walkingRight", true);
-            if (Input.GetKey(KeyCode.Space)) 
-            {
-                anim.SetBool("aiming", true);
-            }
-            else 
-            {
-                anim.SetBool("aiming", false);
-            }
-        }   
-        else 
-        {
-            anim.SetBool("walkingRight", false);
+            case var value when value == true:
+                anim.SetBool("walkingRight", true);
+                break;
+            default:
+                anim.SetBool("walkingRight", false);
+                break;
         }
     }
 
@@ -143,14 +134,17 @@ public class ShootairAgent : Agent
         {   
             if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
             {
+                anim.SetBool("aiming", true);
                 forwardAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
             }
             else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
             {
+                anim.SetBool("aiming", true);
                 turnAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
             }
             else if (actionBuffers.ContinuousActions[0] != 1)
             {
+                anim.SetBool("aiming", false);
                 forwardAmount = 1f;
                 firingPoint.transform.rotation = Quaternion.Euler(0, 0, 0f);
             }
@@ -159,14 +153,17 @@ public class ShootairAgent : Agent
         {            
             if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
             {
+                anim.SetBool("aiming", true);
                 forwardAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
             }
             else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
             {
+                anim.SetBool("aiming", true);
                 turnAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
             }
             else if (actionBuffers.ContinuousActions[0] != 1)
             {
+                anim.SetBool("aiming", false);
                 forwardAmount = -1f;
                 firingPoint.transform.rotation = Quaternion.Euler(0, 0, 180f);
             }
