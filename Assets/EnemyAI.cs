@@ -25,7 +25,7 @@ public class EnemyAI : MonoBehaviour {
     
 	public void Awake()
 	{
-		// Get a reference to the player's transform
+		// Get a reference to the agent's transform
         target = GameObject.FindGameObjectWithTag("agent").transform;
  
         // Get a reference to the FSM (animator)
@@ -62,14 +62,14 @@ public class EnemyAI : MonoBehaviour {
 
 	private void Update()
     {
-        // If chasing get the position of the player and point towards it
+        // If chasing get the position of the agent and point towards it
         if (chasing)
         {
             direction = target.position - transform.position;
             rotateEnemy();
         }
  
-        // Unless the zombie is waiting then move
+        // Unless the enemy is waiting then move
         if (!waiting)
         {
             if (!chasing)
@@ -93,7 +93,6 @@ public class EnemyAI : MonoBehaviour {
                     rBody.MovePosition(Vector2.MoveTowards(rBody.position, rBody.position + rayDir, speed * Time.fixedDeltaTime));
                     Debug.DrawRay(rBody.position, rayDir);
                 }
-            // transform.Translate(speed * direction * Time.deltaTime, Space.World);
         }
         
     }
@@ -164,7 +163,6 @@ public class EnemyAI : MonoBehaviour {
 	public void TakeDamage (int damage)
 	{
 		health -= damage;
-        // ShootairAgent agent = GetComponent<ShootairAgent>();
 		if (health <= 0)
 		{
 			Destroy(gameObject);
