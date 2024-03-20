@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour {
 		{
 			Destroy(gameObject);
 		}
-		Enemy enemy = other.GetComponent<Enemy>();
+		EnemyAI enemy = other.GetComponent<EnemyAI>();
 		if (enemy != null)
 		{
 			enemy.TakeDamage(damage);
