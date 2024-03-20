@@ -18,6 +18,19 @@ TagManager:
   - p8
   - p9
   - obstacle
+  - p10
+  - p11
+  - p12
+  - p13
+  - p14
+  - p15
+  - p16
+  - p17
+  - p18
+  - p19
+  - p20
+  - p21
+  - p22
   layers:
   - Default
   - TransparentFX
