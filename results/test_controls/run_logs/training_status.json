@@ -1,0 +1,38 @@
+{
+    "Shootair": {
+        "checkpoints": [
+            {
+                "steps": 5209,
+                "file_path": "results/test_controls/Shootair/Shootair-5209.onnx",
+                "reward": -0.5,
+                "creation_time": 1711045900.8232465,
+                "auxillary_file_paths": [
+                    "results/test_controls/Shootair/Shootair-5209.pt"
+                ]
+            },
+            {
+                "steps": 11875,
+                "file_path": "results/test_controls/Shootair/Shootair-11875.onnx",
+                "reward": -0.5,
+                "creation_time": 1711046190.6448736,
+                "auxillary_file_paths": [
+                    "results/test_controls/Shootair/Shootair-11875.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 11875,
+            "file_path": "results/test_controls/Shootair.onnx",
+            "reward": -0.5,
+            "creation_time": 1711046190.6448736,
+            "auxillary_file_paths": [
+                "results/test_controls/Shootair/Shootair-11875.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "2.1.1+cu121"
+    }
+}

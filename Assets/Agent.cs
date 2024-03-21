@@ -4,7 +4,6 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Policies;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine.AI;
 
 public class ShootairAgent : Agent
