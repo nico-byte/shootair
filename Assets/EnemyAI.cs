@@ -102,6 +102,7 @@ public class EnemyAI : MonoBehaviour {
         if (chasing)
         {
             Chase();
+            rotateEnemy();
         }
  
         // Unless the enemy is waiting then move
@@ -110,6 +111,7 @@ public class EnemyAI : MonoBehaviour {
             if (!chasing)
             {
                 enemy.SetDestination(new UnityEngine.Vector3(waypoints[currentTarget].position.x, waypoints[currentTarget].position.y, transform.position.z));
+                rotateEnemy();
             }
         }
         
@@ -133,22 +135,34 @@ public class EnemyAI : MonoBehaviour {
         do
         {
             nextPoint =  Random.Range(0, waypoints.Length - 1);
-            SetNextPoint();
         }
         while (nextPoint == currentTarget);
  
         currentTarget = nextPoint;
+        
+        direction = waypoints[currentTarget].position - transform.position;
+        rotateEnemy();
     }
  
     public void Chase()
     {
         // Load the direction of the player
         enemy.SetDestination(new UnityEngine.Vector3(target.position.x, target.position.y, transform.position.z));
+        direction = target.position - transform.position;
+        rotateEnemy();
     }
  
     public void StopChasing()
     {
         chasing = false;
+    }
+
+    private void rotateEnemy()
+    {
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        UnityEngine.Quaternion lookRotation = UnityEngine.Quaternion.Euler(new UnityEngine.Vector3(0, 0, angle - 90));
+        transform.rotation = UnityEngine.Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5);
+        direction = direction.normalized;
     }
  
     public void StartChasing()

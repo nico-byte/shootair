@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.h8man.2d.navmeshplus": {
+      "version": "file:NavMeshPlus",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.2d.animation": {
       "version": "9.1.0",
       "depth": 1,
