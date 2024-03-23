@@ -64,7 +64,13 @@ public class EnemyAI : MonoBehaviour {
         Transform point20 = GameObject.Find("p20").transform;
         Transform point21 = GameObject.Find("p22").transform;
         Transform point22 = GameObject.Find("p22").transform;
-        waypoints = new Transform[22] {
+        Transform point23 = GameObject.Find("p23").transform;
+        Transform point24 = GameObject.Find("p24").transform;
+        Transform point25 = GameObject.Find("p25").transform;
+        Transform point26 = GameObject.Find("p26").transform;
+        Transform point27 = GameObject.Find("p27").transform;
+        Transform point28 = GameObject.Find("p28").transform;
+        waypoints = new Transform[28] {
             point1,
             point2,
             point3,
@@ -86,7 +92,13 @@ public class EnemyAI : MonoBehaviour {
             point19,
             point20,
             point21,
-            point22
+            point22,
+            point23,
+            point24,
+            point25,
+            point26,
+            point27,
+            point28
         };
 	}
 	
@@ -94,6 +106,9 @@ public class EnemyAI : MonoBehaviour {
 	{
 		envController = FindObjectOfType<EnvironmentController>();
         rBody = GetComponent<Rigidbody2D>();
+
+        GameObject mates = GameObject.FindGameObjectWithTag("target");     
+        Physics2D.IgnoreCollision(mates.GetComponent<Collider2D>(), GetComponent<Collider2D>());
 	}
 
 	private void Update()

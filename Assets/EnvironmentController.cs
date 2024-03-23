@@ -164,7 +164,7 @@ public class EnvironmentController : MonoBehaviour
 
         if (enemyCount[0] > 0)
         {
-            spawn(standardEnemyPrefab, enemyCount[0], 8, 2.5f);
+            spawn(standardEnemyPrefab, enemyCount[0], 11, 2.5f);
         }
 
         if (enemyCount[1] > 0)
@@ -183,7 +183,7 @@ public class EnvironmentController : MonoBehaviour
         // Spawn enemies in spawn area
         for (int i = 1; i <= quant; i++)
         {
-            GameObject newGO = Instantiate(prefab, new UnityEngine.Vector3(xOffset * (Random.value * .1f), yOffset, 0f), UnityEngine.Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
+            GameObject newGO = Instantiate(prefab, new UnityEngine.Vector3(xOffset * Random.value, yOffset, 0f), UnityEngine.Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
             EnemyList.Add(newGO);
         }
     }
