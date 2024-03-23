@@ -18,7 +18,7 @@ public class EnvironmentController : MonoBehaviour
     EnvironmentSettings environmentSettings;
 
     public ShootairAgent shootairAgent;
-    public Enemy enemy;
+    public EnemyAI enemy;
     public Bullet bullet;
 
     public GameObject trainingAreaPrefab;
@@ -93,7 +93,7 @@ public class EnvironmentController : MonoBehaviour
                 shootairAgent.AddReward(1e-2f);
 
                 // end episode
-                shootairAgent.EpisodeInterrupted();
+                // shootairAgent.EpisodeInterrupted();
 
                 currentWave++;
                 ResetEnemies();
@@ -138,12 +138,12 @@ public class EnvironmentController : MonoBehaviour
         */
 
         // randomise starting positions and rotations
-        var randomPosX = Random.Range(-2f, 2f);
-        var randomPosY = Random.Range(0.5f, 3.75f); // depends on jump height
-        var randomRot = Random.Range(-45f, 45f);
+        // var randomPosX = Random.Range(-2f, 2f);
+        // var randomPosY = Random.Range(0.5f, 3.75f); // depends on jump height
+        // var randomRot = Random.Range(-45f, 45f);
 
-        agent.transform.localPosition = new UnityEngine.Vector3(randomPosX, randomPosY, 0);
-        agent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, randomRot);
+        agent.transform.localPosition = new UnityEngine.Vector3(0, 0, 0);
+        agent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, 0);
 
         agent.GetComponent<Rigidbody2D>().velocity = default;
 
@@ -164,26 +164,26 @@ public class EnvironmentController : MonoBehaviour
 
         if (enemyCount[0] > 0)
         {
-            spawn(standardEnemyPrefab, enemyCount[0], 16, 4);
+            spawn(standardEnemyPrefab, enemyCount[0], 8, 2.5f);
         }
 
         if (enemyCount[1] > 0)
         {
-            spawn(fastEnemyPrefab, enemyCount[1], -16, 6);
+            spawn(fastEnemyPrefab, enemyCount[1], 7, -8);
         }
 
         if (enemyCount[2] > 0)
         {
-            spawn(difficultEnemyPrefab, enemyCount[2], -16, 2);
+            spawn(difficultEnemyPrefab, enemyCount[2], -8, -8);
         }
     }
 
-    void spawn(GameObject prefab, int quant, int xOffset, int yOffset)
+    void spawn(GameObject prefab, int quant, float xOffset, float yOffset)
     {
         // Spawn enemies in spawn area
         for (int i = 1; i <= quant; i++)
         {
-            GameObject newGO = Instantiate(prefab, new UnityEngine.Vector3(Random.value * xOffset, Random.value * yOffset, 0f), UnityEngine.Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
+            GameObject newGO = Instantiate(prefab, new UnityEngine.Vector3(xOffset * (Random.value * .1f), yOffset, 0f), UnityEngine.Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
             EnemyList.Add(newGO);
         }
     }
