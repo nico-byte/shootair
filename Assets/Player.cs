@@ -2,10 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    // public float speed = 1f;
+    public float speed = 1f;
     private Animator anim;
+    private bool state_lock = false;
+
+    public enum PlayerState 
+    {
+        Idle,
+        Moving,
+        MovingAiming
+    }
+    private PlayerState current_state = PlayerState.Idle;
+
+    private void SetState(PlayerState newState)
+    {
+        if (!state_lock) 
+        {
+            current_state = newState;
+            switch(current_state) 
+            {
+                case PlayerState.Idle:
+                    anim.Play("Idle");
+                    break;
+                case PlayerState.Moving:
+                    anim.Play("Moving");
+                    break;
+                case PlayerState.MovingAiming:
+                    anim.Play("MovingAiming");
+                    break;        
+            }
+        }
+    }
 
     void Start()
     {
@@ -19,77 +48,44 @@ public class NewBehaviourScript : MonoBehaviour
         float direction_left = -Input.GetAxis("Horizontal");
         float direction_right = Input.GetAxis("Horizontal");
 
-        // animation for walking up
-        if (Input.GetKey(KeyCode.W)) 
+        // Movement "upside" + animations
+        if (direction_up != 0) 
         {
-            anim.SetBool("walkingUp", true);
-            if (Input.GetKey(KeyCode.Space)) 
-            {
-                anim.SetBool("aiming", true);
-            }
-            else 
-            {
-                anim.SetBool("aiming", false);
-            }
-        }   
-        else 
-        {
-            anim.SetBool("walkingUp", false);
+            SetState(PlayerState.Moving);
+            anim.SetFloat("xMove", 0f);
+            anim.SetFloat("yMove", direction_up);
+            Vector2 movement_up = Vector2.up * speed * direction_up * Time.deltaTime;
+            transform.Translate(movement_up);
         }
-        // animation for walking down
-        if (Input.GetKey(KeyCode.S)) 
+
+        // Movement "downside" + animations
+        if (direction_down != 0) 
         {
-            anim.SetBool("walkingDown", true);
-            if (Input.GetKey(KeyCode.Mouse0)) 
-            {
-                anim.SetBool("aiming", true);
-            }
-            else 
-            {
-                anim.SetBool("aiming", false);
-            }
-        }   
-        else 
-        {
-            anim.SetBool("walkingDown", false);
-        }
-        // animation for walking left
-        if (Input.GetKey(KeyCode.A)) 
-        {
-            anim.SetBool("walkingLeft", true);
-            if (Input.GetKey(KeyCode.Space)) 
-            {
-                anim.SetBool("aiming", true);
-            }
-            else 
-            {
-                anim.SetBool("aiming", false);
-            }
-        }   
-        else 
-        {
-            anim.SetBool("walkingLeft", false);
-        }
-        // animation for walking right
-        if (Input.GetKey(KeyCode.D)) 
-        {
-            anim.SetBool("walkingRight", true);
-            if (Input.GetKey(KeyCode.Space)) 
-            {
-                anim.SetBool("aiming", true);
-            }
-            else 
-            {
-                anim.SetBool("aiming", false);
-            }
-        }   
-        else 
-        {
-            anim.SetBool("walkingRight", false);
+            SetState(PlayerState.Moving);
+            anim.SetFloat("xMove", 0f);
+            anim.SetFloat("yMove", direction_down);
+            Vector2 movement_down = Vector2.down * speed * direction_down * Time.deltaTime;
+            transform.Translate(movement_down);
         }
         
-        // movement in all directions
-        // Vector2 movement = new Vector2(direction_right - direction_left, direction_up - direction_down);
-        // transform.Translate(movement * speed * Time.deltaTime);
+        // Movement "leftside" + animations
+        if (direction_left != 0) 
+        {
+            SetState(PlayerState.Moving);
+            anim.SetFloat("xMove", direction_left);
+            anim.SetFloat("yMove", 0f);
+            Vector2 movement_left = Vector2.left * speed * direction_left * Time.deltaTime;
+            transform.Translate(movement_left);
+        }
+
+        // Movement "rightside" + animations
+        if (direction_right != 0) 
+        {
+            SetState(PlayerState.Moving);
+            anim.SetFloat("xMove", direction_right);
+            anim.SetFloat("yMove", 0f);
+            Vector2 movement_right = Vector2.right * speed * direction_right * Time.deltaTime;
+            transform.Translate(movement_right);
+        }
     }
 }
