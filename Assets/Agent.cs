@@ -141,16 +141,16 @@ public class ShootairAgent : Agent
             switch (transform.eulerAngles.z)
             {
                 case 0:
-                    forwardAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
+                    forwardAmount += transform.eulerAngles.z == 0 ? 1f : -1f;
                     break;
                 case 180:
-                    forwardAmount = transform.eulerAngles.z == 180 ? 1f : -1f;
+                    forwardAmount += transform.eulerAngles.z == 180 ? 1f : -1f;
                     break;
                 case 90:
-                    turnAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
+                    turnAmount += transform.eulerAngles.z == 90 ? 1f : -1f;
                     break;
                 case 270:
-                    turnAmount = transform.eulerAngles.z == 270 ? 1f : -1f;
+                    turnAmount += transform.eulerAngles.z == 270 ? 1f : -1f;
                     break;
                 default:
                     // Edge Case??
@@ -164,16 +164,16 @@ public class ShootairAgent : Agent
             switch (transform.eulerAngles.z)
             {
                 case 0:
-                    forwardAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
+                    forwardAmount += transform.eulerAngles.z == 0 ? -1f : 1f;
                     break;
                 case 180:
-                    forwardAmount = transform.eulerAngles.z == 180 ? -1f : 1f;
+                    forwardAmount += transform.eulerAngles.z == 180 ? -1f : 1f;
                     break;
                 case 90:
-                    turnAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
+                    turnAmount += transform.eulerAngles.z == 90 ? -1f : 1f;
                     break;
                 case 270:
-                    turnAmount = transform.eulerAngles.z == 270 ? -1f : 1f;
+                    turnAmount += transform.eulerAngles.z == 270 ? -1f : 1f;
                     break;
                 default:
                     // Edge Case??
@@ -187,16 +187,16 @@ public class ShootairAgent : Agent
             switch (transform.eulerAngles.z)
             {
                 case 0:
-                    turnAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
+                    turnAmount += transform.eulerAngles.z == 0 ? -1f : 1f;
                     break;
                 case 180:
-                    turnAmount = transform.eulerAngles.z == 180 ? -1f : 1f;
+                    turnAmount += transform.eulerAngles.z == 180 ? -1f : 1f;
                     break;
                 case 90:
-                    forwardAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
+                    forwardAmount += transform.eulerAngles.z == 90 ? 1f : -1f;
                     break;
                 case 270:
-                    forwardAmount = transform.eulerAngles.z == 270 ? 1f : -1f;
+                    forwardAmount += transform.eulerAngles.z == 270 ? 1f : -1f;
                     break;
                 default:
                     // Edge Case??
@@ -210,16 +210,16 @@ public class ShootairAgent : Agent
             switch (transform.eulerAngles.z)
             {
                 case 0:
-                    turnAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
+                    turnAmount += transform.eulerAngles.z == 0 ? 1f : -1f;
                     break;
                 case 180:
-                    turnAmount = transform.eulerAngles.z == 180 ? 1f : -1f;
+                    turnAmount += transform.eulerAngles.z == 180 ? 1f : -1f;
                     break;
                 case 90:
-                    forwardAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
+                    forwardAmount += transform.eulerAngles.z == 90 ? -1f : 1f;
                     break;
                 case 270:
-                    forwardAmount = transform.eulerAngles.z == 270 ? -1f : 1f;
+                    forwardAmount += transform.eulerAngles.z == 270 ? -1f : 1f;
                     break;
                 default:
                     // Edge Case??
