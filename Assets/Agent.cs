@@ -43,10 +43,38 @@ public class ShootairAgent : Agent
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        // Check for space key
-        bool spacePressed = Input.GetKey(KeyCode.Space);
+        if(agentSettings.selfplay) {
+            MoveAgent();
+        }
+    }
 
+    void OnCollisionEnter2D(Collision2D c)
+    {
+        if (c.gameObject.CompareTag("target"))
+        {
+            envController.ResolveEvent(Event.collisionWithTarget);
+        }
+    }
 
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        // Agent position
+        sensor.AddObservation(this.transform.localPosition);
+
+        // Agent rotation
+        sensor.AddObservation(this.transform.rotation);
+
+        // Firing point position and rotation
+        sensor.AddObservation(firingPoint.position);
+        sensor.AddObservation(firingPoint.rotation);
+
+        // Agent velocity
+        sensor.AddObservation(rBody.velocity.x);
+        sensor.AddObservation(rBody.velocity.y);
+    }
+
+    public void MoveAgent()
+    {
         // Check for directional keys
         bool walkingUp = Input.GetKey(KeyCode.W);
         bool walkingDown = Input.GetKey(KeyCode.S);
@@ -59,7 +87,9 @@ public class ShootairAgent : Agent
         bool[] speedCheck = { walkingUp, walkingDown, walkingLeft, walkingRight };
         bool[] shootCheck = { upArrow, downArrow, leftArrow, rightArrow };
         int amountSpeed = speedCheck.Count(c => c);
-        int amountShoot = shootCheck.Count(c => c);
+        int amountShoot = shootCheck.Count(b => b);
+        Debug.Log("amountSpeed: "+amountSpeed);
+        Debug.Log("amountShoot: "+amountShoot);
 
         // MOVEMENT Animation
         if (amountShoot == 0)
@@ -111,14 +141,20 @@ public class ShootairAgent : Agent
             switch (transform.eulerAngles.z)
             {
                 case 0:
-                case 180:
                     forwardAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
                     break;
+                case 180:
+                    forwardAmount = transform.eulerAngles.z == 180 ? 1f : -1f;
+                    break;
                 case 90:
-                case 270:
                     turnAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
                     break;
+                case 270:
+                    turnAmount = transform.eulerAngles.z == 270 ? 1f : -1f;
+                    break;
                 default:
+                    // Edge Case??
+                    Debug.Log("Edge Case called: "+"walkingUp");
                     forwardAmount = 1f;
                     break;
             }
@@ -128,14 +164,20 @@ public class ShootairAgent : Agent
             switch (transform.eulerAngles.z)
             {
                 case 0:
-                case 180:
                     forwardAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
                     break;
+                case 180:
+                    forwardAmount = transform.eulerAngles.z == 180 ? -1f : 1f;
+                    break;
                 case 90:
-                case 270:
                     turnAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
                     break;
+                case 270:
+                    turnAmount = transform.eulerAngles.z == 270 ? -1f : 1f;
+                    break;
                 default:
+                    // Edge Case??
+                    Debug.Log("Edge Case called: "+"walkingDown");
                     forwardAmount = -1f;
                     break;
             }
@@ -145,14 +187,20 @@ public class ShootairAgent : Agent
             switch (transform.eulerAngles.z)
             {
                 case 0:
-                case 180:
                     turnAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
                     break;
+                case 180:
+                    turnAmount = transform.eulerAngles.z == 180 ? -1f : 1f;
+                    break;
                 case 90:
-                case 270:
                     forwardAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
                     break;
+                case 270:
+                    forwardAmount = transform.eulerAngles.z == 270 ? 1f : -1f;
+                    break;
                 default:
+                    // Edge Case??
+                    Debug.Log("Edge Case called: "+"walkingLeft");
                     turnAmount = -1f;
                     break;
             }
@@ -162,14 +210,20 @@ public class ShootairAgent : Agent
             switch (transform.eulerAngles.z)
             {
                 case 0:
-                case 180:
                     turnAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
                     break;
+                case 180:
+                    turnAmount = transform.eulerAngles.z == 180 ? 1f : -1f;
+                    break;
                 case 90:
-                case 270:
                     forwardAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
                     break;
+                case 270:
+                    forwardAmount = transform.eulerAngles.z == 270 ? -1f : 1f;
+                    break;
                 default:
+                    // Edge Case??
+                    Debug.Log("Edge Case called: "+"walkingRight");
                     turnAmount = 1f;
                     break;
             }
@@ -249,129 +303,11 @@ public class ShootairAgent : Agent
         rBody.MovePosition(transform.position + movement);
     }
 
-    void OnCollisionEnter2D(Collision2D c)
-    {
-        if (c.gameObject.CompareTag("target"))
-        {
-            envController.ResolveEvent(Event.collisionWithTarget);
-        }
-    }
-
-    public override void CollectObservations(VectorSensor sensor)
-    {
-        // Agent position
-        sensor.AddObservation(this.transform.localPosition);
-
-        // Agent rotation
-        sensor.AddObservation(this.transform.rotation);
-
-        // Firing point position and rotation
-        sensor.AddObservation(firingPoint.position);
-        sensor.AddObservation(firingPoint.rotation);
-
-        // Agent velocity
-        sensor.AddObservation(rBody.velocity.x);
-        sensor.AddObservation(rBody.velocity.y);
-    }
-
-    public void MoveAgent(ActionBuffers actionBuffers)
-    {
-        float forwardAmount = 0f;
-        float turnAmount = 0f;
-
-
-        if (actionBuffers.DiscreteActions[0] == 1f)
-        {
-            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
-            {
-                anim.SetBool("aiming", true);
-                forwardAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
-            {
-                anim.SetBool("aiming", true);
-                turnAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] != 1)
-            {
-                anim.SetBool("aiming", false);
-                forwardAmount = 1f;
-                firingPoint.transform.rotation = Quaternion.Euler(0, 0, 0f);
-            }
-        }
-        else if (actionBuffers.DiscreteActions[0] == 2f)
-        {
-            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
-            {
-                anim.SetBool("aiming", true);
-                forwardAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
-            {
-                anim.SetBool("aiming", true);
-                turnAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] != 1)
-            {
-                anim.SetBool("aiming", false);
-                forwardAmount = -1f;
-                firingPoint.transform.rotation = Quaternion.Euler(0, 0, 180f);
-            }
-        }
-
-        if (actionBuffers.DiscreteActions[1] == 1f)
-        {
-            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
-            {
-                turnAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
-            {
-                forwardAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] != 1)
-            {
-                turnAmount = -1f;
-                firingPoint.transform.rotation = Quaternion.Euler(0, 0, 90f);
-            }
-        }
-        else if (actionBuffers.DiscreteActions[1] == 2f)
-        {
-            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
-            {
-                turnAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
-            {
-                forwardAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] != 1)
-            {
-                turnAmount = 1f;
-                firingPoint.transform.rotation = Quaternion.Euler(0, 0, 270f);
-            }
-        }
-
-        // Apply movement
-        Vector3 movementForward = transform.up * forwardAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
-        Vector3 movementTurn = transform.right * turnAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
-        Vector3 movement = movementForward + movementTurn;
-        rBody.MovePosition(transform.position + movement);
-
-        if ((actionBuffers.ContinuousActions[0] == 1 && agentSettings.fireTimer <= 0f) || (agentSettings.autoShoot && agentSettings.fireTimer <= 0f))
-        {
-            Shoot();
-            agentSettings.fireTimer = agentSettings.fireRate;
-        }
-        else
-        {
-            agentSettings.fireTimer -= Time.deltaTime;
-        }
-    }
-
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        //MoveAgent(actionBuffers);
+        if (!agentSettings.selfplay) {
+            MoveAgent();
+        }
     }
 
     private void Shoot()
