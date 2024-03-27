@@ -347,6 +347,9 @@ public class ShootairAgent : Agent
         actionsOut.DiscreteActions.Array[0] = forwardAction;
         actionsOut.DiscreteActions.Array[1] = turnAction;
 
-        actionsOut.ContinuousActions.Array[0] = Input.GetKey(KeyCode.Space) ? 1f : 0f;
+        actionsOut.DiscreteActions.Array[2] = Input.GetKey(KeyCode.UpArrow) ? 1 : 0;
+        actionsOut.DiscreteActions.Array[3] = Input.GetKey(KeyCode.DownArrow) ? 1 : 0;
+        actionsOut.DiscreteActions.Array[4] = Input.GetKey(KeyCode.LeftArrow) ? 1 : 0;
+        actionsOut.DiscreteActions.Array[5] = Input.GetKey(KeyCode.RightArrow) ? 1 : 0;
     }
 }
