@@ -2,15 +2,6 @@
     "Shootair": {
         "checkpoints": [
             {
-                "steps": 6487,
-                "file_path": "results\\test\\Shootair\\Shootair-6487.onnx",
-                "reward": -0.011494252873563218,
-                "creation_time": 1711562631.2310784,
-                "auxillary_file_paths": [
-                    "results\\test\\Shootair\\Shootair-6487.pt"
-                ]
-            },
-            {
                 "steps": 7232,
                 "file_path": "results\\test\\Shootair\\Shootair-7232.onnx",
                 "reward": -0.5,
@@ -45,15 +36,24 @@
                 "auxillary_file_paths": [
                     "results\\test\\Shootair\\Shootair-10872.pt"
                 ]
+            },
+            {
+                "steps": 14011,
+                "file_path": "results\\test\\Shootair\\Shootair-14011.onnx",
+                "reward": -0.449170006159693,
+                "creation_time": 1711567815.6348352,
+                "auxillary_file_paths": [
+                    "results\\test\\Shootair\\Shootair-14011.pt"
+                ]
             }
         ],
         "final_checkpoint": {
-            "steps": 10872,
+            "steps": 14011,
             "file_path": "results\\test\\Shootair.onnx",
-            "reward": -0.01694915254237288,
-            "creation_time": 1711563706.3620834,
+            "reward": -0.449170006159693,
+            "creation_time": 1711567815.6348352,
             "auxillary_file_paths": [
-                "results\\test\\Shootair\\Shootair-10872.pt"
+                "results\\test\\Shootair\\Shootair-14011.pt"
             ]
         }
     },
