@@ -6,5 +6,6 @@ public class AgentSettings : MonoBehaviour
     public float turnSpeed = 60f;
     public float fireRate = 0.5f;
     public bool autoShoot = false;
+    public bool selfplay = true;
     public float fireTimer;
 }

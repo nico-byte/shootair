@@ -1,15 +1,18 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
-using Unity.MLAgents.Policies;
-using UnityEngine.AI;
+using System.Linq;
+using System;
+using Unity.VisualScripting;
+//using Unity.MLAgents.Policies;
+//using Unity.VisualScripting.Dependencies.Sqlite;
+//using UnityEngine.AI;
 
 public class ShootairAgent : Agent
 {
+    // VARIABLES
     Rigidbody2D rBody;
-    BehaviorParameters behaviorParameters;
     AgentSettings agentSettings;
     private Animator anim;
     public GameObject bulletPrefab;
@@ -17,85 +20,31 @@ public class ShootairAgent : Agent
 
     EnvironmentController envController;
 
-    EnvironmentParameters resetParams;    
-    
+    //BehaviorParameters behaviorParameters;
+    //EnvironmentParameters resetParams;    
+
     void Start()
     {
         envController = FindObjectOfType<EnvironmentController>();
         anim = gameObject.GetComponent<Animator>();
     }
-    
+
     public override void Initialize()
     {
         base.Initialize();
         rBody = GetComponent<Rigidbody2D>();
         agentSettings = FindObjectOfType<AgentSettings>();
-        behaviorParameters = gameObject.GetComponent<BehaviorParameters>();
-
-        resetParams = Academy.Instance.EnvironmentParameters;
+        //behaviorParameters = gameObject.GetComponent<BehaviorParameters>();
+        //resetParams = Academy.Instance.EnvironmentParameters;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-         Cursor.visible = false;
-         Cursor.lockState = CursorLockMode.Locked;
- 
-        // Check for space key
-        switch (Input.GetKey(KeyCode.Space))
-        {
-            case true:
-                anim.SetBool("aiming", true);
-                break;
-            default:
-                anim.SetBool("aiming", false);
-                break;
-        }
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
-        // Check for directional keys
-        bool walkingUp = Input.GetKey(KeyCode.W);
-        bool walkingDown = Input.GetKey(KeyCode.S);
-        bool walkingLeft = Input.GetKey(KeyCode.A);
-        bool walkingRight = Input.GetKey(KeyCode.D);
-
-        // Set animation bools based on directional keys
-        switch (walkingUp)
-        {
-            case var value when value == true:
-                anim.SetBool("walkingUp", true);
-                break;
-            default:
-                anim.SetBool("walkingUp", false);
-                break;
-        }
-
-        switch (walkingDown)
-        {
-            case var value when value == true:
-                anim.SetBool("walkingDown", true);
-                break;
-            default:
-                anim.SetBool("walkingDown", false);
-                break;
-        }
-
-        switch (walkingLeft)
-        {
-            case var value when value == true:
-                anim.SetBool("walkingLeft", true);
-                break;
-            default:
-                anim.SetBool("walkingLeft", false);
-                break;
-        }
-
-        switch (walkingRight)
-        {
-            case var value when value == true:
-                anim.SetBool("walkingRight", true);
-                break;
-            default:
-                anim.SetBool("walkingRight", false);
-                break;
+        if(agentSettings.selfplay) {
+            MoveAgent();
         }
     }
 
@@ -111,7 +60,7 @@ public class ShootairAgent : Agent
     {
         // Agent position
         sensor.AddObservation(this.transform.localPosition);
-        
+
         // Agent rotation
         sensor.AddObservation(this.transform.rotation);
 
@@ -124,103 +73,241 @@ public class ShootairAgent : Agent
         sensor.AddObservation(rBody.velocity.y);
     }
 
-    public void MoveAgent(ActionBuffers actionBuffers)
+    public void MoveAgent()
     {
+        // Check for directional keys
+        bool walkingUp = Input.GetKey(KeyCode.W);
+        bool walkingDown = Input.GetKey(KeyCode.S);
+        bool walkingLeft = Input.GetKey(KeyCode.A);
+        bool walkingRight = Input.GetKey(KeyCode.D);
+        bool upArrow = Input.GetKey(KeyCode.UpArrow);
+        bool downArrow = Input.GetKey(KeyCode.DownArrow);
+        bool leftArrow = Input.GetKey(KeyCode.LeftArrow);
+        bool rightArrow = Input.GetKey(KeyCode.RightArrow);
+        bool[] speedCheck = { walkingUp, walkingDown, walkingLeft, walkingRight };
+        bool[] shootCheck = { upArrow, downArrow, leftArrow, rightArrow };
+        int amountSpeed = speedCheck.Count(c => c);
+        int amountShoot = shootCheck.Count(b => b);
+        Debug.Log("amountSpeed: "+amountSpeed);
+        Debug.Log("amountShoot: "+amountShoot);
+
+        // MOVEMENT Animation
+        if (amountShoot == 0)
+        {
+            switch (walkingUp)
+            {
+                case true:
+                    anim.SetBool("walkingUp", true);
+                    break;
+                default:
+                    anim.SetBool("walkingUp", false);
+                    break;
+            }
+            switch (walkingDown)
+            {
+                case true:
+                    anim.SetBool("walkingDown", true);
+                    break;
+                default:
+                    anim.SetBool("walkingDown", false);
+                    break;
+            }
+            switch (walkingLeft)
+            {
+                case true:
+                    anim.SetBool("walkingLeft", true);
+                    break;
+                default:
+                    anim.SetBool("walkingLeft", false);
+                    break;
+            }
+            switch (walkingRight)
+            {
+                case true:
+                    anim.SetBool("walkingRight", true);
+                    break;
+                default:
+                    anim.SetBool("walkingRight", false);
+                    break;
+            }
+        }
+
+        // MOVEMENT
         float forwardAmount = 0f;
         float turnAmount = 0f;
-        
-        if (actionBuffers.DiscreteActions[0] == 1f)
-        {   
-            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
+
+        if (walkingUp)
+        {
+            switch (transform.eulerAngles.z)
             {
-                anim.SetBool("aiming", true);
-                forwardAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
+                case 0:
+                    forwardAmount += transform.eulerAngles.z == 0 ? 1f : -1f;
+                    break;
+                case 180:
+                    forwardAmount += transform.eulerAngles.z == 180 ? 1f : -1f;
+                    break;
+                case 90:
+                    turnAmount += transform.eulerAngles.z == 90 ? 1f : -1f;
+                    break;
+                case 270:
+                    turnAmount += transform.eulerAngles.z == 270 ? 1f : -1f;
+                    break;
+                default:
+                    // Edge Case??
+                    Debug.Log("Edge Case called: "+"walkingUp");
+                    forwardAmount = 1f;
+                    break;
             }
-            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
+        }
+        if (walkingDown)
+        {
+            switch (transform.eulerAngles.z)
             {
-                anim.SetBool("aiming", true);
-                turnAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
+                case 0:
+                    forwardAmount += transform.eulerAngles.z == 0 ? -1f : 1f;
+                    break;
+                case 180:
+                    forwardAmount += transform.eulerAngles.z == 180 ? -1f : 1f;
+                    break;
+                case 90:
+                    turnAmount += transform.eulerAngles.z == 90 ? -1f : 1f;
+                    break;
+                case 270:
+                    turnAmount += transform.eulerAngles.z == 270 ? -1f : 1f;
+                    break;
+                default:
+                    // Edge Case??
+                    Debug.Log("Edge Case called: "+"walkingDown");
+                    forwardAmount = -1f;
+                    break;
             }
-            else if (actionBuffers.ContinuousActions[0] != 1)
+        }
+        if (walkingLeft)
+        {
+            switch (transform.eulerAngles.z)
             {
-                anim.SetBool("aiming", false);
-                forwardAmount = 1f;
+                case 0:
+                    turnAmount += transform.eulerAngles.z == 0 ? -1f : 1f;
+                    break;
+                case 180:
+                    turnAmount += transform.eulerAngles.z == 180 ? -1f : 1f;
+                    break;
+                case 90:
+                    forwardAmount += transform.eulerAngles.z == 90 ? 1f : -1f;
+                    break;
+                case 270:
+                    forwardAmount += transform.eulerAngles.z == 270 ? 1f : -1f;
+                    break;
+                default:
+                    // Edge Case??
+                    Debug.Log("Edge Case called: "+"walkingLeft");
+                    turnAmount = -1f;
+                    break;
+            }
+        }
+        if (walkingRight)
+        {
+            switch (transform.eulerAngles.z)
+            {
+                case 0:
+                    turnAmount += transform.eulerAngles.z == 0 ? 1f : -1f;
+                    break;
+                case 180:
+                    turnAmount += transform.eulerAngles.z == 180 ? 1f : -1f;
+                    break;
+                case 90:
+                    forwardAmount += transform.eulerAngles.z == 90 ? -1f : 1f;
+                    break;
+                case 270:
+                    forwardAmount += transform.eulerAngles.z == 270 ? -1f : 1f;
+                    break;
+                default:
+                    // Edge Case??
+                    Debug.Log("Edge Case called: "+"walkingRight");
+                    turnAmount = 1f;
+                    break;
+            }
+        }
+
+        // SHOOTING
+        switch (upArrow)
+        {
+            case true:
+                anim.SetBool("walkingUp", true);
+                anim.SetBool("walkingDown", false);
+                anim.SetBool("walkingLeft", false);
+                anim.SetBool("walkingRight", false);
                 firingPoint.transform.rotation = Quaternion.Euler(0, 0, 0f);
-            }
+                break;
         }
-        else if (actionBuffers.DiscreteActions[0] == 2f)
-        {            
-            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
-            {
-                anim.SetBool("aiming", true);
-                forwardAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
-            {
-                anim.SetBool("aiming", true);
-                turnAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] != 1)
-            {
-                anim.SetBool("aiming", false);
-                forwardAmount = -1f;
+        switch (downArrow)
+        {
+            case true:
+                anim.SetBool("walkingUp", false);
+                anim.SetBool("walkingDown", true);
+                anim.SetBool("walkingLeft", false);
+                anim.SetBool("walkingRight", false);
                 firingPoint.transform.rotation = Quaternion.Euler(0, 0, 180f);
-            }
+                break;
         }
-
-        if (actionBuffers.DiscreteActions[1] == 1f)
+        switch (leftArrow)
         {
-            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
-            {
-                turnAmount = transform.eulerAngles.z == 0 ? -1f : 1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
-            {
-                forwardAmount = transform.eulerAngles.z == 90 ? 1f : -1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] != 1)
-            {
-                turnAmount = -1f;
+            case true:
+                anim.SetBool("walkingUp", false);
+                anim.SetBool("walkingDown", false);
+                anim.SetBool("walkingLeft", true);
+                anim.SetBool("walkingRight", false);
                 firingPoint.transform.rotation = Quaternion.Euler(0, 0, 90f);
-            }
+                break;
         }
-        else if (actionBuffers.DiscreteActions[1] == 2f)
-        {   
-            if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 0 || transform.eulerAngles.z == 180))
-            {
-                turnAmount = transform.eulerAngles.z == 0 ? 1f : -1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] == 1 && (transform.eulerAngles.z == 90 || transform.eulerAngles.z == 270))
-            {
-                forwardAmount = transform.eulerAngles.z == 90 ? -1f : 1f;
-            }
-            else if (actionBuffers.ContinuousActions[0] != 1)
-            {
-                turnAmount = 1f;
+        switch (rightArrow)
+        {
+            case true:
+                anim.SetBool("walkingUp", false);
+                anim.SetBool("walkingDown", false);
+                anim.SetBool("walkingLeft", false);
+                anim.SetBool("walkingRight", true);
                 firingPoint.transform.rotation = Quaternion.Euler(0, 0, 270f);
-            }
+                break;
         }
 
-        // Apply movement
-        Vector3 movementForward = transform.up * forwardAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
-        Vector3 movementTurn = transform.right * turnAmount * agentSettings.moveSpeed * Time.fixedDeltaTime;
-        Vector3 movement = movementForward + movementTurn;
-        rBody.MovePosition(transform.position + movement);
-        
-        if ((actionBuffers.ContinuousActions[0] == 1 && agentSettings.fireTimer <= 0f) || (agentSettings.autoShoot && agentSettings.fireTimer <= 0f))
+        if (amountShoot >= 1)
         {
-            Shoot();
-            agentSettings.fireTimer = agentSettings.fireRate;
-        } 
+            if (agentSettings.fireTimer <= 0f)
+            {
+                Shoot();
+                agentSettings.fireTimer = agentSettings.fireRate;
+            }
+            else
+            {
+                agentSettings.fireTimer -= Time.deltaTime;
+            }
+        }
         else
         {
-            agentSettings.fireTimer -= Time.deltaTime;
+            if (agentSettings.autoShoot && agentSettings.fireTimer <= 0f)
+            {
+                Shoot();
+                agentSettings.fireTimer = agentSettings.fireRate;
+            }
+            else
+            {
+                agentSettings.fireTimer -= Time.deltaTime;
+            }
         }
+
+        float diagionalSpeed = amountSpeed > 1 ? 0.707106781f : 1f;
+        Vector3 movementForward = agentSettings.moveSpeed * forwardAmount * Time.fixedDeltaTime * transform.up * diagionalSpeed;
+        Vector3 movementTurn = agentSettings.moveSpeed * turnAmount * Time.fixedDeltaTime * transform.right * diagionalSpeed;
+        Vector3 movement = movementForward + movementTurn;
+        rBody.MovePosition(transform.position + movement);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        MoveAgent(actionBuffers);
+        if (!agentSettings.selfplay) {
+            MoveAgent();
+        }
     }
 
     private void Shoot()
@@ -234,7 +321,7 @@ public class ShootairAgent : Agent
     {
         int forwardAction = 0;
         int turnAction = 0;
-        
+
         if (Input.GetKey(KeyCode.W))
         {
             // move forward
@@ -242,10 +329,10 @@ public class ShootairAgent : Agent
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            // move forward
+            // move backwards
             forwardAction = 2;
         }
-        
+
         if (Input.GetKey(KeyCode.A))
         {
             // turn left
@@ -260,7 +347,10 @@ public class ShootairAgent : Agent
         // Put the actions into the array
         actionsOut.DiscreteActions.Array[0] = forwardAction;
         actionsOut.DiscreteActions.Array[1] = turnAction;
-        
-        actionsOut.ContinuousActions.Array[0] = Input.GetKey(KeyCode.Space) ? 1f : 0f;
+
+        actionsOut.DiscreteActions.Array[2] = Input.GetKey(KeyCode.UpArrow) ? 1 : 0;
+        actionsOut.DiscreteActions.Array[3] = Input.GetKey(KeyCode.DownArrow) ? 1 : 0;
+        actionsOut.DiscreteActions.Array[4] = Input.GetKey(KeyCode.LeftArrow) ? 1 : 0;
+        actionsOut.DiscreteActions.Array[5] = Input.GetKey(KeyCode.RightArrow) ? 1 : 0;
     }
 }
