@@ -493,6 +493,7 @@ MonoBehaviour:
   turnSpeed: 90
   fireRate: 0.5
   autoShoot: 0
+  selfplay: 0
   fireTimer: 0
 --- !u!4 &2787998084377841205
 Transform:
@@ -544,7 +545,7 @@ MonoBehaviour:
     NumStackedVectorObservations: 3
     m_ActionSpec:
       m_NumContinuousActions: 2
-      BranchSizes: 0200000002000000
+      BranchSizes: 020000000200000002000000020000000200000002000000
     VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 0

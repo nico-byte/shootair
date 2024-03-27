@@ -44,7 +44,7 @@ public class ShootairAgent : Agent
         Cursor.lockState = CursorLockMode.Locked;
 
         if(agentSettings.selfplay) {
-            MoveAgent();
+            MoveAgent(ActionBuffers.Empty);
         }
     }
 
@@ -73,23 +73,46 @@ public class ShootairAgent : Agent
         sensor.AddObservation(rBody.velocity.y);
     }
 
-    public void MoveAgent()
+    public void MoveAgent(ActionBuffers actionBuffers)
     {
         // Check for directional keys
-        bool walkingUp = Input.GetKey(KeyCode.W);
-        bool walkingDown = Input.GetKey(KeyCode.S);
-        bool walkingLeft = Input.GetKey(KeyCode.A);
-        bool walkingRight = Input.GetKey(KeyCode.D);
-        bool upArrow = Input.GetKey(KeyCode.UpArrow);
-        bool downArrow = Input.GetKey(KeyCode.DownArrow);
-        bool leftArrow = Input.GetKey(KeyCode.LeftArrow);
-        bool rightArrow = Input.GetKey(KeyCode.RightArrow);
+        bool walkingUp = false;
+        bool walkingDown = false;
+        bool walkingLeft = false;
+        bool walkingRight = false;
+        bool upArrow = false;
+        bool downArrow = false;
+        bool leftArrow = false;
+        bool rightArrow = false;
+        
+        if (agentSettings.selfplay)
+        {
+            walkingUp = Input.GetKey(KeyCode.W);
+            walkingDown = Input.GetKey(KeyCode.S);
+            walkingLeft = Input.GetKey(KeyCode.A);
+            walkingRight = Input.GetKey(KeyCode.D);
+            upArrow = Input.GetKey(KeyCode.UpArrow);
+            downArrow = Input.GetKey(KeyCode.DownArrow);
+            leftArrow = Input.GetKey(KeyCode.LeftArrow);
+            rightArrow = Input.GetKey(KeyCode.RightArrow);
+        }
+        else
+        {
+            walkingUp = actionBuffers.DiscreteActions[0] == 1;
+            walkingDown = actionBuffers.DiscreteActions[0] == 2;
+            walkingLeft = actionBuffers.DiscreteActions[1] == 1;
+            walkingRight = actionBuffers.DiscreteActions[1] == 2;
+            upArrow = actionBuffers.DiscreteActions[2] == 1;
+            downArrow = actionBuffers.DiscreteActions[3] == 1;
+            leftArrow = actionBuffers.DiscreteActions[4] == 1;
+            rightArrow = actionBuffers.DiscreteActions[5] == 1;
+        }
         bool[] speedCheck = { walkingUp, walkingDown, walkingLeft, walkingRight };
         bool[] shootCheck = { upArrow, downArrow, leftArrow, rightArrow };
         int amountSpeed = speedCheck.Count(c => c);
         int amountShoot = shootCheck.Count(b => b);
-        Debug.Log("amountSpeed: "+amountSpeed);
-        Debug.Log("amountShoot: "+amountShoot);
+        // Debug.Log("amountSpeed: "+amountSpeed);
+        // Debug.Log("amountShoot: "+amountShoot);
 
         // MOVEMENT Animation
         if (amountShoot == 0)
@@ -306,7 +329,7 @@ public class ShootairAgent : Agent
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         if (!agentSettings.selfplay) {
-            MoveAgent();
+            MoveAgent(actionBuffers);
         }
     }
 
