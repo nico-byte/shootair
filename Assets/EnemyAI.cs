@@ -125,7 +125,10 @@ public class EnemyAI : MonoBehaviour {
         {
             if (!chasing)
             {
-                enemy.SetDestination(new UnityEngine.Vector3(waypoints[currentTarget].position.x, waypoints[currentTarget].position.y, transform.position.z));
+                NavMeshPath path = new NavMeshPath();
+                enemy.CalculatePath(waypoints[currentTarget].position, path);
+                enemy.SetPath(path);
+                // enemy.SetDestination(new UnityEngine.Vector3(waypoints[currentTarget].position.x, waypoints[currentTarget].position.y, transform.position.z));
                 rotateEnemy();
             }
         }
@@ -162,7 +165,10 @@ public class EnemyAI : MonoBehaviour {
     public void Chase()
     {
         // Load the direction of the player
-        enemy.SetDestination(new UnityEngine.Vector3(target.position.x, target.position.y, transform.position.z));
+        NavMeshPath path = new NavMeshPath();
+        enemy.CalculatePath(target.position, path);
+        enemy.SetPath(path);
+        // enemy.SetDestination(new UnityEngine.Vector3(target.position.x, target.position.y, transform.position.z));
         direction = target.position - transform.position;
         rotateEnemy();
     }

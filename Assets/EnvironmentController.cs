@@ -105,9 +105,10 @@ public class EnvironmentController : MonoBehaviour
     void FixedUpdate()
     {
         resetTimer += 1;
+        // Debug.Log(resetTimer);
         if (resetTimer >= MaxEnvironmentSteps && MaxEnvironmentSteps > 0)
         {
-            shootairAgent.EpisodeInterrupted();
+            shootairAgent.EndEpisode();
             ResetScene();
         }
 
@@ -142,7 +143,10 @@ public class EnvironmentController : MonoBehaviour
         // var randomPosY = Random.Range(0.5f, 3.75f); // depends on jump height
         // var randomRot = Random.Range(-45f, 45f);
 
-        agent.transform.localPosition = new UnityEngine.Vector3(0, 0, 0);
+        // Debug.Log("Resetting Scene!");
+        resetTimer = 0;
+        
+        agent.transform.position = new UnityEngine.Vector3(0, -4, 0);
         agent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, 0);
 
         agent.GetComponent<Rigidbody2D>().velocity = default;
@@ -184,6 +188,7 @@ public class EnvironmentController : MonoBehaviour
         for (int i = 1; i <= quant; i++)
         {
             GameObject newGO = Instantiate(prefab, new UnityEngine.Vector3(xOffset * Random.value, yOffset, 0f), UnityEngine.Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
+            newGO.transform.parent = area.transform;
             EnemyList.Add(newGO);
         }
     }

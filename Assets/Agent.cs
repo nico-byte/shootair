@@ -226,6 +226,7 @@ public class ShootairAgent : Agent
     private void Shoot()
     {
         GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+        bullet.transform.parent = firingPoint;
         bullet.GetComponent<Rigidbody2D>().velocity += rBody.velocity;
     }
 
