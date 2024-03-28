@@ -28,6 +28,8 @@ public class EnemyAI : MonoBehaviour {
 
 	EnvironmentController envController;
 	public int health;
+
+    private UnityEngine.Vector3 originalPosition;
     
 	public void Awake()
 	{
@@ -106,13 +108,10 @@ public class EnemyAI : MonoBehaviour {
 	{
 		envController = FindObjectOfType<EnvironmentController>();
         rBody = GetComponent<Rigidbody2D>();
-
-        GameObject mates = GameObject.FindGameObjectWithTag("target");     
-        Physics2D.IgnoreCollision(mates.GetComponent<Collider2D>(), GetComponent<Collider2D>());
 	}
 
 	private void Update()
-    {
+    {   
         // If chasing get the position of the agent and point towards it
         if (chasing)
         {
@@ -129,7 +128,9 @@ public class EnemyAI : MonoBehaviour {
                 enemy.CalculatePath(waypoints[currentTarget].position, path);
                 enemy.SetPath(path);
                 // enemy.SetDestination(new UnityEngine.Vector3(waypoints[currentTarget].position.x, waypoints[currentTarget].position.y, transform.position.z));
+                direction = transform.position - originalPosition;
                 rotateEnemy();
+                originalPosition = transform.position;
             }
         }
         
@@ -179,11 +180,12 @@ public class EnemyAI : MonoBehaviour {
     }
 
     private void rotateEnemy()
-    {
+    {   
+        direction = direction.normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         UnityEngine.Quaternion lookRotation = UnityEngine.Quaternion.Euler(new UnityEngine.Vector3(0, 0, angle - 90));
         transform.rotation = UnityEngine.Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5);
-        direction = direction.normalized;
+        
     }
  
     public void StartChasing()

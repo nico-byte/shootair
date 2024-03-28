@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7979250632934208142}
   - component: {fileID: 774212518654054129}
   - component: {fileID: 6348601346396686555}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: DifficultEnemy
   m_TagString: target
   m_Icon: {fileID: 0}
@@ -145,7 +145,7 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -221,7 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7505198822590769469}
   - component: {fileID: 8378682196363069459}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 5021138365847682717}
   - component: {fileID: 3832918644182044990}
   - component: {fileID: 3615941085599833077}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: vision_cone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

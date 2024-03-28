@@ -349,13 +349,13 @@ MonoBehaviour:
   m_DetectableTags:
   - target
   - wall
-  m_RaysPerDirection: 15
-  m_MaxRayDegrees: 105
+  m_RaysPerDirection: 20
+  m_MaxRayDegrees: 180
   m_SphereCastRadius: 0
   m_RayLength: 50
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 72
   m_ObservationStacks: 3
   m_AlternatingRayOrder: 1
   m_UseBatchedRaycasts: 0
@@ -545,7 +545,7 @@ MonoBehaviour:
     NumStackedVectorObservations: 3
     m_ActionSpec:
       m_NumContinuousActions: 2
-      BranchSizes: 010000000100000001000000010000000100000001000000
+      BranchSizes: 020000000200000002000000020000000200000002000000
     VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
@@ -765,7 +765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 2787998084377841205}
-  follow: 1
+  follow: 0
 --- !u!212 &8264301648172343488
 SpriteRenderer:
   m_ObjectHideFlags: 0

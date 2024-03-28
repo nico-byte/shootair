@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6253682457067037385}
   - component: {fileID: 5927264097152334540}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 712843228287069632}
   - component: {fileID: 2166579575901464058}
   - component: {fileID: 6191360293184082331}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: FastEnemy
   m_TagString: target
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -283,7 +283,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 4666576604683608151}
   - component: {fileID: 9032425211105140199}
   - component: {fileID: 7436715024160439333}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: vision_cone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
