@@ -307,7 +307,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.4
 --- !u!1 &346598573703094272
 GameObject:
   m_ObjectHideFlags: 0
@@ -545,7 +545,7 @@ MonoBehaviour:
     NumStackedVectorObservations: 3
     m_ActionSpec:
       m_NumContinuousActions: 2
-      BranchSizes: 020000000200000002000000020000000200000002000000
+      BranchSizes: 010000000100000001000000010000000100000001000000
     VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
@@ -697,7 +697,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 1
   m_UseAutoMass: 1
-  m_Mass: 0.7604666
+  m_Mass: 1.3519405
   m_LinearDrag: 2
   m_AngularDrag: 2
   m_GravityScale: 0
