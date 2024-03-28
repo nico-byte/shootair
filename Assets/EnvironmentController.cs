@@ -132,7 +132,7 @@ public class EnvironmentController : MonoBehaviour
             ResolveEvent(Event.killedAllTargets);
         }
 
-        shootairAgent.AddReward(-1e-4f);
+        shootairAgent.AddReward(1e-4f);
     }
 
     public void ResetScene()

@@ -5,6 +5,7 @@ using Unity.MLAgents.Actuators;
 using System.Linq;
 using System;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.Sqlite;
 //using Unity.MLAgents.Policies;
 //using Unity.VisualScripting.Dependencies.Sqlite;
 //using UnityEngine.AI;
@@ -14,6 +15,7 @@ public class ShootairAgent : Agent
     // VARIABLES
     Rigidbody2D rBody;
     AgentSettings agentSettings;
+    BufferSensorComponent bufferSensor;
     private Animator anim;
     public GameObject bulletPrefab;
     public Transform firingPoint;
@@ -36,6 +38,7 @@ public class ShootairAgent : Agent
         agentSettings = FindObjectOfType<AgentSettings>();
         //behaviorParameters = gameObject.GetComponent<BehaviorParameters>();
         //resetParams = Academy.Instance.EnvironmentParameters;
+        bufferSensor = gameObject.GetComponent<BufferSensorComponent>();
     }
 
     void FixedUpdate()
@@ -76,6 +79,37 @@ public class ShootairAgent : Agent
         // Agent velocity
         sensor.AddObservation(rBody.velocity.x);
         sensor.AddObservation(rBody.velocity.y);
+
+        // Surrounding enemies
+        // Collect observation about the 20 closest enemies
+        var enemies = envController.EnemyList.ToArray();
+        // Sort by closest :
+        Array.Sort(enemies, (a, b) => (Vector3.Distance(a.transform.position, transform.position)).CompareTo(Vector3.Distance(b.transform.position, transform.position)));
+        int numEnemyAdded = 0;
+
+        foreach (GameObject b in enemies)
+        {
+            if (numEnemyAdded >= 20)
+            {
+                break;
+            }
+
+            if (b == null || !b.activeInHierarchy)
+            {
+                continue;
+            }
+
+            Rigidbody2D bRigid = b.GetComponent<Rigidbody2D>();
+            float[] bulletObservation = new float[]{
+                (b.transform.position.x - transform.position.x) / 45f, // relative position
+                (b.transform.position.y - transform.position.y) / 45f,
+                bRigid.velocity.x,
+                bRigid.velocity.y
+            };
+            numEnemyAdded += 1;
+
+            bufferSensor.AppendObservation(bulletObservation);
+        };
     }
 
     public void MoveAgent(ActionBuffers actionBuffers)
