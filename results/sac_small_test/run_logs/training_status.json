@@ -9,15 +9,33 @@
                 "auxillary_file_paths": [
                     "results\\sac_small_test\\Shootair\\Shootair-129429.pt"
                 ]
+            },
+            {
+                "steps": 134286,
+                "file_path": "results\\sac_small_test\\Shootair\\Shootair-134286.onnx",
+                "reward": null,
+                "creation_time": 1711717724.0168126,
+                "auxillary_file_paths": [
+                    "results\\sac_small_test\\Shootair\\Shootair-134286.pt"
+                ]
+            },
+            {
+                "steps": 440296,
+                "file_path": "results\\sac_small_test\\Shootair\\Shootair-440296.onnx",
+                "reward": null,
+                "creation_time": 1711729716.6456277,
+                "auxillary_file_paths": [
+                    "results\\sac_small_test\\Shootair\\Shootair-440296.pt"
+                ]
             }
         ],
         "final_checkpoint": {
-            "steps": 129429,
+            "steps": 440296,
             "file_path": "results\\sac_small_test\\Shootair.onnx",
             "reward": null,
-            "creation_time": 1711716023.229012,
+            "creation_time": 1711729716.6456277,
             "auxillary_file_paths": [
-                "results\\sac_small_test\\Shootair\\Shootair-129429.pt"
+                "results\\sac_small_test\\Shootair\\Shootair-440296.pt"
             ]
         }
     },

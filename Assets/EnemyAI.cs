@@ -4,6 +4,7 @@ using System.Numerics;
 using Unity.MLAgents;
 using Unity.Sentis.Layers;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -30,6 +31,9 @@ public class EnemyAI : MonoBehaviour {
 	public int health;
 
     private UnityEngine.Vector3 originalPosition;
+
+    private UnityEngine.Vector3 previousPosition;
+    private int stuckCounter;
     
 	public void Awake()
 	{
@@ -60,19 +64,7 @@ public class EnemyAI : MonoBehaviour {
         Transform point14 = GameObject.Find("p14").transform;
 		Transform point15 = GameObject.Find("p15").transform;
         Transform point16 = GameObject.Find("p16").transform;
-        Transform point17 = GameObject.Find("p17").transform;
-        Transform point18 = GameObject.Find("p18").transform;
-        Transform point19 = GameObject.Find("p19").transform;
-        Transform point20 = GameObject.Find("p20").transform;
-        Transform point21 = GameObject.Find("p22").transform;
-        Transform point22 = GameObject.Find("p22").transform;
-        Transform point23 = GameObject.Find("p23").transform;
-        Transform point24 = GameObject.Find("p24").transform;
-        Transform point25 = GameObject.Find("p25").transform;
-        Transform point26 = GameObject.Find("p26").transform;
-        Transform point27 = GameObject.Find("p27").transform;
-        Transform point28 = GameObject.Find("p28").transform;
-        waypoints = new Transform[28] {
+        waypoints = new Transform[16] {
             point1,
             point2,
             point3,
@@ -89,18 +81,6 @@ public class EnemyAI : MonoBehaviour {
             point14,
             point15,
             point16,
-            point17,
-            point18,
-            point19,
-            point20,
-            point21,
-            point22,
-            point23,
-            point24,
-            point25,
-            point26,
-            point27,
-            point28
         };
 	}
 	
@@ -142,6 +122,26 @@ public class EnemyAI : MonoBehaviour {
         distanceFromTarget = UnityEngine.Vector3.Distance(waypoints[currentTarget].position, transform.position);
         anim.SetFloat("distanceFromWaypoint", distanceFromTarget);
         anim.SetBool("playerInSight", inViewCone);
+
+        distanceFromTarget = UnityEngine.Vector3.Distance(waypoints[currentTarget].position, transform.position);
+        // Check if the enemy is stuck
+        if (UnityEngine.Vector3.Distance(transform.position, previousPosition) < 1f)
+        {
+            stuckCounter++;
+        }
+        else
+        {
+            stuckCounter = 0;
+        }
+
+        // Update previousPosition for the next frame
+        previousPosition = transform.position;
+
+        if (stuckCounter > 100)
+        {
+            SetNextPoint();
+            stuckCounter = 0;
+        }
  
     }
 
