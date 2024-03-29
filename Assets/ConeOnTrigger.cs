@@ -16,7 +16,12 @@ public class ConeOnTrigger : MonoBehaviour {
         
         if (o.gameObject.tag == "agent")
         {
-            EnemyAI.inViewCone = true;
+            // EnemyAI.inViewCone = true;
+            EnemyAI[] EnemyArray = FindObjectsOfType<EnemyAI>();
+            foreach (EnemyAI enemy in EnemyArray)
+            {
+                enemy.inViewCone = true;
+            }
         }
     }
     
@@ -26,7 +31,12 @@ public class ConeOnTrigger : MonoBehaviour {
  
         if (o.gameObject.tag == "agent")
         {
-            EnemyAI.inViewCone = false;
+            // EnemyAI.inViewCone = false;
+            EnemyAI[] EnemyArray = FindObjectsOfType<EnemyAI>();
+            foreach (EnemyAI enemy in EnemyArray)
+            {
+                enemy.inViewCone = false;
+            }
         }
     }
 }

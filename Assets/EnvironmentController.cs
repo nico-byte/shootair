@@ -64,7 +64,7 @@ public class EnvironmentController : MonoBehaviour
 
             case Event.collisionWithTarget:
                 // agent loses
-                shootairAgent.SetReward(-.5f);
+                shootairAgent.SetReward(-1f);
 
                 currentWave = 0;
 
@@ -84,7 +84,7 @@ public class EnvironmentController : MonoBehaviour
                 if (currentWave >= environmentSettings.waves.Count-1)
                 {
                     currentWave = 0;
-                    shootairAgent.AddReward(0.5f);
+                    shootairAgent.AddReward(1f - shootairAgent.GetCumulativeReward());
                     shootairAgent.EndEpisode();
                     ResetScene();
                     break;
@@ -102,7 +102,7 @@ public class EnvironmentController : MonoBehaviour
 
             case Event.hitWall:
                 // agent loses
-                shootairAgent.SetReward(-.5f);
+                shootairAgent.SetReward(-1f);
 
                 currentWave = 0;
 
@@ -132,7 +132,7 @@ public class EnvironmentController : MonoBehaviour
             ResolveEvent(Event.killedAllTargets);
         }
 
-        shootairAgent.AddReward(1e-4f);
+        shootairAgent.AddReward(3e-5f);
     }
 
     public void ResetScene()
@@ -171,6 +171,8 @@ public class EnvironmentController : MonoBehaviour
 
     void ResetEnemies()
     {
+        EnemyList.Clear(); // clear list of enemies
+        
         // kill previous instances of enemies
         Object[] allObjects = FindObjectsOfType(typeof(GameObject));
         foreach(GameObject obj in allObjects) {

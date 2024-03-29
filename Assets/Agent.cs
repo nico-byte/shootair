@@ -70,11 +70,11 @@ public class ShootairAgent : Agent
         sensor.AddObservation(this.transform.localPosition);
 
         // Agent rotation
-        sensor.AddObservation(this.transform.rotation);
+        sensor.AddObservation(this.transform.localRotation);
 
         // Firing point position and rotation
-        sensor.AddObservation(firingPoint.position);
-        sensor.AddObservation(firingPoint.rotation);
+        sensor.AddObservation(firingPoint.localPosition);
+        sensor.AddObservation(firingPoint.localRotation);
 
         // Agent velocity
         sensor.AddObservation(rBody.velocity.x);
@@ -84,9 +84,10 @@ public class ShootairAgent : Agent
         // Collect observation about the 20 closest enemies
         var enemies = envController.EnemyList.ToArray();
         // Sort by closest :
+        enemies = enemies.Where(e => e != null && e.activeInHierarchy).ToArray();
         Array.Sort(enemies, (a, b) => (Vector3.Distance(a.transform.position, transform.position)).CompareTo(Vector3.Distance(b.transform.position, transform.position)));
         int numEnemyAdded = 0;
-
+        
         foreach (GameObject b in enemies)
         {
             if (numEnemyAdded >= 20)
