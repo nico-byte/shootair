@@ -32,6 +32,10 @@ public class Bullet : MonoBehaviour {
     {
 		if (other.gameObject.CompareTag("target") || other.gameObject.CompareTag("wall"))
 		{
+			if (!other.gameObject.CompareTag("target"))
+			{
+				envController.ResolveEvent(Event.missedShot);
+			}
 			Destroy(gameObject);
 		}
 		EnemyAI enemy = other.GetComponent<EnemyAI>();

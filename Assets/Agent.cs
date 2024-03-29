@@ -77,8 +77,8 @@ public class ShootairAgent : Agent
         sensor.AddObservation(firingPoint.localRotation);
 
         // Agent velocity
-        sensor.AddObservation(rBody.velocity.x);
-        sensor.AddObservation(rBody.velocity.y);
+        // sensor.AddObservation(rBody.velocity.x);
+        // sensor.AddObservation(rBody.velocity.y);
 
         // Surrounding enemies
         // Collect observation about the 20 closest enemies
@@ -90,7 +90,7 @@ public class ShootairAgent : Agent
         
         foreach (GameObject b in enemies)
         {
-            if (numEnemyAdded >= 20)
+            if (numEnemyAdded >= 5)
             {
                 break;
             }
@@ -103,11 +103,11 @@ public class ShootairAgent : Agent
             EnemyAI enemy = b.GetComponent<EnemyAI>();
             Rigidbody2D bRigid = b.GetComponent<Rigidbody2D>();
             float[] enemyObservation = new float[]{
-                (b.transform.position.x - transform.position.x) / 45f, // relative position
-                (b.transform.position.y - transform.position.y) / 45f,
-                bRigid.velocity.x,
-                bRigid.velocity.y,
-                enemy.health / 200f,
+                Vector3.Distance(b.transform.position.normalized, transform.position.normalized), // relative position
+                // (b.transform.position.y - transform.position.y) / 45f,
+                // bRigid.velocity.x,
+                // bRigid.velocity.y,
+                enemy.health / 150f,
             };
             numEnemyAdded += 1;
 

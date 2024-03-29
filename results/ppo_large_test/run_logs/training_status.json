@@ -1,0 +1,29 @@
+{
+    "Shootair": {
+        "checkpoints": [
+            {
+                "steps": 4441,
+                "file_path": "results\\ppo_large_test\\Shootair\\Shootair-4441.onnx",
+                "reward": -1.000152617943387,
+                "creation_time": 1711741791.3817108,
+                "auxillary_file_paths": [
+                    "results\\ppo_large_test\\Shootair\\Shootair-4441.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 4441,
+            "file_path": "results\\ppo_large_test\\Shootair.onnx",
+            "reward": -1.000152617943387,
+            "creation_time": 1711741791.3817108,
+            "auxillary_file_paths": [
+                "results\\ppo_large_test\\Shootair\\Shootair-4441.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "2.1.1+cu121"
+    }
+}

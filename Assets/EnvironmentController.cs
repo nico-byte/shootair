@@ -11,7 +11,8 @@ public enum Event
     collisionWithTarget = 1,
     killedTarget = 2,
     killedAllTargets = 3,
-    hitWall = 4
+    hitWall = 4,
+    missedShot = 5
 }
 
 public class EnvironmentController : MonoBehaviour
@@ -64,7 +65,7 @@ public class EnvironmentController : MonoBehaviour
 
             case Event.collisionWithTarget:
                 // agent loses
-                shootairAgent.SetReward(-1f);
+                shootairAgent.SetReward(-1f - shootairAgent.GetCumulativeReward());
 
                 currentWave = 0;
 
@@ -102,7 +103,7 @@ public class EnvironmentController : MonoBehaviour
 
             case Event.hitWall:
                 // agent loses
-                shootairAgent.SetReward(-1f);
+                shootairAgent.SetReward(-1f - shootairAgent.GetCumulativeReward());
 
                 currentWave = 0;
 
@@ -110,6 +111,13 @@ public class EnvironmentController : MonoBehaviour
                 // Debug.Log(shootairAgent.GetCumulativeReward());
                 shootairAgent.EndEpisode();
                 ResetScene();
+                break;
+
+            case Event.missedShot:
+                
+                // apply reward to shootair agent
+                shootairAgent.AddReward(-1e-3f);
+
                 break;
         }
     }
