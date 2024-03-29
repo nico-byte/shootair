@@ -2,8 +2,8 @@ behaviors:
   Shootair:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 512
-      buffer_size: 116000
+      batch_size: 256
+      buffer_size: 32768
       learning_rate: 3e-4
       beta: 3e-2
       epsilon: 0.2
@@ -17,14 +17,14 @@ behaviors:
       vis_encode_type: resnet
       use_recurrent: true
       memory:
-        sequence_length: 64
-        memory_size: 128
+        sequence_length: 128
+        memory_size: 256
     reward_signals:
       extrinsic:
         gamma: 0.99
         strength: 1.0
     keep_checkpoints: 5
     max_steps: 1000000
-    time_horizon: 512
-    summary_freq: 10000
+    time_horizon: 256
+    summary_freq: 8192
     threaded: true

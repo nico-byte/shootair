@@ -70,7 +70,7 @@ public class ShootairAgent : Agent
         sensor.AddObservation(this.transform.localPosition);
 
         // Agent rotation
-        sensor.AddObservation(this.transform.localRotation);
+        // sensor.AddObservation(this.transform.localRotation);
 
         // Firing point position and rotation
         sensor.AddObservation(firingPoint.localPosition);
@@ -100,16 +100,18 @@ public class ShootairAgent : Agent
                 continue;
             }
 
+            EnemyAI enemy = b.GetComponent<EnemyAI>();
             Rigidbody2D bRigid = b.GetComponent<Rigidbody2D>();
-            float[] bulletObservation = new float[]{
+            float[] enemyObservation = new float[]{
                 (b.transform.position.x - transform.position.x) / 45f, // relative position
                 (b.transform.position.y - transform.position.y) / 45f,
                 bRigid.velocity.x,
-                bRigid.velocity.y
+                bRigid.velocity.y,
+                enemy.health / 200f,
             };
             numEnemyAdded += 1;
 
-            bufferSensor.AppendObservation(bulletObservation);
+            bufferSensor.AppendObservation(enemyObservation);
         };
     }
 
