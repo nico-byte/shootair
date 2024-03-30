@@ -27,6 +27,7 @@ behaviors:
         strength: 0.01
         gamma: 0.99
     keep_checkpoints: 5
+    checkpoint_interval: 1800000
     max_steps: 9e6
     time_horizon: 256
     summary_freq: 10000
