@@ -71,18 +71,22 @@ public class ShootairAgent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // Agent position
-        // sensor.AddObservation(this.transform.localPosition);
+        sensor.AddObservation(this.transform.localPosition);
 
         // Agent rotation
         // sensor.AddObservation(this.transform.localRotation);
 
         // Firing point position and rotation
         // sensor.AddObservation(firingPoint.localPosition);
-        sensor.AddObservation(firingPoint.localRotation);
+        // sensor.AddObservation(firingPoint.localRotation);
 
         // Agent velocity
-        // sensor.AddObservation(rBody.velocity.x);
-        // sensor.AddObservation(rBody.velocity.y);
+        sensor.AddObservation(rBody.velocity.x);
+        sensor.AddObservation(rBody.velocity.y);
+
+        // shotAvailable
+        sensor.AddObservation(agentSettings.fireTimer);
+        sensor.AddObservation(agentSettings.fireTimer <= 0f);
 
         // Surrounding enemies
         // Collect observation about the 20 closest enemies
@@ -108,9 +112,14 @@ public class ShootairAgent : Agent
             Rigidbody2D bRigid = b.GetComponent<Rigidbody2D>();
 
             float distance = (b.transform.position - transform.position).sqrMagnitude;
+            float rotation = b.transform.rotation.eulerAngles.z / 360f;
+            UnityEngine.Vector2 velocity = new UnityEngine.Vector2(bRigid.velocity.x, bRigid.velocity.y).normalized;
 
             float[] enemyObservation = new float[]{
                 distance,
+                rotation,
+                velocity.x,
+                velocity.y,
                 enemy.health / 150f
             };
             numEnemyAdded += 1;

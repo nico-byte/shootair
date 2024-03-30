@@ -401,8 +401,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: BufferSensor
-  m_ObservableSize: 2
-  m_MaxNumObservables: 5
+  m_ObservableSize: 5
+  m_MaxNumObservables: 7
 --- !u!4 &3634723361133646116
 Transform:
   m_ObjectHideFlags: 0
@@ -468,7 +468,8 @@ MonoBehaviour:
   m_DetectableTags:
   - target
   - wall
-  m_RaysPerDirection: 20
+  - bullet
+  m_RaysPerDirection: 4
   m_MaxRayDegrees: 180
   m_SphereCastRadius: 0
   m_RayLength: 15
@@ -816,8 +817,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 4
-    NumStackedVectorObservations: 1
+    VectorObservationSize: 7
+    NumStackedVectorObservations: 3
     m_ActionSpec:
       m_NumContinuousActions: 0
       BranchSizes: 030000000300000002000000020000000200000002000000
