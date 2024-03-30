@@ -59,13 +59,13 @@ public class EnvironmentController : MonoBehaviour
             case Event.hitOnTarget:
                 
                 // apply reward to shootair agent
-                shootairAgent.AddReward(1e-4f);
+                shootairAgent.AddReward(1e-3f);
 
                 break;
 
             case Event.collisionWithTarget:
                 // agent loses
-                shootairAgent.SetReward(-1f - shootairAgent.GetCumulativeReward());
+                shootairAgent.SetReward(-.9f);
 
                 currentWave = 0;
 
@@ -77,7 +77,7 @@ public class EnvironmentController : MonoBehaviour
 
             case Event.killedTarget:
                 // add reward for killing target
-                shootairAgent.AddReward(1e-2f);
+                shootairAgent.AddReward(6e-3f);
 
                 break;
 
@@ -92,7 +92,7 @@ public class EnvironmentController : MonoBehaviour
                 }
                 
                 // agent wins
-                shootairAgent.AddReward(.8f / environmentSettings.waves.Count);
+                shootairAgent.AddReward(.6f / environmentSettings.waves.Count);
 
                 // end episode
                 // shootairAgent.EpisodeInterrupted();
@@ -103,7 +103,7 @@ public class EnvironmentController : MonoBehaviour
 
             case Event.hitWall:
                 // agent loses
-                shootairAgent.SetReward(-1f - shootairAgent.GetCumulativeReward());
+                shootairAgent.SetReward(-.9f);
 
                 currentWave = 0;
 

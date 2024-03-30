@@ -2,22 +2,22 @@
     "Shootair": {
         "checkpoints": [
             {
-                "steps": 4441,
-                "file_path": "results\\ppo_large_test\\Shootair\\Shootair-4441.onnx",
-                "reward": -1.000152617943387,
-                "creation_time": 1711741791.3817108,
+                "steps": 194744,
+                "file_path": "results\\ppo_large_test\\Shootair\\Shootair-194744.onnx",
+                "reward": -0.7020911964086386,
+                "creation_time": 1711746574.7240202,
                 "auxillary_file_paths": [
-                    "results\\ppo_large_test\\Shootair\\Shootair-4441.pt"
+                    "results\\ppo_large_test\\Shootair\\Shootair-194744.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 4441,
+            "steps": 194744,
             "file_path": "results\\ppo_large_test\\Shootair.onnx",
-            "reward": -1.000152617943387,
-            "creation_time": 1711741791.3817108,
+            "reward": -0.7020911964086386,
+            "creation_time": 1711746574.7240202,
             "auxillary_file_paths": [
-                "results\\ppo_large_test\\Shootair\\Shootair-4441.pt"
+                "results\\ppo_large_test\\Shootair\\Shootair-194744.pt"
             ]
         }
     },
