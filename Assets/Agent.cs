@@ -60,10 +60,12 @@ public class ShootairAgent : Agent
             envController.ResolveEvent(Event.collisionWithTarget);
         }
 
+        /*
         if (c.gameObject.CompareTag("wall"))
 		{
             envController.ResolveEvent(Event.hitWall);
 		}
+        */
     }
 
     public override void CollectObservations(VectorSensor sensor)
