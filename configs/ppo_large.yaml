@@ -23,9 +23,12 @@ behaviors:
       extrinsic:
         gamma: 0.99
         strength: 1.0
-      curiosity:
-        strength: 0.01
-        gamma: 0.99
+        network_settings:   
+          normalize: false
+          hidden_units: 256
+          num_layers: 2
+          vis_encode_type: simple
+          goal_conditioning_type: hyper
     keep_checkpoints: 5
     checkpoint_interval: 1800000
     max_steps: 9e6

@@ -8,4 +8,5 @@ public class AgentSettings : MonoBehaviour
     public bool autoShoot = false;
     public bool selfplay = true;
     public float fireTimer;
+    public float maxVelocity = 10f;
 }

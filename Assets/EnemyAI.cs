@@ -4,7 +4,6 @@ using System.Numerics;
 using Unity.MLAgents;
 using Unity.Sentis.Layers;
 using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -30,10 +29,11 @@ public class EnemyAI : MonoBehaviour {
 	EnvironmentController envController;
 	public int health;
 
-    private UnityEngine.Vector3 originalPosition;
+    private UnityEngine.Vector2 originalPosition;
 
-    private UnityEngine.Vector3 previousPosition;
+    private UnityEngine.Vector2 previousPosition;
     private int stuckCounter;
+    public UnityEngine.Vector2 trackVelocity;
     
 	public void Awake()
 	{
@@ -108,7 +108,7 @@ public class EnemyAI : MonoBehaviour {
                 enemy.CalculatePath(waypoints[currentTarget].position, path);
                 enemy.SetPath(path);
                 // enemy.SetDestination(new UnityEngine.Vector3(waypoints[currentTarget].position.x, waypoints[currentTarget].position.y, transform.position.z));
-                direction = transform.position - originalPosition;
+                direction = new UnityEngine.Vector2(transform.position.x, transform.position.y) - originalPosition;
                 rotateEnemy();
                 originalPosition = transform.position;
             }
@@ -123,6 +123,8 @@ public class EnemyAI : MonoBehaviour {
         anim.SetFloat("distanceFromWaypoint", distanceFromTarget);
         anim.SetBool("playerInSight", inViewCone);
 
+        trackVelocity = (rBody.position - previousPosition) * 50;
+        
         distanceFromTarget = UnityEngine.Vector3.Distance(waypoints[currentTarget].position, transform.position);
         // Check if the enemy is stuck
         if (UnityEngine.Vector3.Distance(transform.position, previousPosition) < 1f)
@@ -135,14 +137,15 @@ public class EnemyAI : MonoBehaviour {
         }
 
         // Update previousPosition for the next frame
-        previousPosition = transform.position;
+        previousPosition = rBody.position;
 
         if (stuckCounter > 100)
         {
             SetNextPoint();
             stuckCounter = 0;
         }
- 
+        Debug.Log(trackVelocity);
+
     }
 
 	public void SetNextPoint()

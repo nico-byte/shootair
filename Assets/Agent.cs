@@ -5,7 +5,6 @@ using Unity.MLAgents.Actuators;
 using System.Linq;
 using System;
 using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using System.Collections.Generic;
 using System.Numerics;
 //using Unity.MLAgents.Policies;
@@ -23,6 +22,9 @@ public class ShootairAgent : Agent
     public Transform firingPoint;
 
     EnvironmentController envController;
+
+    private UnityEngine.Vector2 trackVelocity;
+    private UnityEngine.Vector2 lastPos;
 
     //BehaviorParameters behaviorParameters;
     //EnvironmentParameters resetParams;    
@@ -51,6 +53,9 @@ public class ShootairAgent : Agent
         if(agentSettings.selfplay) {
             MoveAgent(ActionBuffers.Empty);
         }
+
+        trackVelocity = (rBody.position - lastPos) * 50;
+        lastPos = rBody.position;
     }
 
     void OnCollisionEnter2D(Collision2D c)
@@ -71,7 +76,7 @@ public class ShootairAgent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // Agent position
-        sensor.AddObservation(this.transform.localPosition);
+        // sensor.AddObservation(this.transform.localPosition);
 
         // Agent rotation
         // sensor.AddObservation(this.transform.localRotation);
@@ -81,11 +86,11 @@ public class ShootairAgent : Agent
         // sensor.AddObservation(firingPoint.localRotation);
 
         // Agent velocity
-        sensor.AddObservation(rBody.velocity.x);
-        sensor.AddObservation(rBody.velocity.y);
+        sensor.AddObservation(rBody.velocity.x / agentSettings.maxVelocity);
+        sensor.AddObservation(rBody.velocity.y / agentSettings.maxVelocity);
 
         // shotAvailable
-        sensor.AddObservation(agentSettings.fireTimer);
+        sensor.AddObservation(agentSettings.fireTimer / agentSettings.fireRate);
         sensor.AddObservation(agentSettings.fireTimer <= 0f);
 
         // Surrounding enemies
@@ -109,15 +114,14 @@ public class ShootairAgent : Agent
             }
 
             EnemyAI enemy = b.GetComponent<EnemyAI>();
-            Rigidbody2D bRigid = b.GetComponent<Rigidbody2D>();
 
-            float distance = (b.transform.position - transform.position).sqrMagnitude;
-            float rotation = b.transform.rotation.eulerAngles.z / 360f;
-            UnityEngine.Vector2 velocity = new UnityEngine.Vector2(bRigid.velocity.x, bRigid.velocity.y).normalized;
+            float distance = this.transform.InverseTransformVector(b.transform.position - transform.position).sqrMagnitude;
+            float direction = UnityEngine.Vector3.SignedAngle(this.transform.forward, b.transform.position - this.transform.position, UnityEngine.Vector3.up) / 180f;
+            UnityEngine.Vector2 velocity = enemy.trackVelocity / agentSettings.maxVelocity;
 
             float[] enemyObservation = new float[]{
                 distance,
-                rotation,
+                direction,
                 velocity.x,
                 velocity.y,
                 enemy.health / 150f

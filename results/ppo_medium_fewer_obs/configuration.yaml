@@ -47,10 +47,10 @@ behaviors:
     self_play: null
     behavioral_cloning: null
 env_settings:
-  env_path: null
+  env_path: Envs\shootair_test.exe
   env_args: null
   base_port: 5005
-  num_envs: 1
+  num_envs: 3
   num_areas: 1
   timeout_wait: 60
   seed: -1
@@ -70,7 +70,7 @@ checkpoint_settings:
   run_id: ppo_medium_fewer_obs
   initialize_from: null
   load_model: false
-  resume: false
+  resume: true
   force: false
   train_model: false
   inference: false
