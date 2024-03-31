@@ -26,6 +26,8 @@ public class ShootairAgent : Agent
     private UnityEngine.Vector2 trackVelocity;
     private UnityEngine.Vector2 lastPos;
 
+    private bool shotAvailable;
+
     //BehaviorParameters behaviorParameters;
     //EnvironmentParameters resetParams;    
 
@@ -56,6 +58,8 @@ public class ShootairAgent : Agent
 
         trackVelocity = (rBody.position - lastPos) * 50;
         lastPos = rBody.position;
+
+        shotAvailable = agentSettings.fireTimer <= 0f ? true : false;
     }
 
     void OnCollisionEnter2D(Collision2D c)
@@ -64,34 +68,17 @@ public class ShootairAgent : Agent
         {
             envController.ResolveEvent(Event.collisionWithTarget);
         }
-
-        /*
-        if (c.gameObject.CompareTag("wall"))
-		{
-            envController.ResolveEvent(Event.hitWall);
-		}
-        */
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // Agent position
-        // sensor.AddObservation(this.transform.localPosition);
-
-        // Agent rotation
-        // sensor.AddObservation(this.transform.localRotation);
-
-        // Firing point position and rotation
-        // sensor.AddObservation(firingPoint.localPosition);
-        // sensor.AddObservation(firingPoint.localRotation);
-
         // Agent velocity
-        sensor.AddObservation(rBody.velocity.x / agentSettings.maxVelocity);
-        sensor.AddObservation(rBody.velocity.y / agentSettings.maxVelocity);
+        sensor.AddObservation(trackVelocity.x / agentSettings.maxVelocity);
+        sensor.AddObservation(trackVelocity.y / agentSettings.maxVelocity);
 
         // shotAvailable
         sensor.AddObservation(agentSettings.fireTimer / agentSettings.fireRate);
-        sensor.AddObservation(agentSettings.fireTimer <= 0f);
+        sensor.AddObservation(shotAvailable ? 1 : 0);
 
         // Surrounding enemies
         // Collect observation about the 20 closest enemies
@@ -170,13 +157,13 @@ public class ShootairAgent : Agent
             directionStates["Right"] = actionBuffers.DiscreteActions[1] == 2;
 
             shootingStates["Up"] = actionBuffers.DiscreteActions[2] == 1;
-            shootingStates["Down"] = actionBuffers.DiscreteActions[3] == 1;
-            shootingStates["Left"] = actionBuffers.DiscreteActions[4] == 1;
-            shootingStates["Right"] = actionBuffers.DiscreteActions[5] == 1;
+            shootingStates["Down"] = actionBuffers.DiscreteActions[2] == 2;
+            shootingStates["Left"] = actionBuffers.DiscreteActions[2] == 3;
+            shootingStates["Right"] = actionBuffers.DiscreteActions[2] == 4;
         }
     
         int amountSpeed = directionStates.Values.Count(c => c);
-        int amountShoot = shootingStates.Values.Count(b => b);
+        bool shootingStar = shootingStates.Values.Any(c => c) ? true : false;
     
         // Set animation states
         foreach (var direction in directionStates.Keys)
@@ -207,40 +194,26 @@ public class ShootairAgent : Agent
         {
             if (shootingStates[rotation])
             {
-                if (rotation == "Up" || rotation == "Down")
+                // Only update the firing direction if the agent is not currently firing
+                if (shotAvailable && shootingStar)
                 {
-                    firingPoint.transform.rotation = rotation == "Up" ? UnityEngine.Quaternion.Euler(0f, 0f, 0f) : UnityEngine.Quaternion.Euler(0, 0, 180f);
+                    if (rotation == "Up" || rotation == "Down")
+                    {
+                        firingPoint.transform.rotation = rotation == "Up" ? UnityEngine.Quaternion.Euler(0f, 0f, 0f) : UnityEngine.Quaternion.Euler(0, 0, 180f);
+                    }
+                    else
+                    {
+                        firingPoint.transform.rotation = rotation == "Left" ? UnityEngine.Quaternion.Euler(0f, 0f, 90f) : UnityEngine.Quaternion.Euler(0, 0, 270f);
+                    }
+                    
+                    Shoot();
+                    agentSettings.fireTimer = agentSettings.fireRate;
+                    shotAvailable = false;
                 }
                 else
                 {
-                    firingPoint.transform.rotation = rotation == "Left" ? UnityEngine.Quaternion.Euler(0f, 0f, 90f) : UnityEngine.Quaternion.Euler(0, 0, 270f);
+                    agentSettings.fireTimer -= Time.deltaTime;
                 }
-            }
-        }
-    
-        // Shooting
-        if (amountShoot >= 1)
-        {
-            if (agentSettings.fireTimer <= 0f)
-            {
-                Shoot();
-                agentSettings.fireTimer = agentSettings.fireRate;
-            }
-            else
-            {
-                agentSettings.fireTimer -= Time.deltaTime;
-            }
-        }
-        else
-        {
-            if (agentSettings.autoShoot && agentSettings.fireTimer <= 0f)
-            {
-                Shoot();
-                agentSettings.fireTimer = agentSettings.fireRate;
-            }
-            else
-            {
-                agentSettings.fireTimer -= Time.deltaTime;
             }
         }
     
@@ -269,6 +242,7 @@ public class ShootairAgent : Agent
     {
         int forwardAction = 0;
         int turnAction = 0;
+        int shootAction = 0;
 
         if (Input.GetKey(KeyCode.W))
         {
@@ -292,13 +266,42 @@ public class ShootairAgent : Agent
             turnAction = 2;
         }
 
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            // shoot
+            shootAction = 1;
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            // shoot
+            shootAction = 2;
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            // shoot
+            shootAction = 3;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            // shoot
+            shootAction = 4;
+        }
+
         // Put the actions into the array
         actionsOut.DiscreteActions.Array[0] = forwardAction;
         actionsOut.DiscreteActions.Array[1] = turnAction;
 
-        actionsOut.DiscreteActions.Array[2] = Input.GetKey(KeyCode.UpArrow) ? 1 : 0;
-        actionsOut.DiscreteActions.Array[3] = Input.GetKey(KeyCode.DownArrow) ? 1 : 0;
-        actionsOut.DiscreteActions.Array[4] = Input.GetKey(KeyCode.LeftArrow) ? 1 : 0;
-        actionsOut.DiscreteActions.Array[5] = Input.GetKey(KeyCode.RightArrow) ? 1 : 0;
+        actionsOut.DiscreteActions.Array[2] = shootAction;
+    }
+
+    public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
+    {
+        if (!shotAvailable)
+        {
+            actionMask.SetActionEnabled(2, 1, false);
+            actionMask.SetActionEnabled(2, 2, false);
+            actionMask.SetActionEnabled(2, 3, false);
+            actionMask.SetActionEnabled(2, 4, false);
+        }
     }
 }

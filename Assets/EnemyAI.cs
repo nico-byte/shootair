@@ -144,8 +144,6 @@ public class EnemyAI : MonoBehaviour {
             SetNextPoint();
             stuckCounter = 0;
         }
-        Debug.Log(trackVelocity);
-
     }
 
 	public void SetNextPoint()

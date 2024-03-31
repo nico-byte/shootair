@@ -193,7 +193,7 @@ public class EnvironmentController : MonoBehaviour
 
         if (enemyCount[0] > 0)
         {
-            spawn(standardEnemyPrefab, enemyCount[0], 11, 2.5f);
+            spawn(fastEnemyPrefab, enemyCount[0], 11, 2.5f);
         }
 
         if (enemyCount[1] > 0)
