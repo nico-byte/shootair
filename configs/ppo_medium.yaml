@@ -23,9 +23,6 @@ behaviors:
       extrinsic:
         gamma: 0.99
         strength: 1.0
-      curiosity:
-        strength: 0.01
-        gamma: 0.99
     keep_checkpoints: 5
     checkpoint_interval: 1200000
     max_steps: 6e6
