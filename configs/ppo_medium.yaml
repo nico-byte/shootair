@@ -17,8 +17,8 @@ behaviors:
       encoding_size: 128
       use_recurrent: true
       memory:
-        sequence_length: 128
-        memory_size: 256
+        sequence_length: 64
+        memory_size: 128
     reward_signals:
       extrinsic:
         gamma: 0.99
@@ -29,8 +29,8 @@ behaviors:
           num_layers: 2
           vis_encode_type: simple
     keep_checkpoints: 5
-    checkpoint_interval: 1200000
-    max_steps: 6e6
-    time_horizon: 512
+    checkpoint_interval: 4e6
+    max_steps: 20e6
+    time_horizon: 64
     summary_freq: 10000
     threaded: true

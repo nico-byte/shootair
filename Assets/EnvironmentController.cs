@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -38,6 +39,7 @@ public class EnvironmentController : MonoBehaviour
     private int resetTimer;
     public int MaxEnvironmentSteps;
     private int currentWave = 0;
+    private int streak;
     
     // Start is called before the first frame update
     void Start()
@@ -59,7 +61,8 @@ public class EnvironmentController : MonoBehaviour
             case Event.hitOnTarget:
                 
                 // apply reward to shootair agent
-                shootairAgent.AddReward(1e-3f);
+                shootairAgent.AddReward(1e-5f + streak * 1e-5f);
+                streak += 1;
 
                 break;
 
@@ -85,7 +88,7 @@ public class EnvironmentController : MonoBehaviour
                 if (currentWave >= environmentSettings.waves.Count-1)
                 {
                     currentWave = 0;
-                    shootairAgent.AddReward(1f - shootairAgent.GetCumulativeReward());
+                    // shootairAgent.AddReward(1f - shootairAgent.GetCumulativeReward());
                     shootairAgent.EndEpisode();
                     ResetScene();
                     break;
@@ -116,7 +119,8 @@ public class EnvironmentController : MonoBehaviour
             case Event.missedShot:
                 
                 // apply reward to shootair agent
-                shootairAgent.AddReward(-1e-3f);
+                shootairAgent.AddReward(-1e-5f);
+                streak = 0;
 
                 break;
         }
@@ -140,7 +144,7 @@ public class EnvironmentController : MonoBehaviour
             ResolveEvent(Event.killedAllTargets);
         }
 
-        shootairAgent.AddReward(3e-5f);
+        shootairAgent.AddReward(-2e-5f);
     }
 
     public void ResetScene()
@@ -169,7 +173,7 @@ public class EnvironmentController : MonoBehaviour
         // Debug.Log("Resetting Scene!");
         resetTimer = 0;
         
-        agent.transform.position = new UnityEngine.Vector3(0, -4, 0);
+        agent.transform.position = new UnityEngine.Vector3(0, 0, 0);
         agent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, 0);
 
         agent.GetComponent<Rigidbody2D>().velocity = default;
@@ -182,7 +186,7 @@ public class EnvironmentController : MonoBehaviour
         EnemyList.Clear(); // clear list of enemies
         
         // kill previous instances of enemies
-        Object[] allObjects = FindObjectsOfType(typeof(GameObject));
+        UnityEngine.Object[] allObjects = FindObjectsOfType(typeof(GameObject));
         foreach(GameObject obj in allObjects) {
             if(obj.transform.name == "StandardEnemy(Clone)" || obj.transform.name == "DifficultEnemy(Clone)" || obj.transform.name == "FastEnemy(Clone)"){
                 Destroy(obj);
@@ -212,7 +216,7 @@ public class EnvironmentController : MonoBehaviour
         // Spawn enemies in spawn area
         for (int i = 1; i <= quant; i++)
         {
-            GameObject newGO = Instantiate(prefab, new UnityEngine.Vector3(xOffset * Random.value, yOffset, 0f), UnityEngine.Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
+            GameObject newGO = Instantiate(prefab, new UnityEngine.Vector3(xOffset * UnityEngine.Random.value, yOffset, 0f), UnityEngine.Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0.0f, 360.0f)));
             newGO.transform.parent = area.transform;
             EnemyList.Add(newGO);
         }
