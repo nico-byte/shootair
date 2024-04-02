@@ -60,6 +60,10 @@ public class ShootairAgent : Agent
         lastPos = rBody.position;
 
         shotAvailable = agentSettings.fireTimer <= 0f ? true : false;
+        agentSettings.fireTimer -= Time.deltaTime;
+
+        Debug.Log(shotAvailable);
+        Debug.Log(agentSettings.fireTimer);
     }
 
     void OnCollisionEnter2D(Collision2D c)
@@ -209,10 +213,6 @@ public class ShootairAgent : Agent
                     Shoot();
                     agentSettings.fireTimer = agentSettings.fireRate;
                     shotAvailable = false;
-                }
-                else
-                {
-                    agentSettings.fireTimer -= Time.deltaTime;
                 }
             }
         }

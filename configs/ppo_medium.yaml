@@ -29,8 +29,8 @@ behaviors:
           num_layers: 2
           vis_encode_type: simple
     keep_checkpoints: 5
-    checkpoint_interval: 4e6
+    checkpoint_interval: 1000000
     max_steps: 20e6
     time_horizon: 64
-    summary_freq: 10000
+    summary_freq: 100000
     threaded: true
