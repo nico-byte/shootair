@@ -64,7 +64,12 @@ public class EnemyAI : MonoBehaviour {
         Transform point14 = GameObject.Find("p14").transform;
 		Transform point15 = GameObject.Find("p15").transform;
         Transform point16 = GameObject.Find("p16").transform;
-        waypoints = new Transform[16] {
+        Transform point17 = GameObject.Find("p17").transform;
+        Transform point18 = GameObject.Find("p18").transform;
+        Transform point19 = GameObject.Find("p19").transform;
+        Transform point20 = GameObject.Find("p20").transform;
+        Transform point21 = GameObject.Find("p21").transform;
+        waypoints = new Transform[21] {
             point1,
             point2,
             point3,
@@ -81,6 +86,11 @@ public class EnemyAI : MonoBehaviour {
             point14,
             point15,
             point16,
+            point17,
+            point18,
+            point19,
+            point20,
+            point21
         };
 	}
 	
