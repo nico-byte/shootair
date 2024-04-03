@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 1f;
+    public float speed = 3f;
     private Animator anim;
     private bool state_lock = false;
 
+    // Defining PlayerStates for each Condition 
     public enum PlayerState 
     {
         Idle,
         Moving,
+        Aiming,
         MovingAiming
     }
     private PlayerState current_state = PlayerState.Idle;
@@ -29,6 +31,9 @@ public class PlayerController : MonoBehaviour
                 case PlayerState.Moving:
                     anim.Play("Moving");
                     break;
+                case PlayerState.Aiming:
+                    anim.Play("Aiming");
+                    break;
                 case PlayerState.MovingAiming:
                     anim.Play("MovingAiming");
                     break;        
@@ -42,50 +47,55 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update()
+{
+    // direction movement and binding it to the Keys: W, A, S, D
+    float direction_up = Input.GetKey(KeyCode.W) ? 1f : 0f;
+    float direction_down = Input.GetKey(KeyCode.S) ? -1f : 0f;
+    float direction_left = Input.GetKey(KeyCode.A) ? -1f : 0f;
+    float direction_right = Input.GetKey(KeyCode.D) ? 1f : 0f;
+    
+    // aiming keybinds for each Arrow Keys 
+    bool aiming_up = Input.GetKey(KeyCode.UpArrow);
+    bool aiming_down = Input.GetKey(KeyCode.DownArrow);
+    bool aiming_left = Input.GetKey(KeyCode.LeftArrow);
+    bool aiming_right = Input.GetKey(KeyCode.RightArrow);
+
+    // Set the PlayerState between "Moving" and "MovingAiming"
+    // MovingAiming: This combines the Animation from Moving + Aiming 
+    if ((direction_up != 0 || direction_down != 0 || direction_left != 0 || direction_right != 0) &&
+        (aiming_up || aiming_down || aiming_left || aiming_right))
     {
-        float direction_up = Input.GetAxis("Vertical");
-        float direction_down = -Input.GetAxis("Vertical");
-        float direction_left = -Input.GetAxis("Horizontal");
-        float direction_right = Input.GetAxis("Horizontal");
+        SetState(PlayerState.MovingAiming);
+        anim.SetFloat("xMove", direction_right + direction_left);
+        anim.SetFloat("yMove", direction_up + direction_down);
+        anim.SetBool("IsMoving", true);
+        Vector2 movement = new Vector2(direction_right + direction_left, direction_up + direction_down) * speed * Time.deltaTime;
+        transform.Translate(movement);
+    }
 
-        // Movement "upside" + animations
-        if (direction_up != 0) 
-        {
-            SetState(PlayerState.Moving);
-            anim.SetFloat("xMove", 0f);
-            anim.SetFloat("yMove", direction_up);
-            Vector2 movement_up = Vector2.up * speed * direction_up * Time.deltaTime;
-            transform.Translate(movement_up);
-        }
+    // Moving: This is for the Moving animation 
+    else if (direction_up != 0 || direction_down != 0 || direction_left != 0 || direction_right != 0)
+    {
+        SetState(PlayerState.Moving);
+        anim.SetFloat("xMove", direction_right + direction_left);
+        anim.SetFloat("yMove", direction_up + direction_down);
+        anim.SetBool("IsMoving", true);
+        Vector2 movement = new Vector2(direction_right + direction_left, direction_up + direction_down) * speed * Time.deltaTime;
+        transform.Translate(movement);
+    }
 
-        // Movement "downside" + animations
-        if (direction_down != 0) 
-        {
-            SetState(PlayerState.Moving);
-            anim.SetFloat("xMove", 0f);
-            anim.SetFloat("yMove", direction_down);
-            Vector2 movement_down = Vector2.down * speed * direction_down * Time.deltaTime;
-            transform.Translate(movement_down);
-        }
-        
-        // Movement "leftside" + animations
-        if (direction_left != 0) 
-        {
-            SetState(PlayerState.Moving);
-            anim.SetFloat("xMove", direction_left);
-            anim.SetFloat("yMove", 0f);
-            Vector2 movement_left = Vector2.left * speed * direction_left * Time.deltaTime;
-            transform.Translate(movement_left);
-        }
+    // Aiming: This is for the Aiming animation
+    else if (aiming_up || aiming_down || aiming_left || aiming_right)
+    {
+        SetState(PlayerState.Aiming);
+        anim.SetBool("IsMoving", false);
+    }
 
-        // Movement "rightside" + animations
-        if (direction_right != 0) 
-        {
-            SetState(PlayerState.Moving);
-            anim.SetFloat("xMove", direction_right);
-            anim.SetFloat("yMove", 0f);
-            Vector2 movement_right = Vector2.right * speed * direction_right * Time.deltaTime;
-            transform.Translate(movement_right);
-        }
+    // If every State is not active -> Idle State
+    else
+    {
+        SetState(PlayerState.Idle);
+        anim.SetBool("IsMoving", false);
+    }
     }
 }
