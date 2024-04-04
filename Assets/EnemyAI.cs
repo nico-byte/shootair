@@ -132,6 +132,7 @@ public class EnemyAI : MonoBehaviour {
         distanceFromTarget = UnityEngine.Vector3.Distance(waypoints[currentTarget].position, transform.position);
         anim.SetFloat("distanceFromWaypoint", distanceFromTarget);
         anim.SetBool("playerInSight", inViewCone);
+        // Debug.Log(inViewCone);
 
         trackVelocity = (rBody.position - previousPosition) * 50;
         
@@ -188,6 +189,7 @@ public class EnemyAI : MonoBehaviour {
     public void StopChasing()
     {
         chasing = false;
+        // enemy.ResetPath();
     }
 
     private void rotateEnemy()

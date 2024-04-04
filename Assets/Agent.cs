@@ -11,6 +11,14 @@ using System.Numerics;
 //using Unity.VisualScripting.Dependencies.Sqlite;
 //using UnityEngine.AI;
 
+public enum PlayerState 
+    {
+        Idle,
+        Moving,
+        Aiming,
+        MovingAiming
+    }
+
 public class ShootairAgent : Agent
 {
     // VARIABLES
@@ -22,11 +30,16 @@ public class ShootairAgent : Agent
     public Transform firingPoint;
 
     EnvironmentController envController;
+    AgentObservations agentObservations;
 
     private UnityEngine.Vector2 trackVelocity;
     private UnityEngine.Vector2 lastPos;
 
     private bool shotAvailable;
+
+    private bool stateLock;
+    private PlayerState playerState;
+    private GameObject[] refpoints = null;
 
     //BehaviorParameters behaviorParameters;
     //EnvironmentParameters resetParams;    
@@ -34,8 +47,12 @@ public class ShootairAgent : Agent
     void Start()
     {
         envController = FindObjectOfType<EnvironmentController>();
+        agentObservations = FindObjectOfType<AgentObservations>();
         anim = gameObject.GetComponent<Animator>();
+        refpoints = GameObject.FindGameObjectsWithTag("refp");
+        agentSettings.maxDistance = UnityEngine.Vector3.Distance(refpoints[0].transform.position, refpoints[1].transform.position);
     }
+
 
     public override void Initialize()
     {
@@ -45,6 +62,8 @@ public class ShootairAgent : Agent
         //behaviorParameters = gameObject.GetComponent<BehaviorParameters>();
         //resetParams = Academy.Instance.EnvironmentParameters;
         bufferSensor = gameObject.GetComponent<BufferSensorComponent>();
+        stateLock = false;
+        playerState = PlayerState.Idle;
     }
 
     void FixedUpdate()
@@ -62,8 +81,8 @@ public class ShootairAgent : Agent
         shotAvailable = agentSettings.fireTimer <= 0f ? true : false;
         agentSettings.fireTimer -= Time.deltaTime;
 
-        Debug.Log(shotAvailable);
-        Debug.Log(agentSettings.fireTimer);
+        // Debug.Log(shotAvailable);
+        // Debug.Log(agentSettings.fireTimer);
     }
 
     void OnCollisionEnter2D(Collision2D c)
@@ -74,15 +93,42 @@ public class ShootairAgent : Agent
         }
     }
 
+    private void SetState(PlayerState newState)
+    {
+        if (!stateLock) 
+        {
+            playerState = newState;
+            switch(playerState) 
+            {
+                case PlayerState.Idle:
+                    anim.Play("Idle");
+                    break;
+                case PlayerState.Moving:
+                    anim.Play("Moving");
+                    break;
+                case PlayerState.Aiming:
+                    anim.Play("Aiming");
+                    break;
+                case PlayerState.MovingAiming:
+                    anim.Play("MovingAiming");
+                    break;        
+            }
+        }
+    }
+
     public override void CollectObservations(VectorSensor sensor)
     {
         // Agent velocity
         sensor.AddObservation(trackVelocity.x / agentSettings.maxVelocity);
+        agentObservations.observations["velocity_x"] = trackVelocity.x / agentSettings.maxVelocity;
         sensor.AddObservation(trackVelocity.y / agentSettings.maxVelocity);
+        agentObservations.observations["velocity_y"] = trackVelocity.y / agentSettings.maxVelocity;
 
         // shotAvailable
-        sensor.AddObservation(agentSettings.fireTimer / agentSettings.fireRate);
+        // sensor.AddObservation(agentSettings.fireTimer / agentSettings.fireRate);
         sensor.AddObservation(shotAvailable ? 1 : 0);
+        agentObservations.observations["shotAvailable"] = shotAvailable ? 1 : 0;
+        
 
         // Surrounding enemies
         // Collect observation about the 20 closest enemies
@@ -106,7 +152,7 @@ public class ShootairAgent : Agent
 
             EnemyAI enemy = b.GetComponent<EnemyAI>();
 
-            float distance = this.transform.InverseTransformVector(b.transform.position - transform.position).sqrMagnitude;
+            float distance = this.transform.InverseTransformVector(b.transform.position - transform.position).magnitude / agentSettings.maxDistance;
             float direction = UnityEngine.Vector3.SignedAngle(this.transform.forward, b.transform.position - this.transform.position, UnityEngine.Vector3.up) / 180f;
             UnityEngine.Vector2 velocity = enemy.trackVelocity / agentSettings.maxVelocity;
 
@@ -118,6 +164,15 @@ public class ShootairAgent : Agent
                 enemy.health / 150f
             };
             numEnemyAdded += 1;
+
+            if (numEnemyAdded == 3)
+            {
+                agentObservations.observations["distanceEnemy"] = distance;
+                agentObservations.observations["directionEnemy"] = direction;
+                agentObservations.observations["velocity_xEnemy"] = velocity.x;
+                agentObservations.observations["velocity_yEnemy"] = velocity.y;
+                agentObservations.observations["healthEnemy"] = enemy.health / 150f;
+            }
 
             bufferSensor.AppendObservation(enemyObservation);
         };
@@ -167,13 +222,26 @@ public class ShootairAgent : Agent
         }
     
         int amountSpeed = directionStates.Values.Count(c => c);
+        if (amountSpeed == 0)
+        {
+            SetState(PlayerState.Idle);
+            anim.SetBool("IsMoving", false);
+        }
+        
         bool shootingStar = shootingStates.Values.Any(c => c) ? true : false;
+        if (shootingStar && playerState == PlayerState.Idle)
+        {
+            SetState(PlayerState.Aiming);
+            anim.SetBool("IsMoving", false);
+        }
     
         // Set animation states
+        /*
         foreach (var direction in directionStates.Keys)
         {
             anim.SetBool($"walking{direction}", directionStates[direction]);
         }
+        */
     
         // Movement and shooting
         float forwardAmount = 0f;
@@ -183,6 +251,7 @@ public class ShootairAgent : Agent
         {
             if (directionStates[direction])
             {
+                SetState(PlayerState.Moving);
                 if (direction == "Up" || direction == "Down")
                 {
                     forwardAmount = direction == "Up" ? 1f : -1f;
@@ -201,6 +270,7 @@ public class ShootairAgent : Agent
                 // Only update the firing direction if the agent is not currently firing
                 if (shotAvailable && shootingStar)
                 {
+                    SetState(PlayerState.MovingAiming);
                     if (rotation == "Up" || rotation == "Down")
                     {
                         firingPoint.transform.rotation = rotation == "Up" ? UnityEngine.Quaternion.Euler(0f, 0f, 0f) : UnityEngine.Quaternion.Euler(0, 0, 180f);
@@ -217,6 +287,10 @@ public class ShootairAgent : Agent
             }
         }
     
+        anim.SetFloat("xMove", turnAmount);
+        anim.SetFloat("yMove", forwardAmount);
+        anim.SetBool("IsMoving", true);
+
         float diagionalSpeed = amountSpeed > 1 ? 0.707106781f : 1f;
         UnityEngine.Vector3 movementForward = agentSettings.moveSpeed * forwardAmount * Time.fixedDeltaTime * transform.up * diagionalSpeed;
         UnityEngine.Vector3 movementTurn = agentSettings.moveSpeed * turnAmount * Time.fixedDeltaTime * transform.right * diagionalSpeed;
@@ -234,7 +308,7 @@ public class ShootairAgent : Agent
     private void Shoot()
     {
         GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
-        bullet.transform.parent = firingPoint;
+        // bullet.transform.parent = firingPoint;
         // bullet.GetComponent<Rigidbody2D>().velocity += rBody.velocity;
     }
 
