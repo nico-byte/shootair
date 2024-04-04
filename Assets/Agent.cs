@@ -31,6 +31,7 @@ public class ShootairAgent : Agent
 
     EnvironmentController envController;
     AgentObservations agentObservations;
+    private Dictionary<string, float> observations;
 
     private UnityEngine.Vector2 trackVelocity;
     private UnityEngine.Vector2 lastPos;
@@ -39,8 +40,6 @@ public class ShootairAgent : Agent
 
     private bool stateLock;
     private PlayerState playerState;
-    private GameObject[] refpoints = null;
-
     //BehaviorParameters behaviorParameters;
     //EnvironmentParameters resetParams;    
 
@@ -49,8 +48,6 @@ public class ShootairAgent : Agent
         envController = FindObjectOfType<EnvironmentController>();
         agentObservations = FindObjectOfType<AgentObservations>();
         anim = gameObject.GetComponent<Animator>();
-        refpoints = GameObject.FindGameObjectsWithTag("refp");
-        agentSettings.maxDistance = UnityEngine.Vector3.Distance(refpoints[0].transform.position, refpoints[1].transform.position);
     }
 
 
@@ -152,8 +149,9 @@ public class ShootairAgent : Agent
 
             EnemyAI enemy = b.GetComponent<EnemyAI>();
 
-            float distance = this.transform.InverseTransformVector(b.transform.position - transform.position).magnitude / agentSettings.maxDistance;
-            float direction = UnityEngine.Vector3.SignedAngle(this.transform.forward, b.transform.position - this.transform.position, UnityEngine.Vector3.up) / 180f;
+            float distance = UnityEngine.Vector2.Distance(this.transform.position, b.transform.position);
+            distance /= 65f;
+            float direction = UnityEngine.Vector2.SignedAngle(this.transform.position, b.transform.position) / 180f;
             UnityEngine.Vector2 velocity = enemy.trackVelocity / agentSettings.maxVelocity;
 
             float[] enemyObservation = new float[]{

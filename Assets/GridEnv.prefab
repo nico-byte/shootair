@@ -11648,7 +11648,7 @@ GameObject:
   - component: {fileID: 7802577962704266436}
   m_Layer: 0
   m_Name: refpoint1
-  m_TagString: refp
+  m_TagString: refp1
   m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11679,7 +11679,7 @@ GameObject:
   - component: {fileID: 3150216815008571852}
   m_Layer: 0
   m_Name: refpoint2
-  m_TagString: refp
+  m_TagString: refp2
   m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

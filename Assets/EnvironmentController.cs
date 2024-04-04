@@ -19,6 +19,7 @@ public enum Event
 public class EnvironmentController : MonoBehaviour
 {
     EnvironmentSettings environmentSettings;
+    AgentSettings agentSettings;
 
     public ShootairAgent shootairAgent;
     public EnemyAI enemy;
