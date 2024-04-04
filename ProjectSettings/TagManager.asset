@@ -37,6 +37,7 @@ TagManager:
   - p26
   - p27
   - p28
+  - refp
   layers:
   - Default
   - TransparentFX
