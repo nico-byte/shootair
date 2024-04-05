@@ -1,49 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.MLAgents;
-using Unity.Sentis.Layers;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour {
-	EnvironmentController envController;
-
-	public float speed = 20f;
-	public int damage = 40;
-	public Rigidbody2D rb;
-
-    public float lifeTime = 3f;
-
-	// Use this for initialization
-	void Start () 
-	{
-		envController = FindObjectOfType<EnvironmentController>();
-		rb = GetComponent<Rigidbody2D>();
-        Destroy(this.gameObject, lifeTime);
-	}
-
-    private void FixedUpdate()
-    {
-        rb.velocity = transform.up * speed;
-    }
-
-	private void OnTriggerEnter2D (Collider2D other)
-    {
-		if (other.gameObject.CompareTag("target") || other.gameObject.CompareTag("wall") || other.gameObject.CompareTag("obstacle"))
+namespace ShootAirRLAgent
+{
+	public class Bullet : MonoBehaviour {
+		EnvironmentController envController;
+	
+		[SerializeField]
+		private float speed = 20f;
+		[SerializeField]
+		private int damage = 40;
+		[SerializeField]
+		private Rigidbody2D rb;
+	
+	    [SerializeField]
+		private float lifeTime = 3f;
+	
+		// Use this for initialization
+		void Start () 
 		{
-			if (!other.gameObject.CompareTag("target"))
+			envController = FindObjectOfType<EnvironmentController>();
+			rb = GetComponent<Rigidbody2D>();
+	        Destroy(this.gameObject, lifeTime);
+		}
+	
+	    private void FixedUpdate()
+	    {
+	        rb.velocity = transform.up * speed;
+	    }
+	
+		private void OnTriggerEnter2D (Collider2D other)
+	    {
+			if (other.gameObject.CompareTag("target") || other.gameObject.CompareTag("wall") || other.gameObject.CompareTag("obstacle"))
 			{
-				envController.ResolveEvent(Event.missedShot);
+				if (!other.gameObject.CompareTag("target"))
+				{
+					envController.ResolveEvent(Event.missedShot);
+				}
+				Destroy(gameObject);
 			}
-			Destroy(gameObject);
-		}
-		EnemyAI enemy = other.GetComponent<EnemyAI>();
-		if (enemy != null)
-		{
-			enemy.TakeDamage(damage);
-			Debug.Log("Hit!");
-			envController.ResolveEvent(Event.hitOnTarget);
-		}
-    }
+			EnemyAI enemy = other.GetComponent<EnemyAI>();
+			if (enemy != null)
+			{
+				enemy.TakeDamage(damage);
+				Debug.Log("Hit!");
+				envController.ResolveEvent(Event.hitOnTarget);
+			}
+	    }
+	}
 }

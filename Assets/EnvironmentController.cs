@@ -1,225 +1,190 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
-using JetBrains.Annotations;
-using Unity.MLAgents;
 using UnityEngine;
-
-public enum Event
+namespace ShootAirRLAgent
 {
-    hitOnTarget = 0,
-    collisionWithTarget = 1,
-    killedTarget = 2,
-    killedAllTargets = 3,
-    hitWall = 4,
-    missedShot = 5
-}
-
-public class EnvironmentController : MonoBehaviour
-{
-    EnvironmentSettings environmentSettings;
-    AgentSettings agentSettings;
-
-    public ShootairAgent shootairAgent;
-    public EnemyAI enemy;
-    public Bullet bullet;
-
-    public GameObject trainingAreaPrefab;
-    public GameObject standardEnemyPrefab;
-    public GameObject difficultEnemyPrefab;
-    public GameObject fastEnemyPrefab;
-    private GameObject agent;
-    private GameObject area;
-
-    public Transform environment;
-
-    // public List<ShootairAgent> AgentsList = new List<ShootairAgent>();
-    public List<GameObject> EnemyList = new List<GameObject>();
-    
-    private int resetTimer;
-    public int MaxEnvironmentSteps;
-    private int currentWave = 0;
-    private int streak;
-    
-    // Start is called before the first frame update
-    void Start()
+    public enum Event
     {
-        environmentSettings = FindObjectOfType<EnvironmentSettings>();
-        
-        area = Instantiate(trainingAreaPrefab, environment.position, environment.rotation);
-        agent = GameObject.FindGameObjectWithTag("agent");
-
-        agent.transform.parent = area.transform;
-
-        ResetScene();
+        hitOnTarget = 0,
+        collisionWithTarget = 1,
+        killedTarget = 2,
+        killedAllTargets = 3,
+        hitWall = 4,
+        missedShot = 5
     }
 
-    public void ResolveEvent(Event triggerEvent)
+    public class EnvironmentController : MonoBehaviour
     {
-        switch (triggerEvent)
+        EnvironmentSettings environmentSettings;
+        AgentSettings agentSettings;
+
+        [SerializeField]
+        private ShootairAgent shootairAgent;
+
+        [SerializeField]
+        private GameObject trainingAreaPrefab;
+        [SerializeField]
+        private GameObject standardEnemyPrefab;
+        [SerializeField]
+        private GameObject difficultEnemyPrefab;
+        [SerializeField]
+        private GameObject fastEnemyPrefab;
+        private GameObject agent;
+        private GameObject area;
+
+        [SerializeField]
+        private Transform environment;
+
+        public List<GameObject> EnemyList { get; set; } = new List<GameObject>();
+
+        private int resetTimer;
+        [SerializeField]
+        private int MaxEnvironmentSteps;
+        private int currentWave = 0;
+        private int streak;
+
+        // Start is called before the first frame update
+        void Start()
         {
-            case Event.hitOnTarget:
-                
-                // apply reward to shootair agent
-                shootairAgent.AddReward(1e-5f + streak * 1e-5f);
-                streak += 1;
+            environmentSettings = FindObjectOfType<EnvironmentSettings>();
 
-                break;
+            area = Instantiate(trainingAreaPrefab, environment.position, environment.rotation);
+            agent = GameObject.FindGameObjectWithTag("agent");
 
-            case Event.collisionWithTarget:
-                // agent loses
-                shootairAgent.SetReward(-.9f);
+            agent.transform.parent = area.transform;
 
-                currentWave = 0;
-
-                // end episode
-                // Debug.Log(shootairAgent.GetCumulativeReward());
-                shootairAgent.EndEpisode();
-                ResetScene();
-                break;
-
-            case Event.killedTarget:
-                // add reward for killing target
-                shootairAgent.AddReward(6e-3f);
-
-                break;
-
-            case Event.killedAllTargets:
-                if (currentWave >= environmentSettings.waves.Count-1)
-                {
-                    currentWave = 0;
-                    // shootairAgent.AddReward(1f - shootairAgent.GetCumulativeReward());
-                    shootairAgent.EndEpisode();
-                    ResetScene();
-                    break;
-                }
-                
-                // agent wins
-                shootairAgent.AddReward(.6f / environmentSettings.waves.Count);
-
-                // end episode
-                // shootairAgent.EpisodeInterrupted();
-
-                currentWave++;
-                ResetEnemies();
-                break;
-
-            case Event.hitWall:
-                // agent loses
-                shootairAgent.SetReward(-.9f);
-
-                currentWave = 0;
-
-                // end episode
-                // Debug.Log(shootairAgent.GetCumulativeReward());
-                shootairAgent.EndEpisode();
-                ResetScene();
-                break;
-
-            case Event.missedShot:
-                
-                // apply reward to shootair agent
-                shootairAgent.AddReward(-1e-5f);
-                streak = 0;
-
-                break;
-        }
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        resetTimer += 1;
-        // Debug.Log(resetTimer);
-        if (resetTimer >= MaxEnvironmentSteps && MaxEnvironmentSteps > 0)
-        {
-            shootairAgent.EndEpisode();
             ResetScene();
         }
 
-        EnemyList.RemoveAll( x => !x);
-
-        if (EnemyList.Count == 0)
+        public void ResolveEvent(Event triggerEvent)
         {
-            ResolveEvent(Event.killedAllTargets);
-        }
+            switch (triggerEvent)
+            {
+                case Event.hitOnTarget:
 
-        shootairAgent.AddReward(-2e-5f);
-    }
+                    // apply reward to shootair agent
+                    shootairAgent.AddReward(1e-5f + streak * 1e-5f);
+                    streak += 1;
 
-    public void ResetScene()
-    {
-        /*
-        foreach (var agent in AgentsList)
-        {
-            // randomise starting positions and rotations
-            var randomPosX = Random.Range(-2f, 2f);
-            var randomPosZ = Random.Range(-2f, 2f);
-            var randomPosY = Random.Range(0.5f, 3.75f); // depends on jump height
-            var randomRot = Random.Range(-45f, 45f);
+                    break;
 
-            agent.transform.localPosition = new UnityEngine.Vector3(randomPosX, randomPosY, randomPosZ);
-            agent.transform.eulerAngles = new UnityEngine.Vector3(0, randomRot, 0);
+                case Event.collisionWithTarget:
+                    // agent loses
+                    shootairAgent.SetReward(-.9f);
 
-            agent.GetComponent<Rigidbody>().velocity = default;
-        }
-        */
+                    currentWave = 0;
 
-        // randomise starting positions and rotations
-        // var randomPosX = Random.Range(-2f, 2f);
-        // var randomPosY = Random.Range(0.5f, 3.75f); // depends on jump height
-        // var randomRot = Random.Range(-45f, 45f);
+                    // end episode
+                    shootairAgent.EndEpisode();
+                    ResetScene();
+                    break;
 
-        // Debug.Log("Resetting Scene!");
-        resetTimer = 0;
-        
-        agent.transform.position = new UnityEngine.Vector3(0, 0, 0);
-        agent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, 0);
+                case Event.killedTarget:
+                    // add reward for killing target
+                    shootairAgent.AddReward(6e-3f);
 
-        agent.GetComponent<Rigidbody2D>().velocity = default;
+                    break;
 
-        ResetEnemies();
-    }
+                case Event.killedAllTargets:
+                    if (currentWave >= environmentSettings.waves.Count-1)
+                    {
+                        currentWave = 0;
+                        shootairAgent.EndEpisode();
+                        ResetScene();
+                        break;
+                    }
 
-    void ResetEnemies()
-    {
-        EnemyList.Clear(); // clear list of enemies
-        
-        // kill previous instances of enemies
-        UnityEngine.Object[] allObjects = FindObjectsOfType(typeof(GameObject));
-        foreach(GameObject obj in allObjects) {
-            if(obj.transform.name == "StandardEnemy(Clone)" || obj.transform.name == "DifficultEnemy(Clone)" || obj.transform.name == "FastEnemy(Clone)"){
-                Destroy(obj);
+                    // agent wins
+                    shootairAgent.AddReward(.6f / environmentSettings.waves.Count);
+
+                    // end episode
+
+                    currentWave++;
+                    ResetEnemies();
+                    break;
+
+                case Event.missedShot:
+
+                    // apply reward to shootair agent
+                    shootairAgent.AddReward(-1e-5f);
+                    streak = 0;
+
+                    break;
             }
         }
 
-        List<int> enemyCount = environmentSettings.waves[currentWave];
-
-        if (enemyCount[0] > 0)
+        // Update is called once per frame
+        void FixedUpdate()
         {
-            spawn(standardEnemyPrefab, enemyCount[0], 11, 2.5f);
+            resetTimer += 1;
+            if (resetTimer >= MaxEnvironmentSteps && MaxEnvironmentSteps > 0)
+            {
+                shootairAgent.EndEpisode();
+                ResetScene();
+            }
+
+            EnemyList.RemoveAll( x => !x);
+
+            if (EnemyList.Count == 0)
+            {
+                ResolveEvent(Event.killedAllTargets);
+            }
+
+            shootairAgent.AddReward(-2e-5f);
         }
 
-        if (enemyCount[1] > 0)
+        public void ResetScene()
         {
-            spawn(fastEnemyPrefab, enemyCount[1], 7, -8);
+            resetTimer = 0;
+
+            agent.transform.position = new Vector3(0, 0, 0);
+            agent.transform.eulerAngles = new Vector3(0, 0, 0);
+
+            agent.GetComponent<Rigidbody2D>().velocity = default;
+
+            ResetEnemies();
         }
 
-        if (enemyCount[2] > 0)
+        void ResetEnemies()
         {
-            spawn(difficultEnemyPrefab, enemyCount[2], -8, -8);
-        }
-    }
+            EnemyList.Clear(); // clear list of enemies
 
-    void spawn(GameObject prefab, int quant, float xOffset, float yOffset)
-    {
-        // Spawn enemies in spawn area
-        for (int i = 1; i <= quant; i++)
+            // kill previous instances of enemies
+            GameObject[] allObjects = FindObjectsOfType<GameObject>();
+            foreach (GameObject obj in allObjects)
+            {
+                if (obj.transform.name == "StandardEnemy(Clone)" || obj.transform.name == "DifficultEnemy(Clone)" || obj.transform.name == "FastEnemy(Clone)")
+                {
+                    Destroy(obj);
+                }
+            }
+
+            List<int> enemyCount = environmentSettings.waves[currentWave];
+
+            if (enemyCount[0] > 0)
+            {
+                spawn(standardEnemyPrefab, enemyCount[0], 11, 2.5f);
+            }
+
+            if (enemyCount[1] > 0)
+            {
+                spawn(fastEnemyPrefab, enemyCount[1], 7, -8);
+            }
+
+            if (enemyCount[2] > 0)
+            {
+                spawn(difficultEnemyPrefab, enemyCount[2], -8, -8);
+            }
+        }
+
+        void spawn(GameObject prefab, int quant, float xOffset, float yOffset)
         {
-            GameObject newGO = Instantiate(prefab, new UnityEngine.Vector3(xOffset * UnityEngine.Random.value, yOffset, 0f), UnityEngine.Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0.0f, 360.0f)));
-            newGO.transform.parent = area.transform;
-            EnemyList.Add(newGO);
+            // Spawn enemies in spawn area
+            for (int i = 1; i <= quant; i++)
+            {
+                GameObject newGO = Instantiate(prefab, new Vector3(xOffset * Random.value, yOffset, 0f), Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
+                newGO.transform.parent = area.transform;
+                EnemyList.Add(newGO);
+            }
         }
     }
 }

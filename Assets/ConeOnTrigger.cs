@@ -1,45 +1,45 @@
-using System.Collections;
 using UnityEngine;
 
-public class ConeOnTrigger : MonoBehaviour {
- 
-    EnemyAI EnemyAI;
-    EnemyAI[] EnemyArray;
- 
-   
-    void Awake()
-    {
-        EnemyAI = FindObjectOfType<EnemyAI>();
-    }
+namespace ShootAirRLAgent
+{
+    public class ConeOnTrigger : MonoBehaviour {
     
-    void FixedUpdate()
-    {
-        EnemyArray = FindObjectsOfType<EnemyAI>();
-    }
+        EnemyAI EnemyAI;
+        EnemyAI[] EnemyArray;
     
-    void OnTriggerEnter2D(Collider2D o)
-    {
-        if (o.gameObject.tag == "agent")
+    
+        void Awake()
         {
-            // Debug.Log("in View Cone");
-            EnemyAI.inViewCone = true;
-            foreach (EnemyAI enemy in EnemyArray)
+            EnemyAI = FindObjectOfType<EnemyAI>();
+        }
+        
+        void FixedUpdate()
+        {
+            EnemyArray = FindObjectsOfType<EnemyAI>();
+        }
+        
+        void OnTriggerEnter2D(Collider2D o)
+        {
+            if (o.gameObject.tag == "agent")
             {
-                enemy.inViewCone = true;
+                EnemyAI.inViewCone = true;
+                foreach (EnemyAI enemy in EnemyArray)
+                {
+                    enemy.inViewCone = true;
+                }
             }
         }
-    }
-    
-    void OnTriggerExit2D(Collider2D o)
-    {
- 
-        if (o.gameObject.tag == "agent")
+        
+        void OnTriggerExit2D(Collider2D o)
         {
-            // Debug.Log("left View Cone");
-            EnemyAI.inViewCone = false;
-            foreach (EnemyAI enemy in EnemyArray)
+        
+            if (o.gameObject.tag == "agent")
             {
-                enemy.inViewCone = false;
+                EnemyAI.inViewCone = false;
+                foreach (EnemyAI enemy in EnemyArray)
+                {
+                    enemy.inViewCone = false;
+                }
             }
         }
     }

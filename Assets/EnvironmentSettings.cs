@@ -1,14 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 
-public class EnvironmentSettings : MonoBehaviour
+namespace ShootAirRLAgent
 {
-    public List<List<int>> waves = new List<List<int>>
+    public class EnvironmentSettings : MonoBehaviour
     {
-        new List<int> {3, 0, 0},
-        new List<int> {5, 1, 0},
-        new List<int> {5, 3, 1}
-    };
+        public List<List<int>> waves { get; set; } = new List<List<int>>
+        {
+            new List<int> {3, 0, 0},
+            new List<int> {5, 1, 0},
+            new List<int> {5, 3, 1}
+        };
+    }
 }

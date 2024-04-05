@@ -1,15 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LockCamera : MonoBehaviour
+namespace ShootAirRLAgent
 {
-    public Transform target;
-    public bool follow;
- 
-    // Update is called once per frame
-    void LateUpdate()
+    public class LockCamera : MonoBehaviour
     {
-        if (follow) transform.position = new Vector3(target.position.x, target.position.y, -40);
+        [SerializeField]
+        private Transform target;
+        [SerializeField]
+        private bool follow;
+    
+        // Update is called once per frame
+        void LateUpdate()
+        {
+            if (follow) transform.position = new Vector3(target.position.x, target.position.y, -40);
+        }
     }
 }

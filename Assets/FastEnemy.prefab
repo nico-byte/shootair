@@ -454,10 +454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c8516a59d016524aa268edf6ac8626f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  inViewCone: 0
-  health: 30
-  trackVelocity: {x: 0, y: 0}
+  enemyType: 2
 --- !u!70 &712843228287069632
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

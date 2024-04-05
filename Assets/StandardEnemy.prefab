@@ -580,10 +580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c8516a59d016524aa268edf6ac8626f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  inViewCone: 0
-  health: 100
-  trackVelocity: {x: 0, y: 0}
+  enemyType: 3
 --- !u!95 &7823571207269237758
 Animator:
   serializedVersion: 5
