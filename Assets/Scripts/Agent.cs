@@ -163,6 +163,7 @@ namespace ShootAirRLAgent
                     agentObservations.observations["velocity_xEnemy"] = velocity.x;
                     agentObservations.observations["velocity_yEnemy"] = velocity.y;
                     agentObservations.observations["healthEnemy"] = health;
+                    
                 }
 
                 bufferSensor.AppendObservation(enemyObservation);

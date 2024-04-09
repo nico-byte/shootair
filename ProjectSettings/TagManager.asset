@@ -40,6 +40,10 @@ TagManager:
   - refp
   - refp1
   - refp2
+  - refp3
+  - refp4
+  - refp5
+  - refp6
   layers:
   - Default
   - TransparentFX

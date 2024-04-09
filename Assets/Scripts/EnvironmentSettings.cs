@@ -7,9 +7,10 @@ namespace ShootAirRLAgent
     {
         public List<List<int>> waves { get; set; } = new List<List<int>>
         {
-            new List<int> {3, 0, 0},
-            new List<int> {5, 1, 0},
-            new List<int> {5, 3, 1}
+            new List<int> {6, 0, 0},
+            new List<int> {8, 4, 0},
+            new List<int> {14, 6, 4},
+            new List<int> {20, 10, 6}
         };
     }
 }
