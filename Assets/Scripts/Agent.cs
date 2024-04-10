@@ -5,6 +5,8 @@ using Unity.MLAgents.Actuators;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using TMPro;
 
 namespace ShootAirRLAgent
 {
@@ -26,7 +28,7 @@ namespace ShootAirRLAgent
         private Animator anim;
         [SerializeField]
         private GameObject bulletPrefab;
-        [SerializeField]
+        private GameObject[] weaponSprites;
         private Transform firingPoint;
 
         EnvironmentController envController;
@@ -45,6 +47,20 @@ namespace ShootAirRLAgent
             envController = FindObjectOfType<EnvironmentController>();
             agentObservations = FindObjectOfType<AgentObservations>();
             anim = gameObject.GetComponent<Animator>();
+
+            GameObject weaponSprite1 = GameObject.FindGameObjectWithTag("weaponUp");
+            GameObject weaponSprite2 = GameObject.FindGameObjectWithTag("weaponDown");
+            GameObject weaponSprite3 = GameObject.FindGameObjectWithTag("weaponRight");
+            GameObject weaponSprite4 = GameObject.FindGameObjectWithTag("weaponLeft");
+
+            weaponSprites = new GameObject[4] {
+                weaponSprite1,
+                weaponSprite2,
+                weaponSprite3,
+                weaponSprite4,
+            };
+
+            activateStarterWeapon();
         }
 
 
@@ -227,6 +243,8 @@ namespace ShootAirRLAgent
                 anim.SetBool("IsMoving", false);
             }
 
+            Shoot(shootingStates, shootingStar);
+
             // Movement and shooting
             float forwardAmount = 0f;
             float turnAmount = 0f;
@@ -239,15 +257,17 @@ namespace ShootAirRLAgent
                     if (direction == "Up" || direction == "Down")
                     {
                         forwardAmount = direction == "Up" ? 1f : -1f;
+                        int idx = direction == "Up" ? 0 : 1;
+                        activateWeaponIdx(idx);
                     }
                     else
                     {
                         turnAmount = direction == "Right" ? 1f : -1f;
+                        int idx = direction == "Right" ? 2 : 3;
+                        activateWeaponIdx(idx);
                     }
                 }
             }
-
-            Shoot(shootingStates, shootingStar);
 
             anim.SetFloat("xMove", turnAmount);
             anim.SetFloat("yMove", forwardAmount);
@@ -277,11 +297,15 @@ namespace ShootAirRLAgent
                     SetState(PlayerState.MovingAiming);
                     if (rotation == "Up" || rotation == "Down")
                     {
+                        firingPoint = rotation == "Up" ? weaponSprites[0].transform.GetChild(0) : weaponSprites[1].transform.GetChild(0);
                         firingPoint.transform.rotation = rotation == "Up" ? Quaternion.Euler(0f, 0f, 0f) : Quaternion.Euler(0, 0, 180f);
+                        activateFiringPoint(firingPoint);
                     }
                     else
                     {
+                        firingPoint = rotation == "Left" ? weaponSprites[3].transform.GetChild(0) : weaponSprites[2].transform.GetChild(0);
                         firingPoint.transform.rotation = rotation == "Left" ? Quaternion.Euler(0f, 0f, 90f) : Quaternion.Euler(0, 0, 270f);
+                        activateFiringPoint(firingPoint);
                     }
 
                     Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
@@ -289,6 +313,32 @@ namespace ShootAirRLAgent
                     shotAvailable = false;
                 }
             }
+        }
+
+        private void deactivateWeapons()
+        {
+            foreach (GameObject weapon in weaponSprites)
+            {
+                weapon.SetActive(false);
+            }
+        }
+
+        private void activateFiringPoint(Transform child)
+        {
+            deactivateWeapons();
+            child.parent.gameObject.SetActive(true);
+        }
+
+        private void activateStarterWeapon()
+        {
+            deactivateWeapons();
+            weaponSprites[1].SetActive(true);
+        }
+
+        private void activateWeaponIdx(int idx)
+        {
+            deactivateWeapons();
+            weaponSprites[idx].SetActive(true);
         }
 
         public override void Heuristic(in ActionBuffers actionsOut)

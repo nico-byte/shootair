@@ -5,20 +5,21 @@ using UnityEngine.AI;
 
 namespace ShootAirRLAgent
 {
-    public class EnemyAI : MonoBehaviour {
-    	private Rigidbody2D rBody;
+    public class EnemyAI : MonoBehaviour
+    {
+        private Rigidbody2D rBody;
         private Transform target;
 
         NavMeshAgent enemy;
-    
-    	Vector3 direction;
-    	private Vector2 currentTarget;
-    	private Animator anim;
-    	bool chasing = false;
-    	bool waiting = false;
-    	public bool inViewCone { get; set; }
 
-    	EnvironmentController envController;
+        Vector3 direction;
+        private Vector2 currentTarget;
+        private Animator anim;
+        bool chasing = false;
+        bool waiting = false;
+        public bool inViewCone { get; set; }
+
+        EnvironmentController envController;
         public int health { get; set; }
 
         [SerializeField]
@@ -30,22 +31,22 @@ namespace ShootAirRLAgent
         private int stuckCounter;
         public Vector2 trackVelocity { get; set; }
 
-    	public void Awake()
-    	{
-    		// Get a reference to the agent's transform
+        public void Awake()
+        {
+            // Get a reference to the agent's transform
             target = GameObject.FindGameObjectWithTag("agent").transform;
 
             enemy = GetComponent<NavMeshAgent>();
             enemy.updateRotation = false;
             enemy.updateUpAxis = false;
-    
+
             // Get a reference to the FSM (animator)
             anim = gameObject.GetComponent<Animator>();
-    	}
-    
-    	public void Start()
-    	{
-    		envController = FindObjectOfType<EnvironmentController>();
+        }
+
+        public void Start()
+        {
+            envController = FindObjectOfType<EnvironmentController>();
             rBody = GetComponent<Rigidbody2D>();
 
             if (enemyType == 1)
@@ -60,17 +61,17 @@ namespace ShootAirRLAgent
             {
                 health = 100;
             }
-    	}
+        }
 
-    	private void Update()
-        {   
+        private void Update()
+        {
             // If chasing get the position of the agent and point towards it
             if (chasing)
             {
                 Chase();
                 rotateEnemy();
             }
-    
+
             // Unless the enemy is waiting then move
             if (!waiting && !chasing)
             {
@@ -84,7 +85,7 @@ namespace ShootAirRLAgent
 
         }
 
-    	private void FixedUpdate()
+        private void FixedUpdate()
         {
             // Give the values to the FSM (animator)
             float distanceFromTarget = Vector2.Distance(currentTarget, transform.position);
@@ -113,19 +114,19 @@ namespace ShootAirRLAgent
             }
         }
 
-    	public void SetNextPoint()
+        public void SetNextPoint()
         {
             // Pick a random waypoint 
             // But make sure it is not the same as the last one
-            Vector2 nextPoint = new Vector2(0, 0);
+            Vector2 nextPoint;
             Vector2 targetPosition = new Vector2(target.transform.position.x, target.transform.position.y);
-    
+
             do
             {
-                nextPoint =  RandomPointInAnnulus(targetPosition, 2.5f, 5f);
+                nextPoint = RandomPointInAnnulus(targetPosition, 2.5f, 5f);
             }
             while (nextPoint == currentTarget);
-    
+
             currentTarget = nextPoint;
 
             direction = currentTarget - new Vector2(transform.position.x, transform.position.y);
