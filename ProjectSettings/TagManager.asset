@@ -85,9 +85,15 @@ TagManager:
   - name: Ground
     uniqueID: 3798101623
     locked: 0
+  - name: Ground_Dec
+    uniqueID: 3578988085
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Above
+  - name: Wall
     uniqueID: 383566937
+    locked: 0
+  - name: Wall_Dec
+    uniqueID: 4038391233
     locked: 0
