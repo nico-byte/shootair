@@ -31,7 +31,7 @@ namespace ShootAirRLAgent
         private Animator anim;
         [SerializeField]
         private GameObject bulletPrefab;
-        private GameObject[] weaponSprites;
+        [SerializeField]
         private Transform firingPoint;
 
         EnvironmentController envController;
@@ -51,19 +51,6 @@ namespace ShootAirRLAgent
             agentObservations = FindObjectOfType<AgentObservations>();
             anim = gameObject.GetComponent<Animator>();
 
-            GameObject weaponSprite1 = GameObject.FindGameObjectWithTag("weaponUp");
-            GameObject weaponSprite2 = GameObject.FindGameObjectWithTag("weaponDown");
-            GameObject weaponSprite3 = GameObject.FindGameObjectWithTag("weaponRight");
-            GameObject weaponSprite4 = GameObject.FindGameObjectWithTag("weaponLeft");
-
-            weaponSprites = new GameObject[4] {
-                weaponSprite1,
-                weaponSprite2,
-                weaponSprite3,
-                weaponSprite4,
-            };
-
-            activateStarterWeapon();
         }
 
 
@@ -247,8 +234,6 @@ namespace ShootAirRLAgent
                 anim.SetBool("IsMoving", false);
             }
 
-            Shoot(shootingStates, shootingStar);
-
             // Movement and shooting
             float forwardAmount = 0f;
             float turnAmount = 0f;
@@ -261,14 +246,10 @@ namespace ShootAirRLAgent
                     if (direction == "Up" || direction == "Down")
                     {
                         forwardAmount = direction == "Up" ? 1f : -1f;
-                        int idx = direction == "Up" ? 0 : 1;
-                        activateWeaponIdx(idx);
                     }
                     else
                     {
                         turnAmount = direction == "Right" ? 1f : -1f;
-                        int idx = direction == "Right" ? 2 : 3;
-                        activateWeaponIdx(idx);
                     }
                 }
             }
