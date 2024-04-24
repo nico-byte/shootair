@@ -43,16 +43,6 @@ namespace ShootAirRLAgent
         private int currentWave = 0;
         private int streak;
         
-        public void Awake()
-        {
-            environmentSettings = FindObjectOfType<EnvironmentSettings>();
-
-            area = Instantiate(trainingAreaPrefab, environment.position, environment.rotation);
-            agent = GameObject.FindGameObjectWithTag("agent");
-
-            agent.transform.parent = area.transform;
-        }
-        
         // Start is called before the first frame update
         void Start()
         {

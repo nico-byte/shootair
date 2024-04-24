@@ -140,14 +140,6 @@ namespace ShootAirRLAgent
             float maxRadius2 = maxRadius * maxRadius;
             float randomDistance = Mathf.Sqrt(Random.value * (maxRadius2 - minRadius2) + minRadius2);
             Vector2 point = center + randomDirection * randomDistance;
-
-            bool violateXBoundaries = -19.5 < point.x && point.x < -3.5 && -33 > point.x && point.x > 24;
-            bool violateYBoundaries = -17.5 < point.y && point.y < -6.5 && -28 > point.y && point.y > 3;
-
-            if (violateXBoundaries || violateYBoundaries)
-            {
-                RandomPointInAnnulus(center, minRadius, maxRadius);
-            }
             
             return point;
         }
