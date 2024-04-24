@@ -7,17 +7,20 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using TMPro;
+using Unity.Collections;
+using UnityEngine.SocialPlatforms;
+using System.Runtime.CompilerServices;
 
 namespace ShootAirRLAgent
 {
 
-    public enum PlayerState 
-        {
-            Idle,
-            Moving,
-            Aiming,
-            MovingAiming
-        }
+    public enum PlayerState
+    {
+        Idle,
+        Moving,
+        Aiming,
+        MovingAiming
+    }
 
     public class ShootairAgent : Agent
     {
@@ -28,7 +31,7 @@ namespace ShootAirRLAgent
         private Animator anim;
         [SerializeField]
         private GameObject bulletPrefab;
-        private GameObject[] weaponSprites;
+        [SerializeField]
         private Transform firingPoint;
 
         EnvironmentController envController;
@@ -48,19 +51,6 @@ namespace ShootAirRLAgent
             agentObservations = FindObjectOfType<AgentObservations>();
             anim = gameObject.GetComponent<Animator>();
 
-            GameObject weaponSprite1 = GameObject.FindGameObjectWithTag("weaponUp");
-            GameObject weaponSprite2 = GameObject.FindGameObjectWithTag("weaponDown");
-            GameObject weaponSprite3 = GameObject.FindGameObjectWithTag("weaponRight");
-            GameObject weaponSprite4 = GameObject.FindGameObjectWithTag("weaponLeft");
-
-            weaponSprites = new GameObject[4] {
-                weaponSprite1,
-                weaponSprite2,
-                weaponSprite3,
-                weaponSprite4,
-            };
-
-            activateStarterWeapon();
         }
 
 
@@ -79,7 +69,8 @@ namespace ShootAirRLAgent
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
-            if(agentSettings.selfplay) {
+            if (agentSettings.selfplay)
+            {
                 MoveAgent(ActionBuffers.Empty);
             }
 
@@ -100,10 +91,10 @@ namespace ShootAirRLAgent
 
         private void SetState(PlayerState newState)
         {
-            if (!stateLock) 
+            if (!stateLock)
             {
                 playerState = newState;
-                switch(playerState) 
+                switch (playerState)
                 {
                     case PlayerState.Idle:
                         anim.Play("Idle");
@@ -116,7 +107,7 @@ namespace ShootAirRLAgent
                         break;
                     case PlayerState.MovingAiming:
                         anim.Play("MovingAiming");
-                        break;        
+                        break;
                 }
             }
         }
@@ -179,7 +170,7 @@ namespace ShootAirRLAgent
                     agentObservations.observations["velocity_xEnemy"] = velocity.x;
                     agentObservations.observations["velocity_yEnemy"] = velocity.y;
                     agentObservations.observations["healthEnemy"] = health;
-                    
+
                 }
 
                 bufferSensor.AppendObservation(enemyObservation);
@@ -243,8 +234,6 @@ namespace ShootAirRLAgent
                 anim.SetBool("IsMoving", false);
             }
 
-            Shoot(shootingStates, shootingStar);
-
             // Movement and shooting
             float forwardAmount = 0f;
             float turnAmount = 0f;
@@ -257,18 +246,16 @@ namespace ShootAirRLAgent
                     if (direction == "Up" || direction == "Down")
                     {
                         forwardAmount = direction == "Up" ? 1f : -1f;
-                        int idx = direction == "Up" ? 0 : 1;
-                        activateWeaponIdx(idx);
                     }
                     else
                     {
                         turnAmount = direction == "Right" ? 1f : -1f;
-                        int idx = direction == "Right" ? 2 : 3;
-                        activateWeaponIdx(idx);
                     }
                 }
             }
 
+            FireWeapon(shootingStates, shootingStar);
+            
             anim.SetFloat("xMove", turnAmount);
             anim.SetFloat("yMove", forwardAmount);
             anim.SetBool("IsMoving", true);
@@ -282,63 +269,62 @@ namespace ShootAirRLAgent
 
         public override void OnActionReceived(ActionBuffers actions)
         {
-            if (!agentSettings.selfplay) {
+            if (!agentSettings.selfplay)
+            {
                 MoveAgent(actions);
             }
         }
 
-        private void Shoot(Dictionary<string, bool> shootingStates = null, bool shootingStar = false)
+        private void FireWeapon(Dictionary<string, bool> shootingStates = null, bool shootingStar = false)
         {
             foreach (var rotation in shootingStates.Keys)
             {
                 if (shootingStates[rotation] && shotAvailable && shootingStar)
                 {
                     // Only update the firing direction if the agent is not currently firing
+                    // Change firingPoint rotation based on shooting key pressed
                     SetState(PlayerState.MovingAiming);
+                    float shootingRotation;
                     if (rotation == "Up" || rotation == "Down")
                     {
-                        firingPoint = rotation == "Up" ? weaponSprites[0].transform.GetChild(0) : weaponSprites[1].transform.GetChild(0);
-                        firingPoint.transform.rotation = rotation == "Up" ? Quaternion.Euler(0f, 0f, 0f) : Quaternion.Euler(0, 0, 180f);
-                        activateFiringPoint(firingPoint);
+                        shootingRotation = rotation == "Up" ? 0f : 180f;
                     }
                     else
                     {
-                        firingPoint = rotation == "Left" ? weaponSprites[3].transform.GetChild(0) : weaponSprites[2].transform.GetChild(0);
-                        firingPoint.transform.rotation = rotation == "Left" ? Quaternion.Euler(0f, 0f, 90f) : Quaternion.Euler(0, 0, 270f);
-                        activateFiringPoint(firingPoint);
+                        shootingRotation = rotation == "Left" ? 90f : 270f;
                     }
 
-                    Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
-                    agentSettings.fireTimer = agentSettings.fireRate;
+                    switch (agentSettings.weaponEquipped)
+                    {
+                        case "pistol": // Pistol Equipped
+                            Shoot(shootingRotation, speed: 15f, damage: 45, lifetime: 3f, bulletAmount: 1, bulletSpread: 0f);
+                            agentSettings.fireTimer = 0.5f;
+                            break;
+                        case "rifle": // Rifle Equipped
+                            Shoot(shootingRotation, speed: 25f, damage: 20, lifetime: 3f, bulletAmount: 1, bulletSpread: 2f);
+                            agentSettings.fireTimer = 0.18f;
+                            break;
+                        case "shotgun": // Shotgun Equipped
+                            Shoot(shootingRotation, speed: 12f, damage: 8, lifetime: 0.8f, bulletAmount: 20, bulletSpread: 15f);
+                            agentSettings.fireTimer = 1.2f;
+                            break;
+                    }
+
+                    // Reset ShotAvailable
                     shotAvailable = false;
                 }
             }
         }
 
-        private void deactivateWeapons()
+        private void Shoot(float rotation, float speed = 20f, int damage = 40, float lifetime = 3f, int bulletAmount = 1, float bulletSpread = 0f)
         {
-            foreach (GameObject weapon in weaponSprites)
+            for (int i = 0; i < bulletAmount; i++)
             {
-                weapon.SetActive(false);
+                float rotationOffset = bulletSpread == 0f ? 0f : UnityEngine.Random.Range(-bulletSpread, bulletSpread);
+                firingPoint.transform.rotation = Quaternion.Euler(0f, 0f, rotation + rotationOffset);
+                GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+                bullet.GetComponent<Bullet>().bulletSettings(speed, damage, lifetime);
             }
-        }
-
-        private void activateFiringPoint(Transform child)
-        {
-            deactivateWeapons();
-            child.parent.gameObject.SetActive(true);
-        }
-
-        private void activateStarterWeapon()
-        {
-            deactivateWeapons();
-            weaponSprites[1].SetActive(true);
-        }
-
-        private void activateWeaponIdx(int idx)
-        {
-            deactivateWeapons();
-            weaponSprites[idx].SetActive(true);
         }
 
         public override void Heuristic(in ActionBuffers actionsOut)
