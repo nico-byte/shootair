@@ -114,8 +114,7 @@ namespace ShootAirRLAgent
                 case Event.hitOnTarget:
 
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(1e-5f + streak * 1e-5f);
-                    streak += 1;
+                    shootairAgent.AddReward(8e-5f);
 
                     break;
 
@@ -132,7 +131,7 @@ namespace ShootAirRLAgent
 
                 case Event.killedTarget:
                     // add reward for killing target
-                    shootairAgent.AddReward(6e-3f);
+                    shootairAgent.AddReward(1.5e-3f);
 
                     break;
 
@@ -146,7 +145,7 @@ namespace ShootAirRLAgent
                     }
 
                     // agent wins
-                    shootairAgent.AddReward(.6f / environmentSettings.waves.Count);
+                    shootairAgent.AddReward(.4f / environmentSettings.waves.Count);
 
                     // end episode
 
@@ -158,7 +157,6 @@ namespace ShootAirRLAgent
 
                     // apply reward to shootair agent
                     shootairAgent.AddReward(-1e-5f);
-                    streak = 0;
 
                     break;
             }
@@ -181,7 +179,7 @@ namespace ShootAirRLAgent
                 ResolveEvent(Event.killedAllTargets);
             }
 
-            shootairAgent.AddReward(-2e-5f);
+            shootairAgent.AddReward(-1e-8f);
         }
 
         public void ResetScene()

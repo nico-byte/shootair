@@ -12,6 +12,7 @@
 /[Pp]ackages/ml-agents
 /[Pp]ackages/NavMeshPlus
 /[Ee]nvs/
+/[R]results/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
