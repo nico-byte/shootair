@@ -27,6 +27,7 @@ namespace ShootAirRLAgent
         // VARIABLES
         Rigidbody2D rBody;
         AgentSettings agentSettings;
+        SoundEffectPlayer soundHandler;
         BufferSensorComponent bufferSensor;
         private Animator anim;
         [SerializeField]
@@ -50,7 +51,6 @@ namespace ShootAirRLAgent
             envController = FindObjectOfType<EnvironmentController>();
             agentObservations = FindObjectOfType<AgentObservations>();
             anim = gameObject.GetComponent<Animator>();
-
         }
 
 
@@ -59,6 +59,7 @@ namespace ShootAirRLAgent
             base.Initialize();
             rBody = GetComponent<Rigidbody2D>();
             agentSettings = FindObjectOfType<AgentSettings>();
+            soundHandler = FindObjectOfType<SoundEffectPlayer>();
             bufferSensor = gameObject.GetComponent<BufferSensorComponent>();
             stateLock = false;
             playerState = PlayerState.Idle;
@@ -233,6 +234,10 @@ namespace ShootAirRLAgent
                 SetState(PlayerState.Aiming);
                 anim.SetBool("IsMoving", false);
             }
+            if (!shootingStar)
+            {
+                SetWeaponSprites(false, false, false, false);
+            }
 
             // Movement and shooting
             float forwardAmount = 0f;
@@ -255,7 +260,7 @@ namespace ShootAirRLAgent
             }
 
             FireWeapon(shootingStates, shootingStar);
-            
+
             anim.SetFloat("xMove", turnAmount);
             anim.SetFloat("yMove", forwardAmount);
             anim.SetBool("IsMoving", true);
@@ -273,6 +278,19 @@ namespace ShootAirRLAgent
             {
                 MoveAgent(actions);
             }
+        }
+
+        private void SetWeaponSprites(bool up, bool down, bool left, bool right)
+        {
+            Transform weapons = transform.Find("weapons");
+            GameObject weaponUp = weapons.GetChild(0).gameObject;
+            GameObject weaponDown = weapons.GetChild(1).gameObject;
+            GameObject weaponLeft = weapons.GetChild(2).gameObject;
+            GameObject weaponRight = weapons.GetChild(3).gameObject;
+            weaponUp.SetActive(up);
+            weaponDown.SetActive(down);
+            weaponLeft.SetActive(left);
+            weaponRight.SetActive(right);
         }
 
         private void FireWeapon(Dictionary<string, bool> shootingStates = null, bool shootingStar = false)
@@ -294,18 +312,37 @@ namespace ShootAirRLAgent
                         shootingRotation = rotation == "Left" ? 90f : 270f;
                     }
 
+                    switch (shootingRotation)
+                    {
+                        case 0f:
+                            SetWeaponSprites(true, false, false, false);
+                            break;
+                        case 90f:
+                            SetWeaponSprites(false, false, true, false);
+                            break;
+                        case 180f:
+                            SetWeaponSprites(false, true, false, false);
+                            break;
+                        case 270f:
+                            SetWeaponSprites(false, false, false, true);
+                            break;
+                    }
+
                     switch (agentSettings.weaponEquipped)
                     {
                         case "pistol": // Pistol Equipped
                             Shoot(shootingRotation, speed: 15f, damage: 45, lifetime: 3f, bulletAmount: 1, bulletSpread: 0f);
+                            soundHandler.playSound("weapon_pistol_shoot");
                             agentSettings.fireTimer = 0.5f;
                             break;
                         case "rifle": // Rifle Equipped
                             Shoot(shootingRotation, speed: 25f, damage: 20, lifetime: 3f, bulletAmount: 1, bulletSpread: 2f);
+                            soundHandler.playSound("weapon_rifle_shoot");
                             agentSettings.fireTimer = 0.18f;
                             break;
                         case "shotgun": // Shotgun Equipped
                             Shoot(shootingRotation, speed: 12f, damage: 8, lifetime: 0.8f, bulletAmount: 20, bulletSpread: 15f);
+                            soundHandler.playSound("weapon_shotgun_shoot");
                             agentSettings.fireTimer = 1.2f;
                             break;
                     }

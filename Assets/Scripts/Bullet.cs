@@ -5,6 +5,7 @@ namespace ShootAirRLAgent
 	public class Bullet : MonoBehaviour
 	{
 		EnvironmentController envController;
+		SoundEffectPlayer soundHandler;
 		[SerializeField]
 		private Rigidbody2D rb;
 
@@ -19,6 +20,7 @@ namespace ShootAirRLAgent
 		void Start()
 		{
 			envController = FindObjectOfType<EnvironmentController>();
+			soundHandler = FindObjectOfType<SoundEffectPlayer>();
 			rb = GetComponent<Rigidbody2D>();
 			Destroy(this.gameObject, lifeTime);
 		}
@@ -47,6 +49,7 @@ namespace ShootAirRLAgent
 			if (enemy != null)
 			{
 				enemy.TakeDamage(damage);
+				soundHandler.playSound("enemy_damage");
 				Debug.Log("Hit!");
 				envController.ResolveEvent(Event.hitOnTarget);
 			}
