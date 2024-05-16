@@ -13,6 +13,6 @@ namespace ShootAirRLAgent
         public float maxVelocity { get; set; } = 10f;
         public float maxDistance { get; set; } = 65f;
         public float maxHealth { get; set; } = 150f;
-        public string weaponEquipped { get; set; } = "pistol"; // pistol | rifle | shotgun
+        public string weaponEquipped { get; set; } = "shotgun"; // pistol | rifle | shotgun
     }
 }

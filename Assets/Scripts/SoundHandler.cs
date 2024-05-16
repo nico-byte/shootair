@@ -19,14 +19,6 @@ namespace ShootAirRLAgent
             agentSettings = FindObjectOfType<AgentSettings>();
         }
 
-        private void FixedUpdate()
-        {
-            if (Input.GetKey(KeyCode.B))
-            {
-                playSound("death_agent");
-            }
-        }
-
         public void playSound(string soundName)
         {
             if (agentSettings.selfplay) {

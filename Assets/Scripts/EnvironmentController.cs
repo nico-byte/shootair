@@ -16,6 +16,7 @@ namespace ShootAirRLAgent
     {
         EnvironmentSettings environmentSettings;
         AgentSettings agentSettings;
+        SoundEffectPlayer soundHandler;
 
         [SerializeField]
         private ShootairAgent shootairAgent;
@@ -47,6 +48,8 @@ namespace ShootAirRLAgent
         void Start()
         {
             environmentSettings = FindObjectOfType<EnvironmentSettings>();
+            soundHandler = FindObjectOfType<SoundEffectPlayer>();
+            agentSettings = FindObjectOfType<AgentSettings>();
 
             area = Instantiate(trainingAreaPrefab, environment.position, environment.rotation);
             agent = GameObject.FindGameObjectWithTag("agent");
@@ -101,7 +104,6 @@ namespace ShootAirRLAgent
             Transform refpoint1 = GameObject.Find("refpoint1").transform;
             Transform refpoint2 = GameObject.Find("refpoint2").transform;
 
-            agentSettings = FindObjectOfType<AgentSettings>();
             agentSettings.maxDistance = Vector2.Distance(refpoint1.position, refpoint2.position);
 
             ResetScene();
@@ -115,12 +117,15 @@ namespace ShootAirRLAgent
 
                     // apply reward to shootair agent
                     shootairAgent.AddReward(8e-5f);
+                    soundHandler.playSound("enemy_damage");
 
                     break;
 
                 case Event.collisionWithTarget:
                     // agent loses
                     shootairAgent.SetReward(-.9f);
+                    soundHandler.playSound("agent_death");
+                    soundHandler.playSound("game_over");
 
                     currentWave = 0;
 
@@ -132,6 +137,7 @@ namespace ShootAirRLAgent
                 case Event.killedTarget:
                     // add reward for killing target
                     shootairAgent.AddReward(1.5e-3f);
+                    soundHandler.playSound("enemy_death");
 
                     break;
 
@@ -142,10 +148,12 @@ namespace ShootAirRLAgent
                         shootairAgent.EndEpisode();
                         ResetScene();
                         break;
+                        // HE WON ALL WAVES
                     }
 
                     // agent wins
                     shootairAgent.AddReward(.4f / environmentSettings.waves.Count);
+                    soundHandler.playSound("wave_success");
 
                     // end episode
 

@@ -331,17 +331,17 @@ namespace ShootAirRLAgent
                     switch (agentSettings.weaponEquipped)
                     {
                         case "pistol": // Pistol Equipped
-                            Shoot(shootingRotation, speed: 15f, damage: 45, lifetime: 3f, bulletAmount: 1, bulletSpread: 0f);
+                            Shoot(shootingRotation, speed: 20f, damage: 45, lifetime: 3f, bulletAmount: 1, bulletSpread: 0f);
                             soundHandler.playSound("weapon_pistol_shoot");
-                            agentSettings.fireTimer = 0.5f;
+                            agentSettings.fireTimer = 0.4f;
                             break;
                         case "rifle": // Rifle Equipped
-                            Shoot(shootingRotation, speed: 25f, damage: 20, lifetime: 3f, bulletAmount: 1, bulletSpread: 2f);
+                            Shoot(shootingRotation, speed: 25f, damage: 20, lifetime: 3f, bulletAmount: 1, bulletSpread: 0f);
                             soundHandler.playSound("weapon_rifle_shoot");
                             agentSettings.fireTimer = 0.18f;
                             break;
                         case "shotgun": // Shotgun Equipped
-                            Shoot(shootingRotation, speed: 12f, damage: 8, lifetime: 0.8f, bulletAmount: 20, bulletSpread: 15f);
+                            Shoot(shootingRotation, speed: 12f, damage: 9, lifetime: 1.3f, bulletAmount: 12, bulletSpread: 15f);
                             soundHandler.playSound("weapon_shotgun_shoot");
                             agentSettings.fireTimer = 1.2f;
                             break;
@@ -358,9 +358,10 @@ namespace ShootAirRLAgent
             for (int i = 0; i < bulletAmount; i++)
             {
                 float rotationOffset = bulletSpread == 0f ? 0f : UnityEngine.Random.Range(-bulletSpread, bulletSpread);
+                float speedOffset = bulletSpread == 0f ? 0f : UnityEngine.Random.Range(-speed*0.15f, speed*0.15f);
                 firingPoint.transform.rotation = Quaternion.Euler(0f, 0f, rotation + rotationOffset);
                 GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
-                bullet.GetComponent<Bullet>().bulletSettings(speed, damage, lifetime);
+                bullet.GetComponent<Bullet>().bulletSettings(speed+speedOffset, damage, lifetime);
             }
         }
 

@@ -49,7 +49,6 @@ namespace ShootAirRLAgent
 			if (enemy != null)
 			{
 				enemy.TakeDamage(damage);
-				soundHandler.playSound("enemy_damage");
 				Debug.Log("Hit!");
 				envController.ResolveEvent(Event.hitOnTarget);
 			}
