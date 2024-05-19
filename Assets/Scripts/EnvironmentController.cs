@@ -38,6 +38,7 @@ namespace ShootAirRLAgent
         private Transform[] spawnpoints = null;
 
         private int resetTimer;
+        private int scaleTimer;
         [SerializeField]
         private int MaxEnvironmentSteps;
         private int currentWave = 0;
@@ -112,15 +113,17 @@ namespace ShootAirRLAgent
             switch (triggerEvent)
             {
                 case Event.hitOnTarget:
-
+                    float scaledReward = scaledRewards(8e-5f)
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(8e-5f);
+                    shootairAgent.AddReward(scaledReward);
 
                     break;
 
                 case Event.collisionWithTarget:
+                    float scaledReward = scaledRewards(-.9f)
+                    
                     // agent loses
-                    shootairAgent.SetReward(-.9f);
+                    shootairAgent.SetReward(scaledReward);
 
                     currentWave = 0;
 
@@ -130,8 +133,10 @@ namespace ShootAirRLAgent
                     break;
 
                 case Event.killedTarget:
+                    float scaledReward = scaledRewards(1.5e-3f)
+                    
                     // add reward for killing target
-                    shootairAgent.AddReward(1.5e-3f);
+                    shootairAgent.AddReward(scaledReward);
 
                     break;
 
@@ -143,6 +148,7 @@ namespace ShootAirRLAgent
                         ResetScene();
                         break;
                     }
+                    scaleTimer = 0;
 
                     // agent wins
                     shootairAgent.AddReward(.4f / environmentSettings.waves.Count);
@@ -152,14 +158,19 @@ namespace ShootAirRLAgent
                     currentWave++;
                     ResetEnemies();
                     break;
-
-                case Event.missedShot:
-
-                    // apply reward to shootair agent
-                    shootairAgent.AddReward(-1e-5f);
-
-                    break;
             }
+        }
+
+        private float scaledRewards(float reward) {
+            if (scaleTimer > 2000) {
+                return 0.0f
+            }
+            
+            float scaleCosineFactor = (9 * scaleTimer) / 200;
+            float scaledCosine = Mathf.Cos(scaleCosineFactor * (Mathf.PI / 180));
+            float scaledReward = scaledCosine * reward;
+
+            return scaledReward;
         }
 
         // Update is called once per frame
