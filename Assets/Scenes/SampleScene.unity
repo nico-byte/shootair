@@ -1388,7 +1388,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 62713588407104749a136f5ea4084443, type: 3}
+  m_audioClip: {fileID: 8300000, guid: e260e618655376d46be1ec491eb88dcd, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1484,7 +1484,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 392627675f0d73e4ea42af25f13fb003, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a140e94c5a6323240852c105a0205ac6, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1580,7 +1580,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 5f3877edfb358d04fab1770d844aafb7, type: 3}
+  m_audioClip: {fileID: 8300000, guid: fee43f0228b0ab246bcdf4515da52478, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1676,7 +1676,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 7a6bef6ad0955ea489b94181f2160d60, type: 3}
+  m_audioClip: {fileID: 8300000, guid: ef1ed88b36da51c43ab0f7e396f838e4, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -2540,7 +2540,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 4865d315076a835458a41e13d72413ad, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 8206288540890ee428631a0df83bcf33, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3670,7 +3670,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 6.233333
+  orthographic size: 6.3555555
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
