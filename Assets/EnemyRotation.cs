@@ -1,35 +1,35 @@
-using UnityEngine;
+//using UnityEngine;
 
-public class EnemyRotationController : MonoBehaviour
-{
-    // Referenz zum Rigidbody2D des Enemies
-    private Rigidbody2D rb;
+//public class EnemyRotationController : MonoBehaviour
+//{
+    // reference to the ridgitbody 2D
+//    private Rigidbody2D rb;
 
-    // Der Name der Float-Parameter im Animator Controller für die horizontalen und vertikalen Komponenten
-    public string rotationXParameterName = "RotationX";
-    public string rotationYParameterName = "RotationY";
+    // setting the parameter for the z rotation as x and y values
+//    public string rotationXParameterName = "RotationX";
+//    public string rotationYParameterName = "RotationY";
 
-    private void Start()
-    {
-        // Hole die Referenz zum Rigidbody2D
-        rb = GetComponent<Rigidbody2D>();
-    }
+//    private void Start()
+//    {
+        // get the reference of the ridgidbody
+//        rb = GetComponent<Rigidbody2D>();
+//    }
 
-    private void Update()
-    {
-        // Bestimme die Z-Rotation des Enemies
-        float rotationAngle = transform.eulerAngles.z;
+//    private void Update()
+//    {
+        // define the z rotation of the enemys
+//        float rotationAngle = transform.eulerAngles.z;
 
-        // Berechne die horizontalen und vertikalen Komponenten der Z-Rotation
-        float xValue = Mathf.Cos(rotationAngle * Mathf.Deg2Rad);
-        float yValue = Mathf.Sin(rotationAngle * Mathf.Deg2Rad);
+        // calculating the angle of the z rotation of the enemys
+//        float xValue = Mathf.Cos(rotationAngle * Mathf.Deg2Rad);
+//        float yValue = Mathf.Sin(rotationAngle * Mathf.Deg2Rad);
 
         // 
-        bool IsMoving = rb.velocity.magnitude > 0;
+//        bool IsMoving = rb.velocity.magnitude > 0;
 
-        // Aktualisiere die X- und Y-Werte im Blend Tree
-        GetComponent<Animator>().SetFloat(rotationXParameterName, xValue);
-        GetComponent<Animator>().SetFloat(rotationYParameterName, yValue);
+        // updating the x- and y values in the animator controller
+//        GetComponent<Animator>().SetFloat(rotationXParameterName, xValue);
+//        GetComponent<Animator>().SetFloat(rotationYParameterName, yValue);
 
-    }
-}
+//    }
+//}

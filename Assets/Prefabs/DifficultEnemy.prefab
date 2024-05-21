@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 7979250632934208142}
   - component: {fileID: 774212518654054129}
   - component: {fileID: 6348601346396686555}
-  - component: {fileID: 7775101463103675333}
   m_Layer: 6
   m_Name: DifficultEnemy
   m_TagString: target
@@ -105,7 +104,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 0.7853982
+  m_Mass: 0.19634955
   m_LinearDrag: 2
   m_AngularDrag: 2
   m_GravityScale: 0
@@ -211,20 +210,6 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7775101463103675333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3245322192379080683}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d750c009442295f4e8475c2ab70f43e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationXParameterName: RotationX
-  rotationYParameterName: RotationY
 --- !u!1 &3287291534195401861
 GameObject:
   m_ObjectHideFlags: 0
