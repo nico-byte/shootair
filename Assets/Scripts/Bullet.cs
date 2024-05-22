@@ -39,13 +39,15 @@ namespace ShootAirRLAgent
 
 		private void OnTriggerEnter2D(Collider2D other)
 		{
+			EnemyAI enemy = other.GetComponent<EnemyAI>();
 			if (other.gameObject.CompareTag("wall"))
 			{
 				Destroy(gameObject);
+				envController.ResolveEvent(Event.missedShot);
 			}
-			EnemyAI enemy = other.GetComponent<EnemyAI>();
-			if (enemy != null)
+			else if (enemy != null && lifeTime > 0f)
 			{
+				Destroy(gameObject);
 				enemy.TakeDamage(damage);
 				Debug.Log("Hit!");
 				envController.ResolveEvent(Event.hitOnTarget);

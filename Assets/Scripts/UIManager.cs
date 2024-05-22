@@ -18,9 +18,7 @@ namespace ShootAirRLAgent
         [SerializeField]
         private TextMeshProUGUI directionEnemyText;
         [SerializeField]
-        private TextMeshProUGUI velocityXEnemyText;
-        [SerializeField]
-        private TextMeshProUGUI velocityYEnemyText;
+        private TextMeshProUGUI timeLeftText;
         [SerializeField]
         private TextMeshProUGUI healthEnemyText;
         AgentObservations agentObservations;
@@ -38,8 +36,7 @@ namespace ShootAirRLAgent
             UpdateShotAvailable(MathF.Round(observationValues["shotAvailable"], 3));
             UpdateDistanceEnemy(MathF.Round(observationValues["distanceEnemy"], 3));
             UpdateDirectionEnemy(MathF.Round(observationValues["directionEnemy"], 3));
-            UpdateVelocityXEnemy(MathF.Round(observationValues["velocity_xEnemy"], 3));
-            UpdateVelocityYEnemy(MathF.Round(observationValues["velocity_yEnemy"], 3));
+            UpdateTimeLeft(MathF.Round(observationValues["timeLeft"], 3));
             UpdateHealthEnemy(MathF.Round(observationValues["healthEnemy"], 3));
         }
     
@@ -69,16 +66,11 @@ namespace ShootAirRLAgent
             directionEnemyText.text = "direction = " + direction.ToString();
         }
     
-        private void UpdateVelocityXEnemy(float velocityX)
+        private void UpdateTimeLeft(float timeLeft)
         {
-            velocityXEnemyText.text = "velocity.x = " + velocityX.ToString();
+            timeLeftText.text = "timeLeft = " + timeLeft.ToString();
         }
-    
-        private void UpdateVelocityYEnemy(float velocityY)
-        {
-            velocityYEnemyText.text = "velocity.y = " + velocityY.ToString();
-        }
-    
+        
         private void UpdateHealthEnemy(float health)
         {
             healthEnemyText.text = "health = " + health.ToString();

@@ -38,11 +38,12 @@ namespace ShootAirRLAgent
         private Transform[] spawnpoints = null;
 
         private int resetTimer;
-        private int scaleTimer;
+        public float scaleTimer = 0f;
         [SerializeField]
         private int MaxEnvironmentSteps;
         private int currentWave = 0;
         private int streak;
+        public float desiredLength;
         
         // Start is called before the first frame update
         void Start()
@@ -104,7 +105,7 @@ namespace ShootAirRLAgent
 
             agentSettings = FindObjectOfType<AgentSettings>();
             agentSettings.maxDistance = Vector2.Distance(refpoint1.position, refpoint2.position);
-
+            desiredLength = 3000f;
             ResetScene();
         }
 
@@ -113,30 +114,27 @@ namespace ShootAirRLAgent
             switch (triggerEvent)
             {
                 case Event.hitOnTarget:
-                    float scaledReward = scaledRewards(8e-5f)
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(scaledReward);
+                    shootairAgent.AddReward(3e-5f);
 
                     break;
 
                 case Event.collisionWithTarget:
-                    float scaledReward = scaledRewards(-.9f)
-                    
                     // agent loses
-                    shootairAgent.SetReward(scaledReward);
+                    shootairAgent.SetReward(-.9f/(currentWave+1));
 
                     currentWave = 0;
-
+                    scaleTimer = 0;
+                    desiredLength = 3000f;
+                    Debug.Log(desiredLength);
                     // end episode
                     shootairAgent.EndEpisode();
                     ResetScene();
                     break;
 
                 case Event.killedTarget:
-                    float scaledReward = scaledRewards(1.5e-3f)
-                    
                     // add reward for killing target
-                    shootairAgent.AddReward(scaledReward);
+                    shootairAgent.AddReward(scaledRewards(1.5e-3f, false));
 
                     break;
 
@@ -144,6 +142,8 @@ namespace ShootAirRLAgent
                     if (currentWave >= environmentSettings.waves.Count-1)
                     {
                         currentWave = 0;
+                        scaleTimer = 0;
+                        desiredLength = 3000f;
                         shootairAgent.EndEpisode();
                         ResetScene();
                         break;
@@ -151,32 +151,48 @@ namespace ShootAirRLAgent
                     scaleTimer = 0;
 
                     // agent wins
-                    shootairAgent.AddReward(.4f / environmentSettings.waves.Count);
-
+                    shootairAgent.AddReward(scaledRewards(.1f/environmentSettings.waves.Count, false));
+                    desiredLength += 100f;
                     // end episode
 
                     currentWave++;
                     ResetEnemies();
                     break;
+
+                case Event.missedShot:
+
+                    // apply reward to shootair agent
+                    shootairAgent.AddReward(scaledRewards(-1e-5f, true));
+
+                    break;
             }
         }
 
-        private float scaledRewards(float reward) {
-            if (scaleTimer > 2000) {
-                return 0.0f
+        private float scaledRewards(float reward, bool inverse) {
+            if (scaleTimer > desiredLength) {
+                if (reward > 0) {
+                    return 0.0f;
+                }
+                else {
+                    return 1.0f * reward;
+                }
             }
             
-            float scaleCosineFactor = (9 * scaleTimer) / 200;
-            float scaledCosine = Mathf.Cos(scaleCosineFactor * (Mathf.PI / 180));
-            float scaledReward = scaledCosine * reward;
-
-            return scaledReward;
+            float scaleCosineFactor = (scaleTimer / desiredLength) * 2 * Mathf.PI;
+            float scaledCosine = (Mathf.Cos(scaleCosineFactor) + 1) / 2;
+            if (!inverse) {
+                return scaledCosine * reward;
+            }
+            else {
+                return (1 - scaledCosine) * reward;
+            }
         }
 
         // Update is called once per frame
         void FixedUpdate()
         {
             resetTimer += 1;
+            scaleTimer += 1;
             if (resetTimer >= MaxEnvironmentSteps && MaxEnvironmentSteps > 0)
             {
                 shootairAgent.EndEpisode();
@@ -190,7 +206,7 @@ namespace ShootAirRLAgent
                 ResolveEvent(Event.killedAllTargets);
             }
 
-            shootairAgent.AddReward(-1e-8f);
+            shootairAgent.AddReward(scaledRewards(-1e-8f, true));
         }
 
         public void ResetScene()
