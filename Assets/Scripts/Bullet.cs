@@ -4,8 +4,10 @@ namespace ShootAirRLAgent
 {
 	public class Bullet : MonoBehaviour
 	{
+		//OBJECTS
 		EnvironmentController envController;
 		SoundEffectPlayer soundHandler;
+
 		[SerializeField]
 		private Rigidbody2D rb;
 
@@ -16,24 +18,26 @@ namespace ShootAirRLAgent
 		[SerializeField]
 		private float lifeTime = 0f;
 
-		// Use this for initialization
 		void Start()
 		{
 			envController = FindObjectOfType<EnvironmentController>();
 			soundHandler = FindObjectOfType<SoundEffectPlayer>();
 			rb = GetComponent<Rigidbody2D>();
-			Destroy(this.gameObject, lifeTime);
+			Destroy(this.gameObject, lifeTime); // Destroy Bullet after Lifetime
 		}
 
 		private void FixedUpdate()
 		{
-			if(speed != 0f) {
+			// Bullet Speed Handling
+			if (speed != 0f)
+			{
 				rb.velocity = transform.up * speed;
 			}
 		}
 
 		public void bulletSettings(float speed, int damage, float lifetime)
 		{
+			// Change Bullet Settings
 			this.speed = speed;
 			this.damage = damage;
 			this.lifeTime = lifetime;
@@ -41,15 +45,15 @@ namespace ShootAirRLAgent
 
 		private void OnTriggerEnter2D(Collider2D other)
 		{
-			if (other.gameObject.CompareTag("wall"))
+			EnemyAI enemy = other.GetComponent<EnemyAI>();
+			if (other.gameObject.CompareTag("wall")) // Bullet hit Wall
 			{
 				Destroy(gameObject);
 			}
-			EnemyAI enemy = other.GetComponent<EnemyAI>();
-			if (enemy != null)
+			else if (enemy != null) // Bullet hit Enemy
 			{
+				Destroy(gameObject);
 				enemy.TakeDamage(damage);
-				Debug.Log("Hit!");
 				envController.ResolveEvent(Event.hitOnTarget);
 			}
 		}

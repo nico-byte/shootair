@@ -41,8 +41,10 @@ namespace ShootAirRLAgent
         private Vector2 trackVelocity;
         private Vector2 lastPos;
 
-        private bool shotAvailable;
+        private bool currentlyWalking = false;
+        private float soundRatelimit = 0f;
 
+        private bool shotAvailable;
         private bool stateLock;
         private PlayerState playerState;
 
@@ -228,6 +230,32 @@ namespace ShootAirRLAgent
                 anim.SetBool("IsMoving", false);
             }
 
+            // AGENT STEP SOUND
+            if (amountSpeed == 0)
+            {
+                currentlyWalking = false;
+            }
+            else if (amountSpeed >= 1)
+            {
+                if (!currentlyWalking)
+                {
+                    currentlyWalking = true;
+                }
+                else
+                {
+                    //play step sound
+                    if (soundRatelimit <= 0f)
+                    {
+                        soundHandler.playSound("agent_ambient",0.2f,0.2f);
+                        soundRatelimit = 0.275f;
+                    }
+                    else
+                    {
+                        soundRatelimit -= Time.deltaTime;
+                    }
+                }
+            }
+
             bool shootingStar = shootingStates.Values.Any(c => c);
             if (shootingStar && playerState == PlayerState.Idle)
             {
@@ -283,10 +311,14 @@ namespace ShootAirRLAgent
         private void SetWeaponSprites(bool up, bool down, bool left, bool right)
         {
             Transform weapons = transform.Find("weapons");
-            GameObject weaponUp = weapons.GetChild(0).gameObject;
-            GameObject weaponDown = weapons.GetChild(1).gameObject;
-            GameObject weaponLeft = weapons.GetChild(2).gameObject;
-            GameObject weaponRight = weapons.GetChild(3).gameObject;
+            GameObject weaponUp = weapons.Find(agentSettings.weaponEquipped + "Up").gameObject;
+            GameObject weaponDown = weapons.Find(agentSettings.weaponEquipped + "Down").gameObject;
+            GameObject weaponLeft = weapons.Find(agentSettings.weaponEquipped + "Left").gameObject;
+            GameObject weaponRight = weapons.Find(agentSettings.weaponEquipped + "Right").gameObject;
+            //GameObject weaponUp = weapons.GetChild(0).gameObject;
+            //GameObject weaponDown = weapons.GetChild(1).gameObject;
+            //GameObject weaponLeft = weapons.GetChild(2).gameObject;
+            //GameObject weaponRight = weapons.GetChild(3).gameObject;
             weaponUp.SetActive(up);
             weaponDown.SetActive(down);
             weaponLeft.SetActive(left);
@@ -358,10 +390,10 @@ namespace ShootAirRLAgent
             for (int i = 0; i < bulletAmount; i++)
             {
                 float rotationOffset = bulletSpread == 0f ? 0f : UnityEngine.Random.Range(-bulletSpread, bulletSpread);
-                float speedOffset = bulletSpread == 0f ? 0f : UnityEngine.Random.Range(-speed*0.15f, speed*0.15f);
+                float speedOffset = bulletSpread == 0f ? 0f : UnityEngine.Random.Range(-speed * 0.15f, speed * 0.15f);
                 firingPoint.transform.rotation = Quaternion.Euler(0f, 0f, rotation + rotationOffset);
                 GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
-                bullet.GetComponent<Bullet>().bulletSettings(speed+speedOffset, damage, lifetime);
+                bullet.GetComponent<Bullet>().bulletSettings(speed + speedOffset, damage, lifetime);
             }
         }
 

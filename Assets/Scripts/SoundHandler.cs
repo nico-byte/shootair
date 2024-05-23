@@ -19,12 +19,17 @@ namespace ShootAirRLAgent
             agentSettings = FindObjectOfType<AgentSettings>();
         }
 
-        public void playSound(string soundName)
+        public void playSound(string soundName, float pitchOffset = 0f, float volume = 1f)
         {
             if (agentSettings.selfplay) {
+                float pitchRandom = pitchOffset == 0f ? 0f : UnityEngine.Random.Range(-pitchOffset, pitchOffset);
                 GameObject duplicateObj = new GameObject("Dupe_"+soundName);
                 AudioSource duplicateAudioSource = duplicateObj.AddComponent<AudioSource>();
+
                 duplicateAudioSource.clip = audioSourcesDict[soundName].clip;
+                duplicateAudioSource.pitch += pitchRandom;
+                duplicateAudioSource.volume = volume;
+                
                 duplicateAudioSource.Play();
                 Destroy(duplicateObj,duplicateAudioSource.clip.length);
             }

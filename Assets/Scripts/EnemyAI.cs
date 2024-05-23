@@ -31,6 +31,8 @@ namespace ShootAirRLAgent
         private int stuckCounter;
         public Vector2 trackVelocity { get; set; }
 
+        private bool dead = false;
+
         public void Awake()
         {
             // Get a reference to the agent's transform
@@ -182,8 +184,9 @@ namespace ShootAirRLAgent
     	public void TakeDamage (int damage)
     	{
     		health -= damage;
-    		if (health <= 0)
+    		if (health <= 0 && !dead)
     		{
+                dead = true;
     			Destroy(gameObject);
     			envController.ResolveEvent(Event.killedTarget);
     		}
