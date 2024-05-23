@@ -43,7 +43,7 @@ namespace ShootAirRLAgent
         private int MaxEnvironmentSteps;
         private int currentWave = 0;
         private int streak;
-        
+
         // Start is called before the first frame update
         void Start()
         {
@@ -61,7 +61,7 @@ namespace ShootAirRLAgent
             Transform point3 = GameObject.Find("p3").transform;
             Transform point4 = GameObject.Find("p4").transform;
             Transform point5 = GameObject.Find("p5").transform;
-    		Transform point6 = GameObject.Find("p6").transform;
+            Transform point6 = GameObject.Find("p6").transform;
             Transform point7 = GameObject.Find("p7").transform;
             Transform point8 = GameObject.Find("p8").transform;
             Transform point9 = GameObject.Find("p9").transform;
@@ -70,7 +70,7 @@ namespace ShootAirRLAgent
             Transform point12 = GameObject.Find("p12").transform;
             Transform point13 = GameObject.Find("p13").transform;
             Transform point14 = GameObject.Find("p14").transform;
-    		Transform point15 = GameObject.Find("p15").transform;
+            Transform point15 = GameObject.Find("p15").transform;
             Transform point16 = GameObject.Find("p16").transform;
             Transform point17 = GameObject.Find("p17").transform;
             Transform point18 = GameObject.Find("p18").transform;
@@ -83,7 +83,7 @@ namespace ShootAirRLAgent
                 point3,
                 point4,
                 point5,
-    			point6,
+                point6,
                 point7,
                 point8,
                 point9,
@@ -142,7 +142,7 @@ namespace ShootAirRLAgent
                     break;
 
                 case Event.killedAllTargets:
-                    if (currentWave >= environmentSettings.waves.Count-1)
+                    if (currentWave >= environmentSettings.waves.Count - 1)
                     {
                         currentWave = 0;
                         shootairAgent.EndEpisode();
@@ -180,7 +180,7 @@ namespace ShootAirRLAgent
                 ResetScene();
             }
 
-            EnemyList.RemoveAll( x => !x);
+            EnemyList.RemoveAll(x => !x);
 
             if (EnemyList.Count == 0)
             {

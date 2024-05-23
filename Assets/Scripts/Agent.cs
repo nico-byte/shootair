@@ -45,7 +45,6 @@ namespace ShootAirRLAgent
         private float soundRatelimit = 0f;
 
         private bool shotAvailable;
-        private bool stateLock;
         private PlayerState playerState;
 
         void Start()
@@ -63,13 +62,11 @@ namespace ShootAirRLAgent
             agentSettings = FindObjectOfType<AgentSettings>();
             soundHandler = FindObjectOfType<SoundEffectPlayer>();
             bufferSensor = gameObject.GetComponent<BufferSensorComponent>();
-            stateLock = false;
             playerState = PlayerState.Idle;
         }
 
         void FixedUpdate()
         {
-            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
             if (agentSettings.selfplay)
@@ -94,24 +91,22 @@ namespace ShootAirRLAgent
 
         private void SetState(PlayerState newState)
         {
-            if (!stateLock)
+
+            playerState = newState;
+            switch (playerState)
             {
-                playerState = newState;
-                switch (playerState)
-                {
-                    case PlayerState.Idle:
-                        anim.Play("Idle");
-                        break;
-                    case PlayerState.Moving:
-                        anim.Play("Moving");
-                        break;
-                    case PlayerState.Aiming:
-                        anim.Play("Aiming");
-                        break;
-                    case PlayerState.MovingAiming:
-                        anim.Play("MovingAiming");
-                        break;
-                }
+                case PlayerState.Idle:
+                    anim.Play("Idle");
+                    break;
+                case PlayerState.Moving:
+                    anim.Play("Moving");
+                    break;
+                case PlayerState.Aiming:
+                    anim.Play("Aiming");
+                    break;
+                case PlayerState.MovingAiming:
+                    anim.Play("MovingAiming");
+                    break;
             }
         }
 
@@ -246,7 +241,7 @@ namespace ShootAirRLAgent
                     //play step sound
                     if (soundRatelimit <= 0f)
                     {
-                        soundHandler.playSound("agent_ambient",0.2f,0.2f);
+                        soundHandler.playSound("agent_ambient", 0.2f, 0.2f);
                         soundRatelimit = 0.275f;
                     }
                     else
@@ -315,10 +310,6 @@ namespace ShootAirRLAgent
             GameObject weaponDown = weapons.Find(agentSettings.weaponEquipped + "Down").gameObject;
             GameObject weaponLeft = weapons.Find(agentSettings.weaponEquipped + "Left").gameObject;
             GameObject weaponRight = weapons.Find(agentSettings.weaponEquipped + "Right").gameObject;
-            //GameObject weaponUp = weapons.GetChild(0).gameObject;
-            //GameObject weaponDown = weapons.GetChild(1).gameObject;
-            //GameObject weaponLeft = weapons.GetChild(2).gameObject;
-            //GameObject weaponRight = weapons.GetChild(3).gameObject;
             weaponUp.SetActive(up);
             weaponDown.SetActive(down);
             weaponLeft.SetActive(left);
