@@ -10,6 +10,8 @@ using TMPro;
 using Unity.Collections;
 using UnityEngine.SocialPlatforms;
 using System.Runtime.CompilerServices;
+using System.Collections;
+using Google.Protobuf.WellKnownTypes;
 
 namespace ShootAirRLAgent
 {
@@ -375,9 +377,38 @@ namespace ShootAirRLAgent
                 }
             }
         }
+        private IEnumerator PlayParticleEffect(GameObject particleShot)
+        {
+            ParticleSystem ps = particleShot.GetComponent<ParticleSystem>();
+            if (ps != null)
+            {
+                ps.Stop();
+                ps.Clear();
+            }
+
+            particleShot.SetActive(true);
+
+            if (ps != null)
+            {
+                ps.Play();
+            }
+
+            yield return new WaitForSeconds(1f);
+
+            if (ps != null)
+            {
+                ps.Stop();
+            }
+            particleShot.SetActive(false);
+        }
 
         private void Shoot(float rotation, float speed = 20f, int damage = 40, float lifetime = 3f, int bulletAmount = 1, float bulletSpread = 0f)
         {
+            // needs fix to play multiple times when shooting
+            Transform weapons = transform.Find("weapons");
+            GameObject particleShot = weapons.Find("shot").gameObject;
+            StartCoroutine(PlayParticleEffect(particleShot));
+
             for (int i = 0; i < bulletAmount; i++)
             {
                 float rotationOffset = bulletSpread == 0f ? 0f : UnityEngine.Random.Range(-bulletSpread, bulletSpread);
