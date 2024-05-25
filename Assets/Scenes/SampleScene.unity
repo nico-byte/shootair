@@ -1948,7 +1948,7 @@ MonoBehaviour:
   difficultEnemyPrefab: {fileID: 3245322192379080683, guid: 89cf7df2c80eed7b68cf7244fee9cae1, type: 3}
   fastEnemyPrefab: {fileID: 3245322192379080683, guid: 165ee6ec9a979ec6aa1e1bfb23ff98b3, type: 3}
   environment: {fileID: 827689719112947625}
-  MaxEnvironmentSteps: 5000
+  MaxEnvironmentSteps: 0
 --- !u!114 &2724460586365922238
 MonoBehaviour:
   m_ObjectHideFlags: 0
