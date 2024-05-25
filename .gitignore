@@ -13,6 +13,8 @@
 /[Pp]ackages/NavMeshPlus
 /[Ee]nvs/
 /[R]results/
+Assets/Shootair
+Assets/Shootair.meta
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
