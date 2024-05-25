@@ -38,12 +38,12 @@ namespace ShootAirRLAgent
         private Transform[] spawnpoints = null;
 
         private int resetTimer;
-        public float scaleTimer = 0f;
+        // public float scaleTimer = 0f;
         [SerializeField]
         private int MaxEnvironmentSteps;
         private int currentWave = 0;
         private int streak;
-        public float desiredLength;
+        // public float desiredLength;
         
         // Start is called before the first frame update
         void Start()
@@ -105,7 +105,7 @@ namespace ShootAirRLAgent
 
             agentSettings = FindObjectOfType<AgentSettings>();
             agentSettings.maxDistance = Vector2.Distance(refpoint1.position, refpoint2.position);
-            desiredLength = 3000f;
+            // desiredLength = 3000f;
             ResetScene();
         }
 
@@ -124,9 +124,9 @@ namespace ShootAirRLAgent
                     shootairAgent.SetReward(-.9f/(currentWave+1));
 
                     currentWave = 0;
-                    scaleTimer = 0;
-                    desiredLength = 3000f;
-                    Debug.Log(desiredLength);
+                    // scaleTimer = 0;
+                    // desiredLength = 3000f;
+                    // Debug.Log(desiredLength);
                     // end episode
                     shootairAgent.EndEpisode();
                     ResetScene();
@@ -134,7 +134,8 @@ namespace ShootAirRLAgent
 
                 case Event.killedTarget:
                     // add reward for killing target
-                    shootairAgent.AddReward(scaledRewards(1.5e-3f, false));
+                    shootairAgent.AddReward(5e-4f);
+                    // shootairAgent.AddReward(scaledRewards(1.5e-3f, false));
 
                     break;
 
@@ -142,17 +143,18 @@ namespace ShootAirRLAgent
                     if (currentWave >= environmentSettings.waves.Count-1)
                     {
                         currentWave = 0;
-                        scaleTimer = 0;
-                        desiredLength = 3000f;
+                        // scaleTimer = 0;
+                        // desiredLength = 3000f;
                         shootairAgent.EndEpisode();
                         ResetScene();
                         break;
                     }
-                    scaleTimer = 0;
+                    // scaleTimer = 0;
 
                     // agent wins
-                    shootairAgent.AddReward(scaledRewards(.1f/environmentSettings.waves.Count, false));
-                    desiredLength += 100f;
+                    // shootairAgent.AddReward(scaledRewards(.1f/environmentSettings.waves.Count, false));
+                    shootairAgent.AddReward(.9f/environmentSettings.waves.Count);
+                    // desiredLength += 100f;
                     // end episode
 
                     currentWave++;
@@ -162,13 +164,14 @@ namespace ShootAirRLAgent
                 case Event.missedShot:
 
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(scaledRewards(-1e-5f, true));
+                    // shootairAgent.AddReward(scaledRewards(-1e-5f, true));
+                    shootairAgent.AddReward(-1e-5f);
 
                     break;
             }
         }
-
-        private float scaledRewards(float reward, bool inverse) {
+/*
+         private float scaledRewards(float reward, bool inverse) {
             if (scaleTimer > desiredLength) {
                 if (reward > 0) {
                     return 0.0f;
@@ -187,12 +190,12 @@ namespace ShootAirRLAgent
                 return (1 - scaledCosine) * reward;
             }
         }
-
+*/
         // Update is called once per frame
         void FixedUpdate()
         {
             resetTimer += 1;
-            scaleTimer += 1;
+            // scaleTimer += 1;
             if (resetTimer >= MaxEnvironmentSteps && MaxEnvironmentSteps > 0)
             {
                 shootairAgent.EndEpisode();
@@ -206,7 +209,8 @@ namespace ShootAirRLAgent
                 ResolveEvent(Event.killedAllTargets);
             }
 
-            shootairAgent.AddReward(scaledRewards(-1e-8f, true));
+            shootairAgent.AddReward(-1e-8f);
+            // shootairAgent.AddReward(scaledRewards(-1e-8f, true));
         }
 
         public void ResetScene()
@@ -229,7 +233,7 @@ namespace ShootAirRLAgent
             GameObject[] allObjects = FindObjectsOfType<GameObject>();
             foreach (GameObject obj in allObjects)
             {
-                if (obj.transform.name == "StandardEnemy(Clone)" || obj.transform.name == "DifficultEnemy(Clone)" || obj.transform.name == "FastEnemy(Clone)")
+                if (obj.transform.name == "StandardEnemy(Clone)" || obj.transform.name == "DifficultEnemy(Clone)" || obj.transform.name == "FastEnemy(Clone)" || obj.transform.name == "Bullet(Clone)")
                 {
                     Destroy(obj);
                 }

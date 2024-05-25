@@ -18,7 +18,11 @@ namespace ShootAirRLAgent
         [SerializeField]
         private TextMeshProUGUI directionEnemyText;
         [SerializeField]
-        private TextMeshProUGUI timeLeftText;
+        private TextMeshProUGUI velocityXEnemyText;
+        [SerializeField]
+        private TextMeshProUGUI velocityYEnemyText;
+        //[SerializeField]
+        // private TextMeshProUGUI timeLeftText;
         [SerializeField]
         private TextMeshProUGUI healthEnemyText;
         AgentObservations agentObservations;
@@ -36,7 +40,9 @@ namespace ShootAirRLAgent
             UpdateShotAvailable(MathF.Round(observationValues["shotAvailable"], 3));
             UpdateDistanceEnemy(MathF.Round(observationValues["distanceEnemy"], 3));
             UpdateDirectionEnemy(MathF.Round(observationValues["directionEnemy"], 3));
-            UpdateTimeLeft(MathF.Round(observationValues["timeLeft"], 3));
+            UpdateVelocityXEnemy(MathF.Round(observationValues["velocity_xEnemy"], 3));
+            UpdateVelocityYEnemy(MathF.Round(observationValues["velocity_yEnemy"], 3));
+            // UpdateTimeLeft(MathF.Round(observationValues["timeLeft"], 3));
             UpdateHealthEnemy(MathF.Round(observationValues["healthEnemy"], 3));
         }
     
@@ -66,10 +72,20 @@ namespace ShootAirRLAgent
             directionEnemyText.text = "direction = " + direction.ToString();
         }
     
-        private void UpdateTimeLeft(float timeLeft)
+        private void UpdateVelocityXEnemy(float velocityX)
         {
-            timeLeftText.text = "timeLeft = " + timeLeft.ToString();
+            velocityXEnemyText.text = "velocity.x = " + velocityX.ToString();
         }
+    
+        private void UpdateVelocityYEnemy(float velocityY)
+        {
+            velocityYEnemyText.text = "velocity.y = " + velocityY.ToString();
+        }
+        
+        //private void UpdateTimeLeft(float timeLeft)
+        //{
+        //    timeLeftText.text = "timeLeft = " + timeLeft.ToString();
+        //}
         
         private void UpdateHealthEnemy(float health)
         {

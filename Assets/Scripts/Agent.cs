@@ -150,15 +150,18 @@ namespace ShootAirRLAgent
                 float distance = Vector2.Distance(this.transform.position, b.transform.position);
                 distance /= agentSettings.maxDistance;
                 float direction = Vector2.SignedAngle(this.transform.position, b.transform.position) / 180f;
-                float timeLeft = envController.scaleTimer;
-                timeLeft /= envController.desiredLength;
+                // float timeLeft = envController.scaleTimer;
+                // timeLeft /= envController.desiredLength;
+                Vector2 velocity = enemy.trackVelocity / agentSettings.maxVelocity;
                 float health = enemy.health;
                 health /= agentSettings.maxHealth;
 
                 float[] enemyObservation = new float[]{
                     distance,
                     direction,
-                    timeLeft,
+                    velocity.x,
+                    velocity.y,
+                    // timeLeft,
                     health
                 };
                 numEnemyAdded += 1;
@@ -167,7 +170,9 @@ namespace ShootAirRLAgent
                 {
                     agentObservations.observations["distanceEnemy"] = distance;
                     agentObservations.observations["directionEnemy"] = direction;
-                    agentObservations.observations["timeLeft"] = timeLeft;
+                    agentObservations.observations["velocity_xEnemy"] = velocity.x;
+                    agentObservations.observations["velocity_yEnemy"] = velocity.y;
+                    // agentObservations.observations["timeLeft"] = timeLeft;
                     agentObservations.observations["healthEnemy"] = health;
 
                 }
