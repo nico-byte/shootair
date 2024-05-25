@@ -105,7 +105,7 @@ namespace ShootAirRLAgent
 
             agentSettings = FindObjectOfType<AgentSettings>();
             agentSettings.maxDistance = Vector2.Distance(refpoint1.position, refpoint2.position);
-            desiredLength = 1200f;
+            desiredLength = 2250f;
             ResetScene();
         }
 
@@ -125,7 +125,7 @@ namespace ShootAirRLAgent
 
                     currentWave = 0;
                     scaleTimer = 0;
-                    desiredLength = 900f;
+                    desiredLength = 2250f;
                     // Debug.Log(desiredLength);
                     // end episode
                     shootairAgent.EndEpisode();
@@ -144,7 +144,7 @@ namespace ShootAirRLAgent
                     {
                         currentWave = 0;
                         scaleTimer = 0;
-                        desiredLength = 900f;
+                        desiredLength = 2250f;
                         shootairAgent.EndEpisode();
                         ResetScene();
                         break;
@@ -154,7 +154,7 @@ namespace ShootAirRLAgent
                     // agent wins
                     shootairAgent.AddReward(scaledRewards(.9f/environmentSettings.waves.Count, false));
                     // shootairAgent.AddReward(.9f/environmentSettings.waves.Count);
-                    desiredLength += 50f;
+                    desiredLength += 100f;
                     // end episode
 
                     currentWave++;
