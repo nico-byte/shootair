@@ -291,12 +291,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 873af4ed7a6b553adb6b28e1dbf1c662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  turnSpeed: 90
-  fireRate: 0.5
-  autoShoot: 0
-  selfplay: 0
-  fireTimer: 0
 --- !u!95 &264453284586939526
 Animator:
   serializedVersion: 5
@@ -307,7 +301,7 @@ Animator:
   m_GameObject: {fileID: 1065669351236603001}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ff7987dd0c8b1e6dfa2e0aaadfaf39a9, type: 2}
+  m_Controller: {fileID: 9100000, guid: 52cbfeb979922d246ac713297a2d33a5, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

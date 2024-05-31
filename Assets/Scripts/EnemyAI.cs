@@ -48,9 +48,17 @@ namespace ShootAirRLAgent
             {
                 health = 30;
             }
-            else
+            else if (enemyType == 3)
             {
                 health = 100;
+            }
+            else if (enemyType == 4)
+            {
+                health = 200;
+            }
+            else 
+            {
+                health = 250;
             }
 
             // optimizing NavMesh settings

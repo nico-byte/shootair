@@ -1795,25 +1795,6 @@ Transform:
   - {fileID: 7427643898140454106}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2304388887976478111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6621399978392162793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 453ca7c47309efcf7af5d3eb9a38eb40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shootairAgent: {fileID: 2724460586365922238}
-  trainingAreaPrefab: {fileID: 3992230312510455845, guid: 3b70516f5418acf418ff4c223dc89a2f, type: 3}
-  standardEnemyPrefab: {fileID: 3245322192379080683, guid: c5e2bb26abc667ad8acbfb8b826740a3, type: 3}
-  difficultEnemyPrefab: {fileID: 3245322192379080683, guid: 89cf7df2c80eed7b68cf7244fee9cae1, type: 3}
-  fastEnemyPrefab: {fileID: 3245322192379080683, guid: 165ee6ec9a979ec6aa1e1bfb23ff98b3, type: 3}
-  environment: {fileID: 827689719112947625}
-  MaxEnvironmentSteps: 5000
 --- !u!114 &2724460586365922238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1901,18 +1882,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4314017779986917425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6621399978392162793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7e6cb4ff8b04b185816496b34cd85c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4433188733812626580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2004,7 +1973,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 13
+  orthographic size: 4.4666667
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2093,8 +2062,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 827689719112947625}
-  - component: {fileID: 2304388887976478111}
-  - component: {fileID: 4314017779986917425}
+  - component: {fileID: 6621399978392162795}
+  - component: {fileID: 6621399978392162794}
   m_Layer: 0
   m_Name: Environment
   m_TagString: Untagged
@@ -2102,6 +2071,39 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6621399978392162794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621399978392162793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e6cb4ff8b04b185816496b34cd85c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6621399978392162795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621399978392162793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453ca7c47309efcf7af5d3eb9a38eb40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootairAgent: {fileID: 2724460586365922238}
+  trainingAreaPrefab: {fileID: 3992230312510455845, guid: 3b70516f5418acf418ff4c223dc89a2f, type: 3}
+  standardEnemyPrefab: {fileID: 3245322192379080683, guid: c5e2bb26abc667ad8acbfb8b826740a3, type: 3}
+  difficultEnemyPrefab: {fileID: 3245322192379080683, guid: 89cf7df2c80eed7b68cf7244fee9cae1, type: 3}
+  fastEnemyPrefab: {fileID: 3245322192379080683, guid: 165ee6ec9a979ec6aa1e1bfb23ff98b3, type: 3}
+  Occultist3EnemyPrefab: {fileID: 1199007736262422055, guid: 461c1bd0c08f69441862ebcde2e6ff73, type: 3}
+  Occultist4EnemyPrefab: {fileID: 1671440349958721075, guid: 08710610a9021734292057c0ad61a2e5, type: 3}
+  environment: {fileID: 827689719112947625}
+  MaxEnvironmentSteps: 5000
 --- !u!114 &6943398834761882594
 MonoBehaviour:
   m_ObjectHideFlags: 0
