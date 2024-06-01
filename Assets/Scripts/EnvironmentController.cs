@@ -125,7 +125,7 @@ namespace ShootAirRLAgent
             {
                 case Event.hitOnTarget:
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(3e-4f);
+                    shootairAgent.AddReward(6e-4f);
 
                     break;
 
@@ -145,7 +145,7 @@ namespace ShootAirRLAgent
 
                 case Event.killedTarget:
                     // add reward for killing target
-                    shootairAgent.AddReward(1e-3f);
+                    shootairAgent.AddReward(3e-3f);
                     // shootairAgent.AddReward(scaledRewards(1.5e-3f, false));
 
                     break;
@@ -224,7 +224,7 @@ namespace ShootAirRLAgent
                 ResolveEvent(Event.killedAllTargets);
             }
 
-            shootairAgent.AddReward(-1e-6f);
+            // shootairAgent.AddReward(-1e-6f);
             // shootairAgent.AddReward(scaledRewards(-1e-8f, true));
         }
 
