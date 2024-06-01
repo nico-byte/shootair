@@ -1979,7 +1979,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 5
+  DecisionPeriod: 10
   DecisionStep: 0
   TakeActionsBetweenDecisions: 1
 --- !u!114 &3550562804315010292
@@ -1996,7 +1996,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SensorName: BufferSensor
   m_ObservableSize: 5
-  m_MaxNumObservables: 7
+  m_MaxNumObservables: 10
 --- !u!4 &3634723361133646116
 Transform:
   m_ObjectHideFlags: 0
@@ -2065,15 +2065,15 @@ MonoBehaviour:
   - target
   - wall
   - bullet
-  m_RaysPerDirection: 4
+  m_RaysPerDirection: 16
   m_MaxRayDegrees: 180
   m_SphereCastRadius: 0
-  m_RayLength: 15
+  m_RayLength: 35
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 72
-  m_ObservationStacks: 1
-  m_AlternatingRayOrder: 1
+  m_ObservationStacks: 2
+  m_AlternatingRayOrder: 0
   m_UseBatchedRaycasts: 0
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 0, g: 0.0736819, b: 0.8773585, a: 1}
