@@ -33,5 +33,5 @@ behaviors:
     checkpoint_interval: 8000000
     max_steps: 40e6
     time_horizon: 128
-    summary_freq: 100000
+    summary_freq: 1000
     threaded: true

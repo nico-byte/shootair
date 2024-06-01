@@ -68,9 +68,11 @@ sysinfo.txt
 *.app
 
 # Model files
-/[Rr]esults/
+/results/
 *.onnx
 *.onnx.meta
+*.pt
+*.pt.meta
 
 # Crashlytics generated file
 crashlytics-build.properties

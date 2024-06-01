@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.MLAgents;
+using UnityEngine.UI;
 namespace ShootAirRLAgent
 {
     public enum Event
@@ -33,6 +35,7 @@ namespace ShootAirRLAgent
 
         [SerializeField]
         private Transform environment;
+        StatsRecorder m_Recorder;
 
         public List<GameObject> EnemyList { get; set; } = new List<GameObject>();
         private Transform[] spawnpoints = null;
@@ -46,6 +49,13 @@ namespace ShootAirRLAgent
         // public float desiredLength;
         
         // Start is called before the first frame update
+
+        public void Awake()
+    {
+        Academy.Instance.OnEnvironmentReset += ResetScene;
+        m_Recorder = Academy.Instance.StatsRecorder;
+    }
+
         void Start()
         {
             environmentSettings = FindObjectOfType<EnvironmentSettings>();
@@ -115,13 +125,14 @@ namespace ShootAirRLAgent
             {
                 case Event.hitOnTarget:
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(3e-5f);
+                    shootairAgent.AddReward(3e-4f);
 
                     break;
 
                 case Event.collisionWithTarget:
                     // agent loses
-                    shootairAgent.SetReward(-.9f/(currentWave+1));
+                    float collisionReward = -0.9f/(currentWave+1);
+                    shootairAgent.AddReward(collisionReward);
 
                     currentWave = 0;
                     // scaleTimer = 0;
@@ -134,12 +145,15 @@ namespace ShootAirRLAgent
 
                 case Event.killedTarget:
                     // add reward for killing target
-                    shootairAgent.AddReward(5e-4f);
+                    shootairAgent.AddReward(1e-3f);
                     // shootairAgent.AddReward(scaledRewards(1.5e-3f, false));
 
                     break;
 
                 case Event.killedAllTargets:
+                    float wave = currentWave;
+                    m_Recorder.Add("Wave", wave);
+                    
                     if (currentWave >= environmentSettings.waves.Count-1)
                     {
                         currentWave = 0;
@@ -153,7 +167,8 @@ namespace ShootAirRLAgent
 
                     // agent wins
                     // shootairAgent.AddReward(scaledRewards(.1f/environmentSettings.waves.Count, false));
-                    shootairAgent.AddReward(.9f/environmentSettings.waves.Count);
+                    float waveReward = 0.9f/environmentSettings.waves.Count;
+                    shootairAgent.AddReward(waveReward);
                     // desiredLength += 100f;
                     // end episode
 
@@ -165,7 +180,7 @@ namespace ShootAirRLAgent
 
                     // apply reward to shootair agent
                     // shootairAgent.AddReward(scaledRewards(-1e-5f, true));
-                    shootairAgent.AddReward(-1e-5f);
+                    shootairAgent.AddReward(-3e-4f);
 
                     break;
             }
@@ -209,7 +224,7 @@ namespace ShootAirRLAgent
                 ResolveEvent(Event.killedAllTargets);
             }
 
-            shootairAgent.AddReward(-1e-8f);
+            shootairAgent.AddReward(-1e-6f);
             // shootairAgent.AddReward(scaledRewards(-1e-8f, true));
         }
 
