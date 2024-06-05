@@ -126,8 +126,12 @@ namespace ShootAirRLAgent
 
 
             // Surrounding enemies
-            // Collect observation about the 20 closest enemies
+            // Collect observation about the 10 closest enemies
             var enemies = envController.EnemyList.ToArray();
+            
+            sensor.AddObservation(enemies.Length);
+            agentObservations.observations["enemiesLeft"] = enemies.Length;
+
             // Sort by closest :
             enemies = enemies.Where(e => e != null && e.activeInHierarchy).ToArray();
             Array.Sort(enemies, (a, b) => Vector3.Distance(a.transform.position, transform.position).CompareTo(Vector3.Distance(b.transform.position, transform.position)));

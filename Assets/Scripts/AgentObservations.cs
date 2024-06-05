@@ -15,6 +15,7 @@ namespace ShootAirRLAgent
             {"velocity_xEnemy", 0f},
             {"velocity_yEnemy", 0f},
             {"healthEnemy", 0f},
+            {"enemiesLeft", 0f},
         };
     }
 }

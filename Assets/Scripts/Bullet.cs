@@ -43,7 +43,7 @@ namespace ShootAirRLAgent
 			if (other.gameObject.CompareTag("wall"))
 			{
 				Destroy(gameObject);
-				envController.ResolveEvent(Event.missedShot);
+				// envController.ResolveEvent(Event.missedShot);
 			}
 			else if (enemy != null && lifeTime > 0f)
 			{

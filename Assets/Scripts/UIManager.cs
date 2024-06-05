@@ -25,6 +25,8 @@ namespace ShootAirRLAgent
         // private TextMeshProUGUI timeLeftText;
         [SerializeField]
         private TextMeshProUGUI healthEnemyText;
+        [SerializeField]
+        private TextMeshProUGUI enemiesLeftText;
         AgentObservations agentObservations;
         // Start is called before the first frame update
         void Start()
@@ -44,6 +46,7 @@ namespace ShootAirRLAgent
             UpdateVelocityYEnemy(MathF.Round(observationValues["velocity_yEnemy"], 3));
             // UpdateTimeLeft(MathF.Round(observationValues["timeLeft"], 3));
             UpdateHealthEnemy(MathF.Round(observationValues["healthEnemy"], 3));
+            UpdateEnemiesLeft(MathF.Round(observationValues["enemiesLeft"], 3));
         }
     
         // Update is called once per frame
@@ -90,6 +93,11 @@ namespace ShootAirRLAgent
         private void UpdateHealthEnemy(float health)
         {
             healthEnemyText.text = "health = " + health.ToString();
+        }
+
+        private void UpdateEnemiesLeft(float count)
+        {
+            enemiesLeftText.text = "enemiesLeft = " + count.ToString();
         }
         
     }

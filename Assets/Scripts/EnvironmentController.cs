@@ -131,7 +131,7 @@ namespace ShootAirRLAgent
 
                 case Event.collisionWithTarget:
                     // agent loses
-                    float collisionReward = -0.9f/(currentWave+1);
+                    float collisionReward = (-0.9f/environmentSettings.waves.Count)*(environmentSettings.waves.Count - currentWave);
                     shootairAgent.AddReward(collisionReward);
 
                     currentWave = 0;
@@ -167,7 +167,7 @@ namespace ShootAirRLAgent
 
                     // agent wins
                     // shootairAgent.AddReward(scaledRewards(.1f/environmentSettings.waves.Count, false));
-                    float waveReward = 0.9f/environmentSettings.waves.Count;
+                    float waveReward = (0.9f/environmentSettings.waves.Count)*(currentWave+1);
                     shootairAgent.AddReward(waveReward);
                     // desiredLength += 100f;
                     // end episode
