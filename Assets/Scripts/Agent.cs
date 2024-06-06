@@ -98,16 +98,16 @@ namespace ShootAirRLAgent
             switch (playerState)
             {
                 case PlayerState.Idle:
-                    anim.Play("Idle");
+                    //anim.Play("Idle");
                     break;
                 case PlayerState.Moving:
-                    anim.Play("Moving");
+                    //anim.Play("Moving");
                     break;
                 case PlayerState.Aiming:
-                    anim.Play("Aiming");
+                    //anim.Play("Aiming");
                     break;
                 case PlayerState.MovingAiming:
-                    anim.Play("MovingAiming");
+                    //anim.Play("MovingAiming");
                     break;
             }
         }
@@ -178,6 +178,9 @@ namespace ShootAirRLAgent
 
         public void MoveAgent(ActionBuffers actionBuffers)
         {
+            Debug.Log("IsAiming: " + anim.GetBool("IsAiming"));
+            Debug.Log("IsMoving: " + anim.GetBool("IsMoving"));
+
             Dictionary<string, bool> directionStates = new Dictionary<string, bool>
             {
                 {"Up", false},
@@ -222,8 +225,11 @@ namespace ShootAirRLAgent
             int amountSpeed = directionStates.Values.Count(c => c);
             if (amountSpeed == 0)
             {
-                SetState(PlayerState.Idle);
+                //SetState(PlayerState.Idle);
                 anim.SetBool("IsMoving", false);
+            } else {
+                //SetState(PlayerState.Moving);
+                anim.SetBool("IsMoving", true);
             }
 
             // AGENT STEP SOUND
@@ -253,11 +259,10 @@ namespace ShootAirRLAgent
             }
 
             bool shootingStar = shootingStates.Values.Any(c => c);
-            if (shootingStar && playerState == PlayerState.Idle)
-            {
-                SetState(PlayerState.Aiming);
-                anim.SetBool("IsMoving", false);
-            }
+            //if (shootingStar && playerState == PlayerState.Idle)
+            //{
+            //    //SetState(PlayerState.Aiming);
+            //}
             if (!shootingStar)
             {
                 SetWeaponSprites(false, false, false, false);
@@ -271,7 +276,6 @@ namespace ShootAirRLAgent
             {
                 if (directionStates[direction])
                 {
-                    SetState(PlayerState.Moving);
                     if (direction == "Up" || direction == "Down")
                     {
                         forwardAmount = direction == "Up" ? 1f : -1f;
@@ -287,7 +291,6 @@ namespace ShootAirRLAgent
 
             anim.SetFloat("xMove", turnAmount);
             anim.SetFloat("yMove", forwardAmount);
-            anim.SetBool("IsMoving", true);
 
             float diagionalSpeed = amountSpeed > 1 ? 0.707106781f : 1f;
             Vector3 movementForward = agentSettings.moveSpeed * forwardAmount * Time.fixedDeltaTime * transform.up * diagionalSpeed;
@@ -306,6 +309,7 @@ namespace ShootAirRLAgent
 
         private void SetWeaponSprites(bool up, bool down, bool left, bool right)
         {
+            anim.SetBool("IsAiming", true);
             Transform weapons = transform.Find("weapons");
             GameObject weaponUp = weapons.Find(agentSettings.weaponEquipped + "Up").gameObject;
             GameObject weaponDown = weapons.Find(agentSettings.weaponEquipped + "Down").gameObject;
@@ -321,11 +325,12 @@ namespace ShootAirRLAgent
         {
             foreach (var rotation in shootingStates.Keys)
             {
+                //Debug.Log(rotation);
                 if (shootingStates[rotation] && shotAvailable && shootingStar)
                 {
                     // Only update the firing direction if the agent is not currently firing
                     // Change firingPoint rotation based on shooting key pressed
-                    SetState(PlayerState.MovingAiming);
+                    //SetState(PlayerState.Aiming);
                     float shootingRotation;
                     if (rotation == "Up" || rotation == "Down")
                     {
@@ -335,6 +340,7 @@ namespace ShootAirRLAgent
                     {
                         shootingRotation = rotation == "Left" ? 90f : 270f;
                     }
+                    anim.SetFloat("AimingDirection",shootingRotation);
 
                     switch (shootingRotation)
                     {
@@ -373,6 +379,8 @@ namespace ShootAirRLAgent
 
                     // Reset ShotAvailable
                     shotAvailable = false;
+                } else if (!shootingStar) {
+                    anim.SetBool("IsAiming",false);
                 }
             }
         }
