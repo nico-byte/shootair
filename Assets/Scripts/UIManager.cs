@@ -7,6 +7,10 @@ namespace ShootAirRLAgent
 {
     public class UIManager : MonoBehaviour
     {
+        // OBJECTS
+        AgentObservations agentObservations;
+
+        // DEBUG PRINTS
         [SerializeField]
         private TextMeshProUGUI velocityXText;
         [SerializeField]
@@ -21,7 +25,7 @@ namespace ShootAirRLAgent
         private TextMeshProUGUI timeLeftText;
         [SerializeField]
         private TextMeshProUGUI healthEnemyText;
-        AgentObservations agentObservations;
+        
         // Start is called before the first frame update
         void Start()
         {
@@ -75,6 +79,5 @@ namespace ShootAirRLAgent
         {
             healthEnemyText.text = "health = " + health.ToString();
         }
-        
     }
 }

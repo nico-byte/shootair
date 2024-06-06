@@ -16,6 +16,7 @@ namespace ShootAirRLAgent
     {
         EnvironmentSettings environmentSettings;
         AgentSettings agentSettings;
+        SoundEffectPlayer soundHandler;
 
         [SerializeField]
         private ShootairAgent shootairAgent;
@@ -38,17 +39,17 @@ namespace ShootAirRLAgent
         private Transform[] spawnpoints = null;
 
         private int resetTimer;
-        public float scaleTimer = 0f;
         [SerializeField]
         private int MaxEnvironmentSteps;
         private int currentWave = 0;
         private int streak;
-        public float desiredLength;
-        
+
         // Start is called before the first frame update
         void Start()
         {
             environmentSettings = FindObjectOfType<EnvironmentSettings>();
+            soundHandler = FindObjectOfType<SoundEffectPlayer>();
+            agentSettings = FindObjectOfType<AgentSettings>();
 
             area = Instantiate(trainingAreaPrefab, environment.position, environment.rotation);
             agent = GameObject.FindGameObjectWithTag("agent");
@@ -60,7 +61,7 @@ namespace ShootAirRLAgent
             Transform point3 = GameObject.Find("p3").transform;
             Transform point4 = GameObject.Find("p4").transform;
             Transform point5 = GameObject.Find("p5").transform;
-    		Transform point6 = GameObject.Find("p6").transform;
+            Transform point6 = GameObject.Find("p6").transform;
             Transform point7 = GameObject.Find("p7").transform;
             Transform point8 = GameObject.Find("p8").transform;
             Transform point9 = GameObject.Find("p9").transform;
@@ -69,7 +70,7 @@ namespace ShootAirRLAgent
             Transform point12 = GameObject.Find("p12").transform;
             Transform point13 = GameObject.Find("p13").transform;
             Transform point14 = GameObject.Find("p14").transform;
-    		Transform point15 = GameObject.Find("p15").transform;
+            Transform point15 = GameObject.Find("p15").transform;
             Transform point16 = GameObject.Find("p16").transform;
             Transform point17 = GameObject.Find("p17").transform;
             Transform point18 = GameObject.Find("p18").transform;
@@ -82,7 +83,7 @@ namespace ShootAirRLAgent
                 point3,
                 point4,
                 point5,
-    			point6,
+                point6,
                 point7,
                 point8,
                 point9,
@@ -103,9 +104,8 @@ namespace ShootAirRLAgent
             Transform refpoint1 = GameObject.Find("refpoint1").transform;
             Transform refpoint2 = GameObject.Find("refpoint2").transform;
 
-            agentSettings = FindObjectOfType<AgentSettings>();
             agentSettings.maxDistance = Vector2.Distance(refpoint1.position, refpoint2.position);
-            desiredLength = 3000f;
+
             ResetScene();
         }
 
@@ -114,19 +114,21 @@ namespace ShootAirRLAgent
             switch (triggerEvent)
             {
                 case Event.hitOnTarget:
+
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(3e-5f);
+                    shootairAgent.AddReward(8e-5f);
+                    soundHandler.playSound("enemy_damage");
 
                     break;
 
                 case Event.collisionWithTarget:
                     // agent loses
-                    shootairAgent.SetReward(-.9f/(currentWave+1));
+                    shootairAgent.SetReward(-.9f);
+                    soundHandler.playSound("agent_death");
+                    soundHandler.playSound("game_over");
 
                     currentWave = 0;
-                    scaleTimer = 0;
-                    desiredLength = 3000f;
-                    Debug.Log(desiredLength);
+
                     // end episode
                     shootairAgent.EndEpisode();
                     ResetScene();
@@ -134,25 +136,25 @@ namespace ShootAirRLAgent
 
                 case Event.killedTarget:
                     // add reward for killing target
-                    shootairAgent.AddReward(scaledRewards(1.5e-3f, false));
+                    shootairAgent.AddReward(1.5e-3f);
+                    soundHandler.playSound("enemy_death");
 
                     break;
 
                 case Event.killedAllTargets:
-                    if (currentWave >= environmentSettings.waves.Count-1)
+                    if (currentWave >= environmentSettings.waves.Count - 1)
                     {
                         currentWave = 0;
-                        scaleTimer = 0;
-                        desiredLength = 3000f;
                         shootairAgent.EndEpisode();
                         ResetScene();
                         break;
+                        // HE WON ALL WAVES
                     }
-                    scaleTimer = 0;
 
                     // agent wins
-                    shootairAgent.AddReward(scaledRewards(.1f/environmentSettings.waves.Count, false));
-                    desiredLength += 100f;
+                    shootairAgent.AddReward(.4f / environmentSettings.waves.Count);
+                    soundHandler.playSound("wave_success");
+
                     // end episode
 
                     currentWave++;
@@ -162,29 +164,9 @@ namespace ShootAirRLAgent
                 case Event.missedShot:
 
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(scaledRewards(-1e-5f, true));
+                    shootairAgent.AddReward(-1e-5f);
 
                     break;
-            }
-        }
-
-        private float scaledRewards(float reward, bool inverse) {
-            if (scaleTimer > desiredLength) {
-                if (reward > 0) {
-                    return 0.0f;
-                }
-                else {
-                    return 1.0f * reward;
-                }
-            }
-            
-            float scaleCosineFactor = (scaleTimer / desiredLength) * 2 * Mathf.PI;
-            float scaledCosine = (Mathf.Cos(scaleCosineFactor) + 1) / 2;
-            if (!inverse) {
-                return scaledCosine * reward;
-            }
-            else {
-                return (1 - scaledCosine) * reward;
             }
         }
 
@@ -192,21 +174,20 @@ namespace ShootAirRLAgent
         void FixedUpdate()
         {
             resetTimer += 1;
-            scaleTimer += 1;
             if (resetTimer >= MaxEnvironmentSteps && MaxEnvironmentSteps > 0)
             {
                 shootairAgent.EndEpisode();
                 ResetScene();
             }
 
-            EnemyList.RemoveAll( x => !x);
+            EnemyList.RemoveAll(x => !x);
 
             if (EnemyList.Count == 0)
             {
                 ResolveEvent(Event.killedAllTargets);
             }
 
-            shootairAgent.AddReward(scaledRewards(-1e-8f, true));
+            shootairAgent.AddReward(-1e-8f);
         }
 
         public void ResetScene()
