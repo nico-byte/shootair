@@ -44,6 +44,9 @@ namespace ShootAirRLAgent
         private int currentWave = 0;
         private int streak;
 
+        public float scaleTimer = 0f;
+        public float desiredLength = 0f;
+
         // Start is called before the first frame update
         void Start()
         {
