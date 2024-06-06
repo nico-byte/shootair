@@ -29,6 +29,12 @@ namespace ShootAirRLAgent
         private GameObject difficultEnemyPrefab;
         [SerializeField]
         private GameObject fastEnemyPrefab;
+
+        [SerializeField]
+        private GameObject Occultist3EnemyPrefab;
+
+        [SerializeField]
+        private GameObject Occultist4EnemyPrefab;
         private GameObject agent;
         private GameObject area;
 
@@ -213,7 +219,7 @@ namespace ShootAirRLAgent
             GameObject[] allObjects = FindObjectsOfType<GameObject>();
             foreach (GameObject obj in allObjects)
             {
-                if (obj.transform.name == "StandardEnemy(Clone)" || obj.transform.name == "DifficultEnemy(Clone)" || obj.transform.name == "FastEnemy(Clone)")
+                if (obj.transform.name == "StandardEnemy(Clone)" || obj.transform.name == "DifficultEnemy(Clone)" || obj.transform.name == "FastEnemy(Clone)" || obj.transform.name == "Occultist3Enemy(Clone)" || obj.transform.name == "Occultist4Enemy(Clone)" || obj.transform.name == "Bullet(Clone)")
                 {
                     Destroy(obj);
                 }
@@ -234,6 +240,16 @@ namespace ShootAirRLAgent
             if (enemyCount[2] > 0)
             {
                 spawn(difficultEnemyPrefab, enemyCount[2]);
+            }
+
+            if (enemyCount[3] > 0)
+            {
+                spawn(Occultist3EnemyPrefab, enemyCount[3]);
+            }
+
+            if (enemyCount[4] > 0)
+            {
+                spawn(Occultist4EnemyPrefab, enemyCount[4]);
             }
         }
 
