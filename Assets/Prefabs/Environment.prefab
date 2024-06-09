@@ -47,16 +47,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootairAgent: {fileID: 1566164095406430165, guid: 5c68f5f3e0151534dac155027cb8aa9f, type: 3}
-  enemy: {fileID: 2568976797945246692, guid: c5e2bb26abc667ad8acbfb8b826740a3, type: 3}
-  bullet: {fileID: 3953439025076092393, guid: af543b097154e8692971764a6b33f5f7, type: 3}
   trainingAreaPrefab: {fileID: 5990346203202352562, guid: da6192168156fb708bc1d6a70c94a3ea, type: 3}
   standardEnemyPrefab: {fileID: 3245322192379080683, guid: c5e2bb26abc667ad8acbfb8b826740a3, type: 3}
   difficultEnemyPrefab: {fileID: 3245322192379080683, guid: 89cf7df2c80eed7b68cf7244fee9cae1, type: 3}
   fastEnemyPrefab: {fileID: 3245322192379080683, guid: 165ee6ec9a979ec6aa1e1bfb23ff98b3, type: 3}
-  agentPrefab: {fileID: 1065669351236603001, guid: 5c68f5f3e0151534dac155027cb8aa9f, type: 3}
+  Occultist3EnemyPrefab: {fileID: 1199007736262422055, guid: 461c1bd0c08f69441862ebcde2e6ff73, type: 3}
+  Occultist4EnemyPrefab: {fileID: 1671440349958721075, guid: 08710610a9021734292057c0ad61a2e5, type: 3}
   environment: {fileID: 641927431179484097}
-  EnemyList: []
   MaxEnvironmentSteps: 10000
+  scaleTimer: 0
+  desiredLength: 0
 --- !u!114 &4056167262554850393
 MonoBehaviour:
   m_ObjectHideFlags: 0

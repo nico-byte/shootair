@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 539646281690681512}
   - component: {fileID: -7948817545250953503}
   - component: {fileID: -2806031089848294211}
-  - component: {fileID: -8575788359508262776}
   - component: {fileID: -4442021443177575293}
   - component: {fileID: -3609546396121139484}
+  - component: {fileID: -8679042030816373304}
   m_Layer: 6
   m_Name: Occultist4Enemy
   m_TagString: target
@@ -161,19 +161,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-8575788359508262776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1671440349958721075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c8516a59d016524aa268edf6ac8626f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyType: 5
 --- !u!95 &-4442021443177575293
 Animator:
   serializedVersion: 5
@@ -217,3 +204,16 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-8679042030816373304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1671440349958721075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c8516a59d016524aa268edf6ac8626f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyType: 5

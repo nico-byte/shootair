@@ -3221,8 +3221,7 @@ MonoBehaviour:
   shotAvailableText: {fileID: 466484169}
   distanceEnemyText: {fileID: 1056490925}
   directionEnemyText: {fileID: 1666014827}
-  velocityXEnemyText: {fileID: 692681893}
-  velocityYEnemyText: {fileID: 1717074204}
+  timeLeftText: {fileID: 0}
   healthEnemyText: {fileID: 1796661206}
 --- !u!4 &1509746629
 Transform:
@@ -9086,8 +9085,12 @@ MonoBehaviour:
   standardEnemyPrefab: {fileID: 3245322192379080683, guid: c5e2bb26abc667ad8acbfb8b826740a3, type: 3}
   difficultEnemyPrefab: {fileID: 3245322192379080683, guid: 89cf7df2c80eed7b68cf7244fee9cae1, type: 3}
   fastEnemyPrefab: {fileID: 3245322192379080683, guid: 165ee6ec9a979ec6aa1e1bfb23ff98b3, type: 3}
+  Occultist3EnemyPrefab: {fileID: 1199007736262422055, guid: 461c1bd0c08f69441862ebcde2e6ff73, type: 3}
+  Occultist4EnemyPrefab: {fileID: 1671440349958721075, guid: 08710610a9021734292057c0ad61a2e5, type: 3}
   environment: {fileID: 827689719112947625}
   MaxEnvironmentSteps: 5000
+  scaleTimer: 0
+  desiredLength: 0
 --- !u!114 &2724460586365922238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9278,7 +9281,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 6.233333
+  orthographic size: 4.4666667
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

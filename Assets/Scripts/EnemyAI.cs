@@ -40,23 +40,23 @@ namespace ShootAirRLAgent
             envController = FindObjectOfType<EnvironmentController>();
             rBody = GetComponent<Rigidbody2D>();
 
-            if (enemyType == 1)
+            if (enemyType == 1) // difficult enemy
             {
                 health = 150;
             }
-            else if (enemyType == 2)
+            else if (enemyType == 2) // fast enemy
             {
                 health = 30;
             }
-            else if (enemyType == 3)
+            else if (enemyType == 3) // standard enemy
             {
                 health = 100;
             }
-            else if (enemyType == 4)
+            else if (enemyType == 4) // boss 1 enemy
             {
-                health = 200;
+                health = 175;
             }
-            else 
+            else if (enemyType == 5) // boss 2 enemy
             {
                 health = 250;
             }
