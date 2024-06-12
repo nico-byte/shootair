@@ -22,8 +22,6 @@ namespace ShootAirRLAgent
         [SerializeField]
         private TextMeshProUGUI directionEnemyText;
         [SerializeField]
-        private TextMeshProUGUI timeLeftText;
-        [SerializeField]
         private TextMeshProUGUI healthEnemyText;
         
         // Start is called before the first frame update
@@ -40,7 +38,6 @@ namespace ShootAirRLAgent
             UpdateShotAvailable(MathF.Round(observationValues["shotAvailable"], 3));
             UpdateDistanceEnemy(MathF.Round(observationValues["distanceEnemy"], 3));
             UpdateDirectionEnemy(MathF.Round(observationValues["directionEnemy"], 3));
-            UpdateTimeLeft(MathF.Round(observationValues["timeLeft"], 3));
             UpdateHealthEnemy(MathF.Round(observationValues["healthEnemy"], 3));
         }
     
@@ -68,11 +65,6 @@ namespace ShootAirRLAgent
         private void UpdateDirectionEnemy(float direction)
         {
             directionEnemyText.text = "direction = " + direction.ToString();
-        }
-    
-        private void UpdateTimeLeft(float timeLeft)
-        {
-            timeLeftText.text = "timeLeft = " + timeLeft.ToString();
         }
         
         private void UpdateHealthEnemy(float health)
