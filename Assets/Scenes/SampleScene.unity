@@ -3221,7 +3221,6 @@ MonoBehaviour:
   shotAvailableText: {fileID: 466484169}
   distanceEnemyText: {fileID: 1056490925}
   directionEnemyText: {fileID: 1666014827}
-  timeLeftText: {fileID: 0}
   healthEnemyText: {fileID: 1796661206}
 --- !u!4 &1509746629
 Transform:
@@ -9121,7 +9120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 5
+  DecisionPeriod: 10
   DecisionStep: 0
   TakeActionsBetweenDecisions: 1
 --- !u!114 &3550562804315010292
@@ -9207,15 +9206,15 @@ MonoBehaviour:
   - target
   - wall
   - bullet
-  m_RaysPerDirection: 4
+  m_RaysPerDirection: 16
   m_MaxRayDegrees: 180
   m_SphereCastRadius: 0
-  m_RayLength: 15
+  m_RayLength: 35
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 72
-  m_ObservationStacks: 1
-  m_AlternatingRayOrder: 1
+  m_ObservationStacks: 2
+  m_AlternatingRayOrder: 0
   m_UseBatchedRaycasts: 0
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 0, g: 0.0736819, b: 0.8773585, a: 1}
@@ -9506,10 +9505,10 @@ MonoBehaviour:
   m_BehaviorType: 0
   m_BehaviorName: Shootair
   TeamId: 0
-  m_UseChildSensors: 1
+  m_UseChildSensors: 0
   m_UseChildActuators: 1
   m_DeterministicInference: 0
-  m_ObservableAttributeHandling: 2
+  m_ObservableAttributeHandling: 0
 --- !u!60 &8420589445136966830
 PolygonCollider2D:
   m_ObjectHideFlags: 0
