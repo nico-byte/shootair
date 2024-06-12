@@ -120,24 +120,28 @@ namespace ShootAirRLAgent
 
         public void ResolveEvent(Event triggerEvent)
         {
+            Debug.Log(triggerEvent);
+            Debug.Log(shootairAgent.GetCumulativeReward());
             switch (triggerEvent)
             {
                 case Event.hitOnTarget:
-
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(8e-5f);
+                    shootairAgent.AddReward(6e-4f);
                     soundHandler.playSound("enemy_damage");
 
                     break;
 
                 case Event.collisionWithTarget:
                     // agent loses
-                    shootairAgent.SetReward(-.9f);
+                    float collisionReward = (-0.9f/environmentSettings.waves.Count)*(environmentSettings.waves.Count - currentWave);
+                    shootairAgent.AddReward(collisionReward);
                     soundHandler.playSound("agent_death");
                     soundHandler.playSound("game_over");
 
                     currentWave = 0;
-
+                    // scaleTimer = 0;
+                    // desiredLength = 3000f;
+                    // Debug.Log(desiredLength);
                     // end episode
                     shootairAgent.EndEpisode();
                     ResetScene();
@@ -145,25 +149,30 @@ namespace ShootAirRLAgent
 
                 case Event.killedTarget:
                     // add reward for killing target
-                    shootairAgent.AddReward(1.5e-3f);
+                    shootairAgent.AddReward(3e-3f);
+                    // shootairAgent.AddReward(scaledRewards(1.5e-3f, false));
                     soundHandler.playSound("enemy_death");
 
                     break;
 
-                case Event.killedAllTargets:
-                    if (currentWave >= environmentSettings.waves.Count - 1)
+                case Event.killedAllTargets:                    
+                    if (currentWave >= environmentSettings.waves.Count-1)
                     {
                         currentWave = 0;
+                        // scaleTimer = 0;
+                        // desiredLength = 3000f;
                         shootairAgent.EndEpisode();
                         ResetScene();
                         break;
-                        // HE WON ALL WAVES
                     }
+                    // scaleTimer = 0;
 
                     // agent wins
-                    shootairAgent.AddReward(.4f / environmentSettings.waves.Count);
+                    // shootairAgent.AddReward(scaledRewards(.1f/environmentSettings.waves.Count, false));
+                    float waveReward = (0.9f/environmentSettings.waves.Count)*(currentWave+1);
+                    shootairAgent.AddReward(waveReward);
                     soundHandler.playSound("wave_success");
-
+                    // desiredLength += 100f;
                     // end episode
 
                     currentWave++;
@@ -173,7 +182,8 @@ namespace ShootAirRLAgent
                 case Event.missedShot:
 
                     // apply reward to shootair agent
-                    shootairAgent.AddReward(-1e-5f);
+                    // shootairAgent.AddReward(scaledRewards(-1e-5f, true));
+                    shootairAgent.AddReward(-3e-4f);
 
                     break;
             }
