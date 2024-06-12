@@ -70,6 +70,8 @@ sysinfo.txt
 *.onnx
 *.onnx.meta
 
+500mil*
+
 # Crashlytics generated file
 crashlytics-build.properties
 
