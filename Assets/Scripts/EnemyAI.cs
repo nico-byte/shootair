@@ -63,7 +63,7 @@ namespace ShootAirRLAgent
             }
         }
 
-        private void Update()
+        private void UpdateMovement()
         {
             // If chasing get the position of the agent and point towards it
             if (chasing)
@@ -87,6 +87,7 @@ namespace ShootAirRLAgent
 
         private void FixedUpdate()
         {
+            UpdateMovement();
             // Give the values to the FSM (animator)
             float distanceFromTarget = Vector2.Distance(currentTarget, transform.position);
             anim.SetFloat("distanceFromWaypoint", distanceFromTarget);

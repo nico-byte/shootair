@@ -121,6 +121,8 @@ namespace ShootAirRLAgent
 
         public void ResolveEvent(Event triggerEvent)
         {
+            Debug.Log(triggerEvent);
+            Debug.Log(shootairAgent.GetCumulativeReward());
             switch (triggerEvent)
             {
                 case Event.hitOnTarget:
