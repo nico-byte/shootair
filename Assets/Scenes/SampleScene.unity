@@ -9238,6 +9238,7 @@ GameObject:
   - component: {fileID: 3550562804315010292}
   - component: {fileID: 8420589445136966830}
   - component: {fileID: 8420589445136966831}
+  - component: {fileID: 8420589445136966832}
   m_Layer: 1
   m_Name: ShootairAgent
   m_TagString: agent
@@ -9574,6 +9575,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8998ec1e16454f446b422759c8d078f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8420589445136966832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4519677946699837458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88b6042bc9a5d4aa58d931eae49442e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
