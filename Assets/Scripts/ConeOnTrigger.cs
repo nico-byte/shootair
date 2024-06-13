@@ -15,6 +15,7 @@ namespace ShootAirRLAgent
         {
             if (o.gameObject.tag == "agent")
             {
+                Debug.Log("Agent entered cone");
                 EnemyAI.inViewCone = true;
             }
         }
@@ -24,6 +25,7 @@ namespace ShootAirRLAgent
         
             if (o.gameObject.tag == "agent")
             {
+                Debug.Log("Agent exited cone");
                 EnemyAI.inViewCone = false;
             }
         }

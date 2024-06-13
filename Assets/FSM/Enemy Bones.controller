@@ -147,6 +147,18 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-4769851474457037884
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03750f19be1988d439bcf739e6b75ddf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1102 &-3965939920774952383
 AnimatorState:
   serializedVersion: 6
@@ -159,7 +171,9 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -8899317363082664305}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -4769851474457037884}
+  - {fileID: 7032211230633239169}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -346,8 +360,8 @@ AnimatorController:
     m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
-    m_Name: Enemy Animation
-    m_StateMachine: {fileID: 6678919915644223926}
+    m_Name: Base Layer
+    m_StateMachine: {fileID: -2966490426988178852}
     m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
@@ -358,8 +372,8 @@ AnimatorController:
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
-    m_Name: Base Layer
-    m_StateMachine: {fileID: -2966490426988178852}
+    m_Name: Enemy Animation
+    m_StateMachine: {fileID: 6678919915644223926}
     m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
@@ -494,6 +508,18 @@ AnimatorStateMachine:
   m_ExitPosition: {x: -560, y: 40, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -2449550609755628809}
+--- !u!114 &7032211230633239169
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb205088b72a6ed7a937163d8be7fdee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1102 &8042418643416901646
 AnimatorState:
   serializedVersion: 6

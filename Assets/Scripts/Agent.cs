@@ -187,9 +187,6 @@ namespace ShootAirRLAgent
 
         public void MoveAgent(ActionBuffers actionBuffers)
         {
-            Debug.Log("IsAiming: " + anim.GetBool("IsAiming"));
-            Debug.Log("IsMoving: " + anim.GetBool("IsMoving"));
-
             Dictionary<string, bool> directionStates = new Dictionary<string, bool>
             {
                 {"Up", false},

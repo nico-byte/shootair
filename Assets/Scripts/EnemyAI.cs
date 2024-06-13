@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.PlayerLoop;
 
 namespace ShootAirRLAgent
 {
@@ -70,14 +71,24 @@ namespace ShootAirRLAgent
 
         private void Update()
         {
+            // If chasing get the position of the agent and point towards it
             if (chasing)
             {
+                Debug.Log("Chasing");
                 Chase();
+                UpdateAnimation(enemy.velocity.normalized);
             }
-            else if (!waiting)
+
+            // Unless the enemy is waiting then move
+            if (!waiting && !chasing)
             {
-                MoveToCurrentTarget();
+                NavMeshPath path = new NavMeshPath();
+                enemy.CalculatePath(currentTarget, path);
+                enemy.SetPath(path);
+                originalPosition = transform.position;
+                UpdateAnimation(enemy.velocity.normalized);
             }
+
         }
 
         private void FixedUpdate()
@@ -85,7 +96,8 @@ namespace ShootAirRLAgent
             float distanceFromTarget = Vector2.Distance(currentTarget, transform.position);
             anim.SetFloat("distanceFromWaypoint", distanceFromTarget);
             anim.SetBool("playerInSight", inViewCone);
-
+            Debug.Log("viewCone: " + inViewCone);
+            Debug.Log("playerInSight: " + anim.GetBool("playerInSight"));
             trackVelocity = (rBody.position - previousPosition) * 50;
 
             if (Vector3.Distance(transform.position, previousPosition) < 1f)
@@ -118,7 +130,6 @@ namespace ShootAirRLAgent
             while (nextPoint == currentTarget);
 
             currentTarget = nextPoint;
-            MoveToCurrentTarget();
         }
 
         private Vector2 RandomPointInAnnulus(Vector2 center, float minRadius, float maxRadius)
@@ -134,19 +145,15 @@ namespace ShootAirRLAgent
 
         public void Chase()
         {
-            enemy.SetDestination(target.position);
-            UpdateAnimation(enemy.velocity.normalized);
+            // Load the direction of the player
+            NavMeshPath path = new NavMeshPath();
+            enemy.CalculatePath(target.position, path);
+            enemy.SetPath(path);
         }
 
         public void StopChasing()
         {
             chasing = false;
-        }
-
-        public void MoveToCurrentTarget()
-        {
-            enemy.SetDestination(currentTarget);
-            UpdateAnimation(enemy.velocity.normalized);
         }
 
         void UpdateAnimation(Vector3 direction)
