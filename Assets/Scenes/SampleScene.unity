@@ -3218,6 +3218,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocityXText: {fileID: 923646396}
   velocityYText: {fileID: 2038636667}
+  enemyVelocityXText: {fileID: 692681893}
+  enemyVelocityYText: {fileID: 1717074204}
   shotAvailableText: {fileID: 466484169}
   distanceEnemyText: {fileID: 1056490925}
   directionEnemyText: {fileID: 1666014827}

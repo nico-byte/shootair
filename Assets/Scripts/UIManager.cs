@@ -16,6 +16,10 @@ namespace ShootAirRLAgent
         [SerializeField]
         private TextMeshProUGUI velocityYText;
         [SerializeField]
+        private TextMeshProUGUI enemyVelocityXText;
+        [SerializeField]
+        private TextMeshProUGUI enemyVelocityYText;
+        [SerializeField]
         private TextMeshProUGUI shotAvailableText;
         [SerializeField]
         private TextMeshProUGUI distanceEnemyText;
@@ -38,6 +42,8 @@ namespace ShootAirRLAgent
             UpdateShotAvailable(MathF.Round(observationValues["shotAvailable"], 3));
             UpdateDistanceEnemy(MathF.Round(observationValues["distanceEnemy"], 3));
             UpdateDirectionEnemy(MathF.Round(observationValues["directionEnemy"], 3));
+            UpdateEnemyVelocityX(MathF.Round(observationValues["velocity_xEnemy"], 3));
+            UpdateEnemyVelocityY(MathF.Round(observationValues["velocity_yEnemy"], 3));
             UpdateHealthEnemy(MathF.Round(observationValues["healthEnemy"], 3));
         }
     
@@ -50,6 +56,16 @@ namespace ShootAirRLAgent
         private void UpdateVelocityY(float velocityY)
         {
             velocityYText.text = "velocity.y = " + velocityY.ToString();
+        }
+
+        private void UpdateEnemyVelocityX(float velocityX)
+        {
+            enemyVelocityXText.text = "velocity.x = " + velocityX.ToString();
+        }
+        
+        private void UpdateEnemyVelocityY(float velocityY)
+        {
+            enemyVelocityYText.text = "velocity.y = " + velocityY.ToString();
         }
     
         private void UpdateShotAvailable(float shotAvailable)

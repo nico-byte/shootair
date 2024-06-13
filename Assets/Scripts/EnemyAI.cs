@@ -96,8 +96,6 @@ namespace ShootAirRLAgent
             float distanceFromTarget = Vector2.Distance(currentTarget, transform.position);
             anim.SetFloat("distanceFromWaypoint", distanceFromTarget);
             anim.SetBool("playerInSight", inViewCone);
-            Debug.Log("viewCone: " + inViewCone);
-            Debug.Log("playerInSight: " + anim.GetBool("playerInSight"));
             trackVelocity = (rBody.position - previousPosition) * 50;
 
             if (Vector3.Distance(transform.position, previousPosition) < 1f)
