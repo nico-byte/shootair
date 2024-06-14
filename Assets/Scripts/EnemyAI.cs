@@ -9,6 +9,7 @@ namespace ShootAirRLAgent
     {
         private Rigidbody2D rBody;
         private Transform target;
+        SoundEffectPlayer soundHandler;
         private NavMeshAgent enemy;
         private Vector3 direction;
         private Vector2 currentTarget;
@@ -24,12 +25,14 @@ namespace ShootAirRLAgent
 
         private Vector2 originalPosition;
         private Vector2 previousPosition;
+        private float soundRatelimit = 0f;
         private int stuckCounter;
         public Vector2 trackVelocity { get; set; }
 
         public void Awake()
         {
             target = GameObject.FindGameObjectWithTag("agent").transform;
+            soundHandler = FindObjectOfType<SoundEffectPlayer>();
             enemy = GetComponent<NavMeshAgent>();
             enemy.updateRotation = false;
             enemy.updateUpAxis = false;
@@ -74,7 +77,7 @@ namespace ShootAirRLAgent
             // If chasing get the position of the agent and point towards it
             if (chasing)
             {
-                Debug.Log("Chasing");
+                //Debug.Log("Chasing");
                 Chase();
                 UpdateAnimation(enemy.velocity.normalized);
             }
@@ -97,6 +100,8 @@ namespace ShootAirRLAgent
             anim.SetFloat("distanceFromWaypoint", distanceFromTarget);
             anim.SetBool("playerInSight", inViewCone);
             trackVelocity = (rBody.position - previousPosition) * 50;
+
+            soundRatelimit -= Time.deltaTime;
 
             if (Vector3.Distance(transform.position, previousPosition) < 1f)
             {
@@ -172,13 +177,13 @@ namespace ShootAirRLAgent
                     xMove = 1.1f;
                     yMove = 0;
                 }
-                else 
+                else
                 {
                     // Enemy movement "left"
                     xMove = -1.1f;
                     yMove = 0;
                 }
-                   
+
             }
             else
             {
@@ -208,6 +213,28 @@ namespace ShootAirRLAgent
         public void StartChasing()
         {
             chasing = true;
+            if (soundRatelimit <= 0f)
+            {
+                switch (enemyType)
+                {
+                    case 1:
+                        soundHandler.playSound("enemy_ambient1");
+                        break;
+                    case 2:
+                        soundHandler.playSound("enemy_ambient2");
+                        break;
+                    case 3:
+                        soundHandler.playSound("enemy_ambient3");
+                        break;
+                    case 4:
+                        soundHandler.playSound("enemy_ambient4");
+                        break;
+                    case 5:
+                        soundHandler.playSound("enemy_ambient5");
+                        break;
+                }
+                soundRatelimit = 5f;
+            }
         }
 
         public void ToggleWaiting()
