@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
 namespace ShootAirRLAgent
 {
@@ -48,10 +50,6 @@ namespace ShootAirRLAgent
         [SerializeField]
         private int MaxEnvironmentSteps;
         private int currentWave = 0;
-        private int streak;
-
-        public float scaleTimer = 0f;
-        public float desiredLength = 0f;
 
         // Start is called before the first frame update
         void Start()
@@ -113,7 +111,7 @@ namespace ShootAirRLAgent
             Transform refpoint1 = GameObject.Find("refpoint1").transform;
             Transform refpoint2 = GameObject.Find("refpoint2").transform;
 
-            agentSettings.maxDistance = Vector2.Distance(refpoint1.position, refpoint2.position);
+            agentSettings.maxDistance = UnityEngine.Vector2.Distance(refpoint1.position, refpoint2.position);
 
             ResetScene();
         }
@@ -137,9 +135,6 @@ namespace ShootAirRLAgent
                     soundHandler.playSound("game_over");
 
                     currentWave = 0;
-                    // scaleTimer = 0;
-                    // desiredLength = 3000f;
-                    // Debug.Log(desiredLength);
                     // end episode
                     shootairAgent.EndEpisode();
                     ResetScene();
@@ -157,20 +152,15 @@ namespace ShootAirRLAgent
                     if (currentWave >= environmentSettings.waves.Count-1)
                     {
                         currentWave = 0;
-                        // scaleTimer = 0;
-                        // desiredLength = 3000f;
                         shootairAgent.EndEpisode();
                         ResetScene();
                         break;
                     }
-                    // scaleTimer = 0;
 
                     // agent wins
-                    // shootairAgent.AddReward(scaledRewards(.1f/environmentSettings.waves.Count, false));
                     float waveReward = (0.9f/environmentSettings.waves.Count)*(currentWave+1);
                     shootairAgent.AddReward(waveReward);
                     soundHandler.playSound("wave_success");
-                    // desiredLength += 100f;
                     // end episode
 
                     currentWave++;
@@ -180,7 +170,6 @@ namespace ShootAirRLAgent
                 case Event.missedShot:
 
                     // apply reward to shootair agent
-                    // shootairAgent.AddReward(scaledRewards(-1e-5f, true));
                     shootairAgent.AddReward(-3e-4f);
 
                     break;
@@ -211,8 +200,8 @@ namespace ShootAirRLAgent
         {
             resetTimer = 0;
 
-            agent.transform.position = new Vector3(0, 0, 0);
-            agent.transform.eulerAngles = new Vector3(0, 0, 0);
+            agent.transform.position = new UnityEngine.Vector3(0, 0, 0);
+            agent.transform.eulerAngles = new UnityEngine.Vector3(0, 0, 0);
 
             agent.GetComponent<Rigidbody2D>().velocity = default;
 
@@ -266,8 +255,14 @@ namespace ShootAirRLAgent
             // Spawn enemies in spawn area
             for (int i = 1; i <= quant; i++)
             {
-                int randomIdx = Random.Range(0, spawnpoints.Length);
-                GameObject newGO = Instantiate(prefab, spawnpoints[randomIdx].position, Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
+                int randomIdx = 0;
+                while (true) {
+                    randomIdx = Random.Range(0, spawnpoints.Length);
+                    if (UnityEngine.Vector2.Distance(spawnpoints[randomIdx].position, agent.transform.position) > 10f) {
+                        break;
+                    }
+                }
+                GameObject newGO = Instantiate(prefab, spawnpoints[randomIdx].position, UnityEngine.Quaternion.Euler(0f, 0f, Random.Range(0.0f, 360.0f)));
                 newGO.transform.parent = area.transform;
                 EnemyList.Add(newGO);
             }

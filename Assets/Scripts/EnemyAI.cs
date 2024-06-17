@@ -77,9 +77,7 @@ namespace ShootAirRLAgent
             // If chasing get the position of the agent and point towards it
             if (chasing)
             {
-                //Debug.Log("Chasing");
                 Chase();
-                UpdateAnimation(enemy.velocity.normalized);
             }
 
             // Unless the enemy is waiting then move
@@ -89,13 +87,13 @@ namespace ShootAirRLAgent
                 enemy.CalculatePath(currentTarget, path);
                 enemy.SetPath(path);
                 originalPosition = transform.position;
-                UpdateAnimation(enemy.velocity.normalized);
             }
 
         }
 
         private void FixedUpdate()
         {
+            UpdateAnimation(enemy.velocity.normalized);
             float distanceFromTarget = Vector2.Distance(currentTarget, transform.position);
             anim.SetFloat("distanceFromWaypoint", distanceFromTarget);
             anim.SetBool("playerInSight", inViewCone);
