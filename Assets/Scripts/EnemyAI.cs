@@ -93,7 +93,6 @@ namespace ShootAirRLAgent
 
         private void FixedUpdate()
         {
-            UpdateAnimation(enemy.velocity.normalized);
             float distanceFromTarget = Vector2.Distance(currentTarget, transform.position);
             anim.SetFloat("distanceFromWaypoint", distanceFromTarget);
             anim.SetBool("playerInSight", inViewCone);
@@ -117,6 +116,8 @@ namespace ShootAirRLAgent
                 SetNextPoint();
                 stuckCounter = 0;
             }
+
+            UpdateAnimation(enemy.velocity.normalized);
         }
 
         public void SetNextPoint()
