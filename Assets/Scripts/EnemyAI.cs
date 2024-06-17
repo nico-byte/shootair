@@ -94,8 +94,7 @@ namespace ShootAirRLAgent
         private void FixedUpdate()
         {
             float distanceFromTarget = Vector2.Distance(currentTarget, transform.position);
-            anim.SetFloat("distanceFromWaypoint", distanceFromTarget);
-            anim.SetBool("playerInSight", inViewCone);
+            UpdateAnimation(enemy.velocity.normalized, inViewCone, distanceFromTarget);
             trackVelocity = (rBody.position - previousPosition) * 50;
 
             soundRatelimit -= Time.deltaTime;
@@ -116,8 +115,6 @@ namespace ShootAirRLAgent
                 SetNextPoint();
                 stuckCounter = 0;
             }
-
-            UpdateAnimation(enemy.velocity.normalized);
         }
 
         public void SetNextPoint()
@@ -127,7 +124,7 @@ namespace ShootAirRLAgent
 
             do
             {
-                nextPoint = RandomPointInAnnulus(targetPosition, 2.5f, 5f);
+                nextPoint = RandomPointInAnnulus(targetPosition, 1.5f, 4.0f);
             }
             while (nextPoint == currentTarget);
 
@@ -158,7 +155,7 @@ namespace ShootAirRLAgent
             chasing = false;
         }
 
-        void UpdateAnimation(Vector3 direction)
+        void UpdateAnimation(Vector3 direction, bool inSight, float distance)
         {
             float horizontal = direction.x;
             float vertical = direction.y;
@@ -203,6 +200,8 @@ namespace ShootAirRLAgent
             // setting animation parameters
             anim.SetFloat("xMove", xMove);
             anim.SetFloat("yMove", yMove);
+            anim.SetFloat("distanceFromWaypoint", distance);
+            anim.SetBool("playerInSight", inSight);
 
             // Static enemy angle
             float angle = Mathf.Atan2(vertical, horizontal) * Mathf.Rad2Deg;
