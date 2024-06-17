@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Occultist3 Animations
+  m_Controller: {fileID: 9100000, guid: 655dcf1bd0cecfe41bc1fe6a13090658, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 6d2ce59ba14d8c74aa54c654b8865e49, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6d2ce59ba14d8c74aa54c654b8865e49, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ab57033ad790b5c41a88f1cd05762586, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ab57033ad790b5c41a88f1cd05762586, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 24738739f2a50d94a97b4dbc97c9bece, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 24738739f2a50d94a97b4dbc97c9bece, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 92f1215a4f7f4b84da9a202b598fb1a2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 92f1215a4f7f4b84da9a202b598fb1a2, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: c0914918ed9259849acdc20348ef4538, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c0914918ed9259849acdc20348ef4538, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 13c9799a3bc09354a834420c0f8cd3cc, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 13c9799a3bc09354a834420c0f8cd3cc, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: c850de17ea70acd47b767a3939122419, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c850de17ea70acd47b767a3939122419, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: fb1851b2612394f44a29eddaa4fcbd94, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: fb1851b2612394f44a29eddaa4fcbd94, type: 2}
