@@ -125,7 +125,7 @@ namespace ShootAirRLAgent
                 case Event.hitOnTarget:
                     // apply reward to shootair agent
                     shootairAgent.AddReward(6e-4f);
-                    soundHandler.playSound("enemy_damage");
+                    soundHandler.playSound("enemy_damage", 0f, 0.5f);
 
                     break;
 
@@ -133,7 +133,7 @@ namespace ShootAirRLAgent
                     // agent loses
                     float collisionReward = (-0.9f/environmentSettings.waves.Count)*(environmentSettings.waves.Count - currentWave);
                     shootairAgent.AddReward(collisionReward);
-                    soundHandler.playSound("agent_death");
+                    soundHandler.playSound("agent_death", 0f, 0.3f);
                     soundHandler.playSound("game_over");
 
                     currentWave = 0;
@@ -149,7 +149,7 @@ namespace ShootAirRLAgent
                     // add reward for killing target
                     shootairAgent.AddReward(3e-3f);
                     // shootairAgent.AddReward(scaledRewards(1.5e-3f, false));
-                    soundHandler.playSound("enemy_death");
+                    soundHandler.playSound("enemy_death", 0.15f, 0.5f);
 
                     break;
 
