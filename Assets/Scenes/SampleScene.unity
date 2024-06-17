@@ -9477,9 +9477,7 @@ MonoBehaviour:
   Occultist3EnemyPrefab: {fileID: 1199007736262422055, guid: 461c1bd0c08f69441862ebcde2e6ff73, type: 3}
   Occultist4EnemyPrefab: {fileID: 1671440349958721075, guid: 08710610a9021734292057c0ad61a2e5, type: 3}
   environment: {fileID: 827689719112947625}
-  MaxEnvironmentSteps: 5000
-  scaleTimer: 0
-  desiredLength: 0
+  MaxEnvironmentSteps: 0
 --- !u!114 &2724460586365922238
 MonoBehaviour:
   m_ObjectHideFlags: 0
