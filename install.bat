@@ -22,7 +22,9 @@ cd ml-agents
 :: Install ml-agents-envs and ml-agents
 call python -m pip install ./ml-agents-envs
 call python -m pip install ./ml-agents
-cd ../../
+cd ../
+rmdir /s ml-agents
+cd ../
 
 :: Display conda env
 call conda.bat list

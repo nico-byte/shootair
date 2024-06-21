@@ -23,7 +23,9 @@ cd ml-agents
 # Install ml-agents-envs and ml-agents
 pip3 install -e ./ml-agents-envs
 pip3 install -e ./ml-agents
-cd ../../
+cd ../
+rm -rf ml-agents
+cd ../
 
 # Display conda env
 conda list
