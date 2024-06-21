@@ -54,6 +54,9 @@ namespace ShootAirRLAgent
         // Start is called before the first frame update
         void Start()
         {
+            Time.timeScale = 1;
+            Application.targetFrameRate = -1;
+            
             environmentSettings = FindObjectOfType<EnvironmentSettings>();
             soundHandler = FindObjectOfType<SoundEffectPlayer>();
             agentSettings = FindObjectOfType<AgentSettings>();
